@@ -4,15 +4,7 @@
 #' Get metadata with cache
 #' @noRd
 get_cached_metadata <- function(agregado) {
-  key <- as.character(agregado)
-  
-  if (exists(key, envir = .ibger_cache)) {
-    return(get(key, envir = .ibger_cache))
-  }
-  
-  meta <- ibge_metadata(agregado)
-  assign(key, meta, envir = .ibger_cache)
-  meta
+  ibge_metadata(agregado)
 }
 
 #' Clear metadata cache
