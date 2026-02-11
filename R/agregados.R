@@ -1,11 +1,14 @@
 #' List IBGE aggregates
 #'
 #' Retrieves the set of available aggregates (tables), grouped by survey.
-#' Each aggregate corresponds to a SIDRA table.
+#' Each aggregate corresponds to a SIDRA table. Results are cached in memory
+#' per unique combination of parameters, so repeated calls with the same
+#' filters are instant.
 #'
 #' @param period Period of interest, e.g. `"P5[202001]"` (monthly),
 #'   `"P10[20201]"` (quarterly).
 #' @param subject Numeric subject code (e.g. `70` for animal slaughter).
+#'   Use [ibge_subjects()] to look up codes.
 #' @param classification Numeric classification code.
 #' @param periodicity Periodicity code: `"P5"` (monthly), `"P10"`
 #'   (quarterly), `"P13"` (annual), etc.
@@ -28,20 +31,33 @@ ibge_aggregates <- function(period = NULL,
                             classification = NULL,
                             periodicity = NULL,
                             level = NULL) {
-  query <- list(
-    periodo = period,
-    assunto = subject,
+  
+  # Build a cache key from the parameter combination
+  params <- list(
+    periodo       = period,
+    assunto       = subject,
     classificacao = classification,
     periodicidade = periodicity,
-    nivel = level
+    nivel         = level
   )
-
+  cache_key <- paste0("aggregates_", rlang::hash(params))
+  
+  # Return cached result if available
+  if (exists(cache_key, envir = .ibger_cache)) {
+    result <- get(cache_key, envir = .ibger_cache)
+    n <- nrow(result)
+    cli::cli_alert_success("{n} aggregate{?s} found (cached).")
+    return(result)
+  }
+  
+  query <- purrr::compact(params)
+  
   data <- ibge_request(query = query, .label = "aggregates")
-
+  
   result <- purrr::map_dfr(data, function(survey) {
     aggregates <- survey[["agregados"]]
     if (is.null(aggregates) || length(aggregates) == 0) return(NULL)
-
+    
     purrr::map_dfr(aggregates, function(ag) {
       tibble::tibble(
         survey_id      = pluck_chr(survey, "id"),
@@ -51,7 +67,10 @@ ibge_aggregates <- function(period = NULL,
       )
     })
   })
-
+  
+  # Store in cache
+  assign(cache_key, result, envir = .ibger_cache)
+  
   n <- nrow(result)
   cli::cli_alert_success("{n} aggregate{?s} found.")
   result

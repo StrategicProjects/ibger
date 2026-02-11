@@ -16,7 +16,8 @@ ibge_aggregates(
 \item{period}{Period of interest, e.g. \code{"P5[202001]"} (monthly),
 \code{"P10[20201]"} (quarterly).}
 
-\item{subject}{Numeric subject code (e.g. \code{70} for animal slaughter).}
+\item{subject}{Numeric subject code (e.g. \code{70} for animal slaughter).
+Use \code{\link[=ibge_subjects]{ibge_subjects()}} to look up codes.}
 
 \item{classification}{Numeric classification code.}
 
@@ -32,7 +33,9 @@ A \link[tibble:tibble]{tibble} with columns:
 }
 \description{
 Retrieves the set of available aggregates (tables), grouped by survey.
-Each aggregate corresponds to a SIDRA table.
+Each aggregate corresponds to a SIDRA table. Results are cached in memory
+per unique combination of parameters, so repeated calls with the same
+filters are instant.
 }
 \examples{
 \dontrun{
