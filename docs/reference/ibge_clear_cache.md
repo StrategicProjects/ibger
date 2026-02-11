@@ -1,7 +1,7 @@
 # Clear metadata cache
 
-Removes all cached metadata, forcing fresh API calls on subsequent
-requests.
+Removes all cached metadata (aggregates and surveys), forcing fresh API
+calls on subsequent requests.
 
 ## Usage
 

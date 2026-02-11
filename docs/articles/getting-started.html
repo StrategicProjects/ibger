@@ -366,6 +366,62 @@ refresh:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1705</span>, localities <span class="op">=</span> <span class="st">"BR"</span>, validate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="browsing-the-survey-catalog">Browsing the survey catalog<a class="anchor" aria-label="anchor" href="#browsing-the-survey-catalog"></a>
+</h2>
+<p>Beyond aggregate-level data, ibger also provides access to the <a href="https://servicodados.ibge.gov.br/api/docs/metadados?versao=2" class="external-link">IBGE
+Metadata API</a> (v2), which catalogs IBGE’s surveys with institutional
+and methodological information such as status, category, collection
+frequency, and thematic classifications.</p>
+<p>This is useful when you want to understand <strong>what surveys
+exist</strong> and <strong>how they are structured</strong> before
+diving into specific aggregates.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># List all 98 IBGE surveys</span></span>
+<span><span class="fu"><a href="../reference/ibge_surveys.html">ibge_surveys</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 98 × 8</span></span>
+<span><span class="co">#&gt;   id    name                                 status category    ...</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                &lt;chr&gt;  &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 AC    Pesquisa Anual da Indústria da Cons… Ativa  Estrutural</span></span>
+<span><span class="co">#&gt; 2 AA    Pesquisa Nacional de Saúde do Escol… Ativa  Especial</span></span>
+<span><span class="co">#&gt; ...</span></span>
+<span></span>
+<span><span class="co"># Filter active monthly surveys</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ibge_surveys.html">ibge_surveys</a></span><span class="op">(</span>thematic_classifications <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">status</span> <span class="op">==</span> <span class="st">"Ativa"</span>, <span class="va">category</span> <span class="op">==</span> <span class="st">"Conjuntural"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check which periods have metadata for the Censo Demográfico</span></span>
+<span><span class="fu"><a href="../reference/ibge_survey_periods.html">ibge_survey_periods</a></span><span class="op">(</span><span class="st">"CD"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 9 × 3</span></span>
+<span><span class="co">#&gt;    year month order</span></span>
+<span><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1  2022    NA     0</span></span>
+<span><span class="co">#&gt; 2  2010    NA     0</span></span>
+<span><span class="co">#&gt; ...</span></span>
+<span></span>
+<span><span class="co"># Get full institutional metadata for a specific period</span></span>
+<span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_survey_metadata.html">ibge_survey_metadata</a></span><span class="op">(</span><span class="st">"CD"</span>, year <span class="op">=</span> <span class="fl">2022</span><span class="op">)</span></span>
+<span><span class="va">meta</span></span>
+<span><span class="co">#&gt; ── CD ──</span></span>
+<span><span class="co">#&gt; Status: Ativa</span></span>
+<span><span class="co">#&gt; Category: Estrutural</span></span>
+<span><span class="co">#&gt; ...</span></span>
+<span><span class="co">#&gt; ── Metadata occurrences (1) ──</span></span>
+<span><span class="co">#&gt; Use `meta$occurrences` to explore the full metadata.</span></span>
+<span></span>
+<span><span class="co"># Explore methodology fields</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">occurrences</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p>Survey codes are validated before each request. If you use a wrong
+code, the error suggests similar alternatives:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_survey_periods.html">ibge_survey_periods</a></span><span class="op">(</span><span class="st">"PMS"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error: Survey code "PMS" not found in the IBGE catalog.</span></span>
+<span><span class="co">#&gt; ℹ Did you mean one of these?</span></span>
+<span><span class="co">#&gt;   * SC - Pesquisa Mensal de Serviços</span></span>
+<span><span class="co">#&gt;   * MC - Pesquisa Mensal de Comércio</span></span>
+<span><span class="co">#&gt;   ...</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="api-limits-and-special-values">API limits and special values<a class="anchor" aria-label="anchor" href="#api-limits-and-special-values"></a>
 </h2>
 <p>Each request can return at most <strong>100,000 values</strong>,
@@ -404,7 +460,7 @@ of numbers:</p>
 <p>These come through as character strings in the <code>value</code>
 column. Use <code><a href="../reference/parse_ibge_value.html">parse_ibge_value()</a></code> to convert to numeric in one
 step:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">7060</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="../reference/parse_ibge_value.html">parse_ibge_value</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>

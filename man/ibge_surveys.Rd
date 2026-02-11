@@ -14,7 +14,7 @@ for each survey. Set to \code{FALSE} for a simpler flat tibble.}
 \value{
 A \link[tibble:tibble]{tibble} with columns:
 \describe{
-\item{id}{Survey code (e.g. \code{"PMS"}, \code{"CD"})}
+\item{id}{Survey code (e.g. \code{"SC"}, \code{"CD"})}
 \item{name}{Survey name in Portuguese}
 \item{name_en}{Survey name in English (may be \code{NA})}
 \item{status}{Survey status: Ativa, Encerrada, etc.}

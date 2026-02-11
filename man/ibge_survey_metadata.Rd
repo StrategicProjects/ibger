@@ -7,13 +7,16 @@
 ibge_survey_metadata(survey, year, month = NULL, order = 0)
 }
 \arguments{
-\item{survey}{Character string. The survey code (e.g. \code{"PMS"}, \code{"CD"}).}
+\item{survey}{Character string. The survey code (e.g. \code{"SC"}, \code{"CD"}).
+Must match a code from \code{\link[=ibge_surveys]{ibge_surveys()}}.}
 
-\item{year}{Integer. Reference year.}
+\item{year}{Integer. Reference year. Must be a year with available
+metadata for the survey (see \code{\link[=ibge_survey_periods]{ibge_survey_periods()}}).}
 
-\item{month}{Integer or \code{NULL}. Reference month (1--12). Required only
-for conjunctural (sub-annual) surveys. Omit for structural (annual+)
-surveys.}
+\item{month}{Integer or \code{NULL}. Reference month (1--12). Required for
+conjunctural (sub-annual) surveys; omit for structural (annual+)
+surveys. If omitted for a conjunctural survey, a warning is issued
+listing the available months.}
 
 \item{order}{Integer. Publication order within the period (default \code{0},
 the most recent).}
@@ -37,10 +40,10 @@ varies by survey)}
 }
 \description{
 Retrieves detailed institutional and methodological metadata for a
-survey in a given reference period. The returned information includes
-survey status, category (conjunctural/structural), thematic
-classifications, SIDRA/CONCLA URLs, and the full set of metadata
-occurrences for the period.
+survey in a given reference period. Before querying, both the survey
+code and the year/month combination are validated against the IBGE
+catalog, so invalid inputs produce clear errors without wasting an
+API call.
 }
 \details{
 The structure of \code{occurrences} varies by survey and may include fields
@@ -49,11 +52,24 @@ scope, reference period, and more.
 }
 \examples{
 \dontrun{
-# Annual survey (no month needed)
+# Structural survey (no month needed)
 ibge_survey_metadata("CD", year = 2022)
 
-# Conjunctural survey (month required)
-ibge_survey_metadata("PMS", year = 2024, month = 6)
+# Conjunctural survey (specify month)
+ibge_survey_metadata("SC", year = 2023, month = 6)
+
+# Inspect methodology fields
+meta <- ibge_survey_metadata("CD", year = 2022)
+names(meta$occurrences[[1]])
+
+# Invalid code: clear error with suggestions
+ibge_survey_metadata("PMS", year = 2024)
+#> Error: Survey code "PMS" not found in the IBGE catalog.
+
+# Invalid year: error with available range
+ibge_survey_metadata("CD", year = 1800)
+#> Error: Year 1800 not available for survey "CD".
+#> i Available years: 1940 to 2022 (9 total).
 }
 
 }

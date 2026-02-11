@@ -11,7 +11,8 @@ Main functions to query the IBGE API.
 
 ## Explore metadata
 
-Discover available aggregates, variables, periods, and localities.
+Discover available aggregates, variables, periods, localities, and
+subjects.
 
 - [`ibge_metadata()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_metadata.md)
   : Metadata for an aggregate
@@ -19,6 +20,20 @@ Discover available aggregates, variables, periods, and localities.
   : Periods for an aggregate
 - [`ibge_localities()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_localities.md)
   : Localities for an aggregate
+- [`ibge_subjects()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_subjects.md)
+  : IBGE subject codes lookup
+
+## Survey catalog
+
+Browse IBGE surveys and their institutional metadata via the Metadata
+API (v2).
+
+- [`ibge_surveys()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_surveys.md)
+  : List IBGE surveys with metadata
+- [`ibge_survey_periods()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_survey_periods.md)
+  : List periods with metadata for a survey
+- [`ibge_survey_metadata()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_survey_metadata.md)
+  : Get survey metadata for a specific period
 
 ## Utilities
 
@@ -32,3 +47,5 @@ Helpers and cache management.
   : Fetch data from a SIDRA API URL
 - [`parse_sidra_url()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/parse_sidra_url.md)
   : Parse a SIDRA API URL into ibger parameters
+- [`ibge_explorer()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_explorer.md)
+  : Interactive aggregate explorer

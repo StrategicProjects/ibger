@@ -25,11 +25,15 @@ Imports:
     rlang,
     glue
 Suggests:
-    testthat (>= 3.0.0),
     knitr,
     rmarkdown,
     pkgdown,
     ggplot2,
-    tidyr
+    tidyr,
+    shiny (>= 1.8.0),
+    DT,
+    bslib (>= 0.6.0),
+    bsicons,
+    rstudioapi
 Config/testthat/edition: 3
 VignetteBuilder: knitr

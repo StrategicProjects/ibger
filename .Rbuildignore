@@ -1,2 +1,14 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+.DS_Store
+^LICENSE\.md$
+^README\.Rmd$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^build_site\.R$
+^\.DS_Store$
+\.DS_Store$
+^cran-comments\.md$
+^CRAN-SUBMISSION$

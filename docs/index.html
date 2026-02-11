@@ -99,7 +99,7 @@
 <span></span>
 <span><span class="co"># Available periods and localities</span></span>
 <span><span class="fu"><a href="reference/ibge_periods.html">ibge_periods</a></span><span class="op">(</span><span class="fl">7060</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/ibge_localities.html">ibge_localities</a></span><span class="op">(</span><span class="fl">7060</span>, level <span class="op">=</span> <span class="st">"N7"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/ibge_localities.html">ibge_localities</a></span><span class="op">(</span><span class="fl">7060</span>, level <span class="op">=</span> <span class="st">"N6"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get data — the main function</span></span>
 <span><span class="fu"><a href="reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">7060</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span></span></code></pre></div>
@@ -126,7 +126,7 @@
 <span>  aggregate      <span class="op">=</span> <span class="fl">7060</span>,</span>
 <span>  variable       <span class="op">=</span> <span class="fl">63</span>,</span>
 <span>  periods        <span class="op">=</span> <span class="op">-</span><span class="fl">6</span>,</span>
-<span>  localities     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>N6 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3550308</span>, <span class="fl">3304557</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  localities     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>N6 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1200401</span>, <span class="fl">2800308</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  classification <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"315"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7169</span>, <span class="fl">7170</span>, <span class="fl">7445</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -189,6 +189,9 @@
 <div class="section level2">
 <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
 </h2>
+<div class="section level3">
+<h3 id="aggregates-api-data-retrieval">Aggregates API (data retrieval)<a class="anchor" aria-label="anchor" href="#aggregates-api-data-retrieval"></a>
+</h3>
 <table class="table">
 <thead><tr>
 <th>Function</th>
@@ -216,6 +219,50 @@
 <td>Get data (with validation)</td>
 </tr>
 <tr>
+<td><code><a href="reference/ibge_subjects.html">ibge_subjects()</a></code></td>
+<td>Look up IBGE subject (theme) codes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="survey-catalog-metadata-api">Survey catalog (Metadata API)<a class="anchor" aria-label="anchor" href="#survey-catalog-metadata-api"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="34%">
+<col width="65%">
+</colgroup>
+<thead><tr>
+<th>Function</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code><a href="reference/ibge_surveys.html">ibge_surveys()</a></code></td>
+<td>List all IBGE surveys with status and category</td>
+</tr>
+<tr>
+<td><code><a href="reference/ibge_survey_periods.html">ibge_survey_periods()</a></code></td>
+<td>Available periods for a survey’s metadata</td>
+</tr>
+<tr>
+<td><code><a href="reference/ibge_survey_metadata.html">ibge_survey_metadata()</a></code></td>
+<td>Institutional/methodological metadata for a survey</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="utilities">Utilities<a class="anchor" aria-label="anchor" href="#utilities"></a>
+</h3>
+<table class="table">
+<thead><tr>
+<th>Function</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
 <td><code><a href="reference/parse_sidra_url.html">parse_sidra_url()</a></code></td>
 <td>Parse SIDRA URL into ibger parameters</td>
 </tr>
@@ -234,6 +281,7 @@
 </tbody>
 </table>
 </div>
+</div>
 <div class="section level2">
 <h2 id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
 </h2>
@@ -247,6 +295,66 @@
 <li>
 <code><a href="articles/tutorial.html">vignette("tutorial")</a></code> — tracking state GDP components with IBGE data</li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="interactive-aggregate-explorer">Interactive Aggregate Explorer<a class="anchor" aria-label="anchor" href="#interactive-aggregate-explorer"></a>
+</h2>
+<p>The function <code><a href="reference/ibge_explorer.html">ibge_explorer()</a></code> launches an interactive Shiny application that allows you to browse, filter, and export the full catalog of IBGE aggregates available via the API.</p>
+<p>It is designed to make exploration easier before calling functions such as <code><a href="reference/ibge_metadata.html">ibge_metadata()</a></code>, <code><a href="reference/ibge_variables.html">ibge_variables()</a></code>, or <code><a href="reference/ibge_aggregates.html">ibge_aggregates()</a></code>.</p>
+<div class="section level3">
+<h3 id="sparkles-features">✨ Features<a class="anchor" aria-label="anchor" href="#sparkles-features"></a>
+</h3>
+<ul>
+<li>📊 Summary value boxes with total counts<br>
+</li>
+<li>🔍 Global and column-level table filtering<br>
+</li>
+<li>🧭 Filter by survey<br>
+</li>
+<li>📥 CSV download of filtered results<br>
+</li>
+<li>🆔 Click a row to display the corresponding <code><a href="reference/ibge_metadata.html">ibge_metadata()</a></code> call</li>
+</ul>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="rocket-usage">🚀 Usage<a class="anchor" aria-label="anchor" href="#rocket-usage"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Open in RStudio Viewer (default behavior)</span></span>
+<span><span class="fu"><a href="reference/ibge_explorer.html">ibge_explorer</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Open in your system browser</span></span>
+<span><span class="fu"><a href="reference/ibge_explorer.html">ibge_explorer</a></span><span class="op">(</span>launch.browser <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="package-dependencies">📦 Dependencies<a class="anchor" aria-label="anchor" href="#package-dependencies"></a>
+</h3>
+<p>The explorer requires the following packages:</p>
+<ul>
+<li><code>shiny</code></li>
+<li><code>DT</code></li>
+<li><code>bslib</code></li>
+<li><code>bsicons</code></li>
+</ul>
+<p>If any of them are not installed, <code><a href="reference/ibge_explorer.html">ibge_explorer()</a></code> will display a friendly CLI error message.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="bulb-when-to-use-it">💡 When to Use It?<a class="anchor" aria-label="anchor" href="#bulb-when-to-use-it"></a>
+</h3>
+<p>Use <code><a href="reference/ibge_explorer.html">ibge_explorer()</a></code> when you:</p>
+<ul>
+<li>Don’t remember an aggregate ID<br>
+</li>
+<li>Want to search by survey name<br>
+</li>
+<li>Need a quick way to copy the correct <code><a href="reference/ibge_metadata.html">ibge_metadata()</a></code> call<br>
+</li>
+<li>Prefer a visual workflow before writing code</li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="comparison-with-other-packages">Comparison with other packages<a class="anchor" aria-label="anchor" href="#comparison-with-other-packages"></a>
@@ -294,6 +402,14 @@
 <td>Metadata browsing</td>
 <td>
 <code><a href="reference/ibge_metadata.html">ibge_metadata()</a></code>, <code><a href="reference/ibge_periods.html">ibge_periods()</a></code>, <code><a href="reference/ibge_localities.html">ibge_localities()</a></code>
+</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Survey catalog</td>
+<td>
+<code><a href="reference/ibge_surveys.html">ibge_surveys()</a></code>, <code><a href="reference/ibge_survey_metadata.html">ibge_survey_metadata()</a></code>
 </td>
 <td>—</td>
 <td>—</td>
@@ -350,7 +466,7 @@
 <h2 id="disclaimer">Disclaimer<a class="anchor" aria-label="anchor" href="#disclaimer"></a>
 </h2>
 <p>This package is an independent, open-source project and is <strong>not</strong> affiliated with, endorsed by, or officially connected to the Instituto Brasileiro de Geografia e Estatística (IBGE) in any way.</p>
-<p>All data retrieved through this package is sourced from the <a href="https://servicodados.ibge.gov.br/api/docs/agregados?versao=3" class="external-link">IBGE Aggregates API</a> and remains the intellectual property of IBGE. Users must comply with IBGE’s <a href="https://www.ibge.gov.br/acesso-informacao/institucional/termos-de-uso.html" class="external-link">terms of use</a> when using, publishing, or redistributing the data.</p>
+<p>All data retrieved through this package is sourced from the <a href="https://servicodados.ibge.gov.br/api/docs/agregados?versao=3" class="external-link">IBGE Aggregates API</a> and the <a href="https://servicodados.ibge.gov.br/api/docs/metadados?versao=2" class="external-link">IBGE Metadata API</a> and remains the intellectual property of IBGE. Users must comply with IBGE’s <a href="https://www.ibge.gov.br/acesso-informacao/institucional/termos-de-uso.html" class="external-link">terms of use</a> when using, publishing, or redistributing the data.</p>
 <p>The data is provided <strong>as-is</strong>, without warranty of any kind. The package authors are not responsible for the accuracy, completeness, or timeliness of the data returned by the API. For official statistics and methodology, always refer to <a href="https://www.ibge.gov.br" class="external-link">ibge.gov.br</a>.</p>
 <p>API availability, rate limits, and response formats are controlled by IBGE and may change without notice.</p>
 </div>

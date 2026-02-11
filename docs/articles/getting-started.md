@@ -289,6 +289,70 @@ Skip validation entirely with `validate = FALSE`:
 ibge_variables(1705, localities = "BR", validate = FALSE)
 ```
 
+## Browsing the survey catalog
+
+Beyond aggregate-level data, ibger also provides access to the [IBGE
+Metadata
+API](https://servicodados.ibge.gov.br/api/docs/metadados?versao=2) (v2),
+which catalogs IBGE’s surveys with institutional and methodological
+information such as status, category, collection frequency, and thematic
+classifications.
+
+This is useful when you want to understand **what surveys exist** and
+**how they are structured** before diving into specific aggregates.
+
+``` r
+
+# List all 98 IBGE surveys
+ibge_surveys()
+#> # A tibble: 98 × 8
+#>   id    name                                 status category    ...
+#>   <chr> <chr>                                <chr>  <chr>
+#> 1 AC    Pesquisa Anual da Indústria da Cons… Ativa  Estrutural
+#> 2 AA    Pesquisa Nacional de Saúde do Escol… Ativa  Especial
+#> ...
+
+# Filter active monthly surveys
+library(dplyr)
+ibge_surveys(thematic_classifications = FALSE) |>
+  filter(status == "Ativa", category == "Conjuntural")
+
+# Check which periods have metadata for the Censo Demográfico
+ibge_survey_periods("CD")
+#> # A tibble: 9 × 3
+#>    year month order
+#>   <int> <int> <int>
+#> 1  2022    NA     0
+#> 2  2010    NA     0
+#> ...
+
+# Get full institutional metadata for a specific period
+meta <- ibge_survey_metadata("CD", year = 2022)
+meta
+#> ── CD ──
+#> Status: Ativa
+#> Category: Estrutural
+#> ...
+#> ── Metadata occurrences (1) ──
+#> Use `meta$occurrences` to explore the full metadata.
+
+# Explore methodology fields
+names(meta$occurrences[[1]])
+```
+
+Survey codes are validated before each request. If you use a wrong code,
+the error suggests similar alternatives:
+
+``` r
+
+ibge_survey_periods("PMS")
+#> Error: Survey code "PMS" not found in the IBGE catalog.
+#> ℹ Did you mean one of these?
+#>   * SC - Pesquisa Mensal de Serviços
+#>   * MC - Pesquisa Mensal de Comércio
+#>   ...
+```
+
 ## API limits and special values
 
 Each request can return at most **100,000 values**, computed as:

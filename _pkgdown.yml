@@ -42,11 +42,19 @@ reference:
       - ibge_aggregates
 
   - title: "Explore metadata"
-    desc: "Discover available aggregates, variables, periods, and localities."
+    desc: "Discover available aggregates, variables, periods, localities, and subjects."
     contents:
       - ibge_metadata
       - ibge_periods
       - ibge_localities
+      - ibge_subjects
+
+  - title: "Survey catalog"
+    desc: "Browse IBGE surveys and their institutional metadata via the Metadata API (v2)."
+    contents:
+      - ibge_surveys
+      - ibge_survey_periods
+      - ibge_survey_metadata
 
   - title: "Utilities"
     desc: "Helpers and cache management."
@@ -55,6 +63,7 @@ reference:
       - ibge_clear_cache
       - fetch_sidra_url
       - parse_sidra_url
+      - ibge_explorer
 
 footer:
   structure:

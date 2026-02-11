@@ -8,22 +8,39 @@ ibge_survey_periods(survey)
 }
 \arguments{
 \item{survey}{Character string. The survey code as returned by
-\code{\link[=ibge_surveys]{ibge_surveys()}} (e.g. \code{"AC"} for Pesquisa Anual de Comércio,
-\code{"PMS"} for Pesquisa Mensal de Serviços).}
+\code{\link[=ibge_surveys]{ibge_surveys()}} (e.g. \code{"SC"} for Pesquisa Mensal de Serviços,
+\code{"CD"} for Censo Demográfico). Invalid codes are caught before the
+request is sent, with suggestions for similar codes.}
 }
 \value{
 A \link[tibble:tibble]{tibble} with columns:
-\code{year}, \code{month} (NA for annual surveys), and \code{order} (publication
-order within the period, where 0 is the most recent).
+\describe{
+\item{year}{Integer year with metadata available.}
+\item{month}{Integer month (1--12) or \code{NA} for structural
+(annual or longer) surveys.}
+\item{order}{Publication order within the period (0 = most recent).}
+}
 }
 \description{
 Retrieves the periods (year/month combinations) for which a given survey
-has associated metadata records.
+has associated metadata records. Before querying, the survey code is
+validated against the IBGE catalog; invalid codes produce a helpful error
+with suggestions.
 }
 \examples{
 \dontrun{
+# Conjunctural survey (monthly periods)
+ibge_survey_periods("SC")   # Pesquisa Mensal de Serviços
+
+# Structural survey (annual periods)
+ibge_survey_periods("CD")   # Censo Demográfico
+
+# Invalid code: helpful error with suggestions
 ibge_survey_periods("PMS")
-ibge_survey_periods("CD")
+#> Error: Survey code "PMS" not found in the IBGE catalog.
+#> i Did you mean one of these?
+#>   * SC - Pesquisa Mensal de Serviços
+#>   ...
 }
 
 }

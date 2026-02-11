@@ -36,7 +36,7 @@ meta$classifications
 
 # Available periods and localities
 ibge_periods(7060)
-ibge_localities(7060, level = "N7")
+ibge_localities(7060, level = "N6")
 
 # Get data — the main function
 ibge_variables(7060, localities = "BR")
@@ -66,7 +66,7 @@ ibge_variables(
   aggregate      = 7060,
   variable       = 63,
   periods        = -6,
-  localities     = list(N6 = c(3550308, 3304557)),
+  localities     = list(N6 = c(1200401, 2800308)),
   classification = list("315" = c(7169, 7170, 7445))
 )
 ```
@@ -103,6 +103,8 @@ When numerical analysis is required, these symbols must be handled explicitly be
 
 ## Functions
 
+### Aggregates API (data retrieval)
+
 | Function             | Description                            |
 |----------------------|----------------------------------------|
 | `ibge_aggregates()`  | List aggregates grouped by survey      |
@@ -110,6 +112,20 @@ When numerical analysis is required, these symbols must be handled explicitly be
 | `ibge_periods()`     | Available periods                      |
 | `ibge_localities()`  | Localities by level (with validation)  |
 | `ibge_variables()`   | Get data (with validation)             |
+| `ibge_subjects()`    | Look up IBGE subject (theme) codes     |
+
+### Survey catalog (Metadata API)
+
+| Function                 | Description                                      |
+|--------------------------|--------------------------------------------------|
+| `ibge_surveys()`         | List all IBGE surveys with status and category   |
+| `ibge_survey_periods()`  | Available periods for a survey's metadata        |
+| `ibge_survey_metadata()` | Institutional/methodological metadata for a survey |
+
+### Utilities
+
+| Function             | Description                            |
+|----------------------|----------------------------------------|
 | `parse_sidra_url()`  | Parse SIDRA URL into ibger parameters  |
 | `fetch_sidra_url()`  | Fetch data directly from a SIDRA URL   |
 | `parse_ibge_value()` | Convert value column to numeric        |
@@ -122,6 +138,58 @@ When numerical analysis is required, these symbols must be handled explicitly be
 - `vignette("ipca-example")` — real-world IPCA inflation analysis
 - `vignette("tutorial")` — tracking state GDP components with IBGE data
 
+## Interactive Aggregate Explorer
+
+The function `ibge_explorer()` launches an interactive Shiny application that allows you to browse, filter, and export the full catalog of IBGE aggregates available via the API.
+
+It is designed to make exploration easier before calling functions such as `ibge_metadata()`, `ibge_variables()`, or `ibge_aggregates()`.
+
+### ✨ Features
+
+- 📊 Summary value boxes with total counts  
+- 🔍 Global and column-level table filtering  
+- 🧭 Filter by survey  
+- 📥 CSV download of filtered results  
+- 🆔 Click a row to display the corresponding `ibge_metadata()` call  
+
+---
+  
+### 🚀 Usage
+  
+  ```r
+# Open in RStudio Viewer (default behavior)
+ibge_explorer()
+
+# Open in your system browser
+ibge_explorer(launch.browser = TRUE)
+```
+
+---
+  
+### 📦 Dependencies
+  
+The explorer requires the following packages:
+  
+- `shiny`
+- `DT`
+- `bslib`
+- `bsicons`
+
+If any of them are not installed, `ibge_explorer()` will display a friendly CLI error message.
+
+---
+  
+### 💡 When to Use It?
+  
+Use `ibge_explorer()` when you:
+  
+- Don’t remember an aggregate ID  
+- Want to search by survey name  
+- Need a quick way to copy the correct `ibge_metadata()` call  
+- Prefer a visual workflow before writing code  
+
+
+
 ## Comparison with other packages
 
 Several R packages provide access to IBGE data. Here is how ibger differs:
@@ -133,6 +201,7 @@ Several R packages provide access to IBGE data. Here is how ibger differs:
 | Parameter format | Named R lists | Strings with SIDRA codes | File paths / year + quarter |
 | Validation | Pre-flight check against metadata | None (errors come from the API) | — |
 | Metadata browsing | `ibge_metadata()`, `ibge_periods()`, `ibge_localities()` | — | — |
+| Survey catalog | `ibge_surveys()`, `ibge_survey_metadata()` | — | — |
 | Special values | `parse_ibge_value()` | Manual handling | — |
 | Caching | In-memory metadata cache | None | Local file cache |
 | Feedback | cli progress messages | None | None |
@@ -177,6 +246,7 @@ Geografia e Estatística (IBGE) in any way.
 
 All data retrieved through this package is sourced from the
 [IBGE Aggregates API](https://servicodados.ibge.gov.br/api/docs/agregados?versao=3)
+and the [IBGE Metadata API](https://servicodados.ibge.gov.br/api/docs/metadados?versao=2)
 and remains the intellectual property of IBGE. Users must comply with IBGE's
 [terms of use](https://www.ibge.gov.br/acesso-informacao/institucional/termos-de-uso.html)
 when using, publishing, or redistributing the data.
