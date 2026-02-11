@@ -1,0 +1,35 @@
+Package: ibger
+Title: Access the IBGE (Brazilian Institute of Geography and Statistics) Aggregate Data 'API'
+Version: 0.1.0
+Authors@R: c(
+    person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
+    person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),
+    person("Hugo", "Vasconcelos", email = "hugo.vasconcelos@ufpe.br", role = "aut"),
+    person("Carlos", "Amorin", email = "carlos.agaf@ufpe.br", role = "aut"),
+    person("Diogo", "Bezerra", email = "diogo.bezerra@ufpe.br", role = "aut"))
+Description: 'Tidyverse'-friendly interface to the IBGE Aggregate Data 'API' 
+    <https://servicodados.ibge.gov.br/api/docs/agregados?versao=3>. Query aggregates, variables, localities, periods, and metadata
+    from surveys and censuses conducted by IBGE (Brazilian Institute of Geography and Statistics).
+License: MIT + file LICENSE
+URL: https://github.com/StrategicProjects/ibger
+BugReports: https://github.com/StrategicProjects/ibger/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    httr2 (>= 1.0.0),
+    cli (>= 3.6.0),
+    tibble,
+    purrr,
+    dplyr,
+    rlang,
+    glue
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    pkgdown,
+    ggplot2,
+    tidyr
+Config/testthat/edition: 3
+VignetteBuilder: knitr

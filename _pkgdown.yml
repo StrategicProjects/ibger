@@ -1,0 +1,62 @@
+url: https://monitoramento.sepe.pe.gov.br/ibger/
+
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#0d3b66"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+
+navbar:
+  structure:
+    left:  [intro, reference, articles]
+    right: [search, github]
+  components:
+    articles:
+      text: Articles
+      menu:
+        - text: Getting started
+          href: articles/getting-started.html
+        - text: "---"
+        - text: Understanding the IBGE API
+          href: articles/api-concepts.html
+        - text: "Real-world example: IPCA inflation"
+          href: articles/ipca-example.html
+        - text: "---"
+        - text: "Tracking state GDP components"
+          href: articles/tutorial.html  
+
+home:
+  title: "ibger: Access the IBGE Aggregate Data API from R"
+  description: >
+    Tidyverse-friendly interface to the IBGE Aggregate Data 'API' 
+    <https://servicodados.ibge.gov.br/api/docs/agregados?versao=3>. Query aggregates, variables, localities, periods, and metadata
+    from surveys and censuses conducted by IBGE (Brazilian Institute of Geography and Statistics).
+
+reference:
+  - title: "Retrieve data"
+    desc: "Main functions to query the IBGE API."
+    contents:
+      - ibge_variables
+      - ibge_aggregates
+
+  - title: "Explore metadata"
+    desc: "Discover available aggregates, variables, periods, and localities."
+    contents:
+      - ibge_metadata
+      - ibge_periods
+      - ibge_localities
+
+  - title: "Utilities"
+    desc: "Helpers and cache management."
+    contents:
+      - parse_ibge_value
+      - ibge_clear_cache
+      - fetch_sidra_url
+      - parse_sidra_url
+
+footer:
+  structure:
+    left: developed_by 
+    right: built_with

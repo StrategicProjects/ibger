@@ -1,0 +1,284 @@
+---
+title: "Understanding the IBGE Aggregate Data API"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Understanding the IBGE Aggregate Data API}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Introduction
+
+The IBGE Aggregate Data API (version 3) is the programmatic interface
+behind [SIDRA](https://sidra.ibge.gov.br/), IBGE's automatic data
+retrieval system. It covers every survey and census produced by the
+Brazilian Institute of Geography and Statistics.
+
+This vignette explains the API's data model so you can make the most of
+ibger. If you're familiar with OLAP terminology: variables = measures,
+classifications = dimensions, and categories = members.
+
+## Core concepts
+
+### Aggregates
+
+An **aggregate** is a specific table of results from an IBGE survey. Each
+aggregate has a numeric ID that is stable over time. For example:
+
+-	**1705** — IPCA-15 — Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal
+(Monthly change, year-to-date accumulation, 12-month accumulation and monthly weight)
+-	**1712** — Produção, venda, valor da produção e área colhida da lavoura (Censo Agropecuário)
+(Production, sales, production value and harvested area of crops — Agricultural Census)
+-	**7060** — IPCA — Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal
+(Monthly change, year-to-date accumulation, 12-month accumulation and monthly weight)
+
+```{r}
+library(ibger)
+
+# Search for aggregates
+ibge_aggregates()
+```
+
+You can filter by periodicity, geographic level, subject, or classification:
+
+```{r}
+# Only quarterly aggregates
+ibge_aggregates(periodicity = "P10")
+
+# Aggregates that have state-level data
+ibge_aggregates(level = "N3")
+```
+
+### Variables
+
+Each aggregate exposes one or more **variables** — the measures being
+reported. Aggregate 1712 (crop production), for example, has:
+
+| ID   | Variable                                |
+|------|-----------------------------------------|
+| 214  | Quantidade produzida (Production qty)   |
+| 215  | Valor da produção (Production value)    |
+| 216  | Área colhida (Harvested area)           |
+| 1982 | Quantidade vendida (Sold qty)           |
+| ...  | ...                                     |
+
+```{r}
+meta <- ibge_metadata(1712)
+meta$variables
+```
+
+When calling `ibge_variables()`, you can request specific variables by ID:
+
+```{r}
+# Two specific variables
+ibge_variables(1712, variable = c(214, 1982), localities = "BR")
+```
+
+Use `variable = NULL` (default) for all standard variables, or
+`variable = "all"` to include API-generated percentage variables when
+available.
+
+### Classifications and categories
+
+Besides being linked to a locality and a period, each observation can be
+further broken down by **classifications** (dimensions). Each
+classification contains **categories** (members).
+
+For aggregate 1712, the classifications are things like "type of product"
+(226), "producer condition" (218), "economic activity group", etc.
+Classification 226 has categories like "pineapple" (4844), "garlic"
+(96608), "potato" (96609), and hundreds more.
+
+```{r}
+meta <- ibge_metadata(1712)
+meta$classifications
+
+# Unnest to see all categories
+tidyr::unnest(meta$classifications, categories)
+```
+
+When you don't specify a classification, the API returns results for the
+**Total** category (ID = 0). This is a special aggregate across all
+categories.
+
+```{r}
+# Default: Total category (aggregated across all products)
+ibge_variables(1712, localities = "BR")
+
+# Specific products
+ibge_variables(
+  1712,
+  localities     = "BR",
+  classification = list("226" = c(4844, 96608))
+)
+
+# All products (can be large)
+ibge_variables(
+  1712,
+  periods        = -1,
+  localities     = "BR",
+  classification = list("226" = "all")
+)
+```
+
+### Geographic levels and localities
+
+IBGE organizes Brazil into a hierarchy of geographic levels. Each aggregate
+supports a specific subset of these levels:
+
+| Code | Level                 | Count  | Example                     |
+|------|-----------------------|--------|-----------------------------|
+| `N1` | Brazil                | 1      | BR                          |
+| `N2` | Major region          | 5      | 1 (North), 3 (Southeast)    |
+| `N3` | State (UF)            | 27     | 33 (RJ), 35 (SP)           |
+| `N6` | Municipality          | 5,570+ | 3550308 (São Paulo city)    |
+| `N7` | Metropolitan area     | varies | 3501 (RM São Paulo)         |
+| `N9` | Immediate region      | varies | ...                         |
+| `N15`| Intermediate region   | varies | ...                         |
+
+> **Important**: municipality IDs (N6) and metropolitan area IDs (N7) use
+> different numbering. São Paulo city is 3550308 (N6), while the São Paulo
+> metropolitan area is 3501 (N7). Don't confuse them.
+
+The available levels for each aggregate are in the metadata:
+
+```{r}
+meta <- ibge_metadata(1705)
+meta$territorial_level
+#> $administrative
+#> [1] "N1" "N2" "N3"
+```
+
+You can request all localities at a level, or pick specific ones:
+
+```{r}
+# All states
+ibge_variables(1705, localities = "N3")
+
+# Specific states
+ibge_variables(1705, localities = list(N3 = c(33, 35)))
+```
+
+The API also supports **contextual queries** — filtering municipalities
+by their parent state or region. For example,
+`N6[N3[33,35],N2[1]]` means "all municipalities in RJ, SP, or the North
+region". ibger passes this through directly:
+
+```{r}
+ibge_variables(
+  512,
+  variable   = 216,
+  periods    = -6,
+  localities = "N6[N3[33,35],N2[1]]"
+)
+```
+
+### Periods and periodicities
+
+Each aggregate has a fixed periodicity:
+
+| Code  | Periodicity    |
+|-------|----------------|
+| `P5`  | Monthly        |
+| `P10` | Quarterly      |
+| `P13` | Annual         |
+| `P58` | Semi-annual    |
+
+Period codes encode both the date and periodicity. The code `202001` means
+different things depending on the aggregate's periodicity:
+
+- Monthly (`P5`): January 2020
+- Quarterly (`P10`): Q1 2020
+- Semi-annual (`P58`): S1 2020
+
+The metadata tells you the valid range:
+
+```{r}
+meta <- ibge_metadata(7060)
+meta$periodicity
+#> $frequency [1] "mensal"
+#> $start     [1] "202001"
+#> $end       [1] "202512"
+```
+
+ibger's `ibge_periods()` lists every individual period:
+
+```{r}
+ibge_periods(7060)
+```
+
+## Request limits
+
+The API allows at most **100,000 values** per request. The formula is:
+
+> **categories × periods × localities ≤ 100,000**
+
+For example, a request for aggregate 2654 with:
+
+- Classification 244: 1 category
+- Classification 1836: 2 categories
+- Classification 2: 2 categories
+- Classification 260: 1 category
+- 6 periods (default)
+- 4 municipalities
+
+produces 1 × 2 × 2 × 1 × 6 × 4 = **96 values** — well within the limit.
+
+If your request exceeds 100,000 values, the API returns HTTP 500. Reduce
+the number of localities, periods, or categories and retry.
+
+## View modes
+
+The API supports three view modes for the response format. ibger uses the
+default JSON mode, but you can also pass `view = "OLAP"` or
+`view = "flat"`:
+
+```{r}
+# OLAP notation
+ibge_variables(1705, localities = "BR", view = "OLAP")
+
+# Flat mode (first element is metadata, data starts at second)
+ibge_variables(1705, localities = "BR", view = "flat")
+```
+
+In most cases, the default mode with ibger's tidy output is the most
+convenient.
+
+## How ibger maps to the API
+
+Here is a quick reference showing how ibger functions correspond to
+API endpoints:
+
+| ibger function       | API endpoint                                        |
+|----------------------|-----------------------------------------------------|
+| `ibge_aggregates()`  | `GET /agregados`                                    |
+| `ibge_metadata()`    | `GET /agregados/{id}/metadados`                     |
+| `ibge_periods()`     | `GET /agregados/{id}/periodos`                      |
+| `ibge_localities()`  | `GET /agregados/{id}/localidades/{nivel}`            |
+| `ibge_variables()`   | `GET /agregados/{id}/periodos/{p}/variaveis/{v}`     |
+
+The ibger parameters map to URL path segments and query parameters:
+
+| ibger parameter    | API parameter         | Format                                    |
+|--------------------|-----------------------|-------------------------------------------|
+| `aggregate`        | `{agregado}` (path)   | Numeric ID                                |
+| `variable`         | `{variavel}` (path)   | `214\|1982` or `all` or `allxp`           |
+| `periods`          | `{periodos}` (path)   | `-6` or `201701-201706` or `201701\|201702` |
+| `localities`       | `localidades` (query) | `BR` or `N3` or `N6[3550308,3304557]`     |
+| `classification`   | `classificacao` (query)| `226[4844,96608]\|218[4780]`              |
+| `view`             | `view` (query)        | `OLAP` or `flat`                          |
+
+## Further reading
+
+- [IBGE API documentation](https://servicodados.ibge.gov.br/api/docs/agregados?versao=3)
+- [SIDRA portal](https://sidra.ibge.gov.br/)
+- [SIDRA Query Builder](https://sidra.ibge.gov.br/pesquisa/) — useful for
+  exploring tables before writing R code

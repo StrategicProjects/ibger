@@ -1,0 +1,546 @@
+---
+title: "Tracking state GDP components with IBGE data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tracking state GDP components with IBGE data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Overview
+
+This vignette demonstrates how to query **IBGE aggregate tables** that
+serve as short-term tracking indicators for **state-level GDP components**
+— particularly in services, retail, manufacturing, and construction.
+
+The workflow is always the same:
+
+1. **Inspect metadata** with `ibge_metadata()` to discover available
+   variables, classifications, and categories.
+2. **Fetch data** with `ibge_variables()`, specifying aggregate, variable,
+   classification, localities, and periods.
+3. **Post-process** the `value` column with `parse_ibge_value()` and convert
+   period codes to proper dates.
+
+> **Note on `value`**: the IBGE API may return special symbols (`"-"`,
+> `".."`, `"..."`, `"X"`) instead of numbers. Always use
+> `parse_ibge_value()` to convert reliably.
+
+## Setup
+
+```{r}
+library(ibger)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(lubridate)
+library(stringr)
+```
+
+## Helper: convert period codes to dates
+
+IBGE returns periods as character codes: `"202501"` for monthly data
+(January 2025) and `"202501"` for quarterly data (Q1 2025). We need
+format-specific converters:
+
+```{r}
+# Monthly periods: "202501" -> 2025-01-01
+period_to_monthly <- function(x) ym(x)
+
+# Quarterly periods: "202501" -> 2025-01-01
+# lubridate::yq() expects "2025.1", so we reformat first
+period_to_quarterly <- function(x) {
+  yr <- substr(x, 1, 4)
+  qt <- as.integer(substr(x, 5, 6))
+  as.Date(paste0(yr, "-", qt * 3 - 2, "-01"))
+}
+```
+
+---
+
+## 1) IPCA (7060) — Health insurance
+
+The IPCA (consumer price index) aggregate 7060 is the main source for
+inflation tracking. Here we compare the general index against the health
+insurance sub-item for the Recife Metropolitan Area.
+
+### 1.1 Discovering the right IDs
+
+```{r}
+meta_7060 <- ibge_metadata(7060)
+
+# Find classification categories matching "Plano" (health plan) or "Índice" (index)
+unnest(meta_7060$classifications, categories) |>
+  filter(str_detect(category_name, "Plano|Índice")) |>
+  select(id, category_id, category_name, category_level)
+
+# Available variables
+meta_7060$variables
+```
+
+Reading the output:
+
+- `id` is the **classification ID** (e.g. `"315"`).
+- `category_id` is the **category ID** within that classification
+  (e.g. `"7169"` for *General index*).
+- In `ibge_variables()`, pass
+  `classification = list("315" = c("7169", "7695"))` to request both
+  categories simultaneously.
+
+### 1.2 Fetching the data
+
+```{r}
+ipca_health <- ibge_variables(
+  aggregate = 7060,
+  variable = 63,                          # IPCA - Monthly variation
+  periods = -12,
+  classification = list(
+    "315" = c("7169", "7695")             # General index + Health insurance
+  ),
+  localities = "N7[2601]"                 # Recife Metropolitan Area
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_315, locality_name, value)
+```
+
+### 1.3 Wide format for inspection
+
+```{r}
+ipca_health |>
+  pivot_wider(
+    id_cols    = c(period, locality_name),
+    names_from = classification_315,
+    values_from = value
+  ) |>
+  arrange(desc(period))
+```
+
+### 1.4 Plot
+
+```{r}
+ipca_health |>
+  ggplot(aes(period, value, color = classification_315)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "IPCA — Health insurance vs General index",
+    subtitle = "Recife Metropolitan Area, monthly variation (%)",
+    x = NULL, y = "Monthly variation (%)", color = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## 2) IPCA (7060) — Vehicle insurance
+
+Same logic — only the category changes in classification `"315"`.
+
+```{r}
+# Find category ID for "Seguro" (insurance)
+unnest(meta_7060$classifications, categories) |>
+  filter(str_detect(category_name, "Seguro|Índice")) |>
+  select(id, category_id, category_name)
+```
+
+```{r}
+ipca_vehicle_ins <- ibge_variables(
+  aggregate = 7060,
+  variable = 63,
+  periods = -12,
+  classification = list("315" = c("7169", "7643")),  # General + Vehicle insurance
+  localities = "N7[2601]"
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_315, locality_name, value)
+```
+
+```{r}
+ipca_vehicle_ins |>
+  ggplot(aes(period, value, color = classification_315)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "IPCA — Vehicle insurance vs General index",
+    subtitle = "Recife Metropolitan Area, monthly variation (%)",
+    x = NULL, y = "Monthly variation (%)", color = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## 3) PMS (8693) — Transportation and postal services
+
+The Monthly Survey of Services (PMS) aggregate 8693 is a proxy for
+service-sector activity. Here we filter by:
+
+- **Index type** (classification `11046`): revenue vs volume indices
+- **Activity group** (classification `12355`): transportation, storage
+  and postal services
+
+```{r}
+meta_8693 <- ibge_metadata(8693)
+
+# Browse classifications and categories
+unnest(meta_8693$classifications, categories)
+meta_8693$variables
+```
+
+```{r}
+pms_transport <- ibge_variables(
+  aggregate = 8693,
+  variable = 7167,                          # Index number (2022 = 100)
+  periods = -12,
+  classification = list(
+    "11046" = "all",                        # All index types (revenue + volume)
+    "12355" = "106876"                      # Transportation/postal services
+  ),
+  localities = "N3[26]"                     # Pernambuco
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_11046, locality_name, value)
+```
+
+```{r}
+pms_transport |>
+  ggplot(aes(period, value, color = classification_11046)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PMS — Index numbers (2022 = 100)",
+    subtitle = "Transportation, storage and postal services (Pernambuco)",
+    x = NULL, y = "Index (2022 = 100)", color = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## 4) PNAD Contínua (5434) — Accommodation and food services
+
+The Continuous PNAD aggregate 5434 provides quarterly employment data
+(persons aged 14+ employed) by activity group.
+
+```{r}
+meta_5434 <- ibge_metadata(5434)
+unnest(meta_5434$classifications, categories)
+meta_5434$variables
+```
+
+```{r}
+pnad_accommodation <- ibge_variables(
+  aggregate = 5434,
+  variable = 4090,                          # Employed persons (thousands)
+  periods = -12,                            # Last 12 quarters
+  classification = list("888" = "56623"),   # Accommodation and food services
+  localities = "N3[26]"                     # Pernambuco
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_quarterly(period)
+  ) |>
+  select(period, classification_888, locality_name, value)
+```
+
+```{r}
+pnad_accommodation |>
+  ggplot(aes(period, value)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PNAD Contínua — Employed persons (14+)",
+    subtitle = "Accommodation and food services (Pernambuco, thousands)",
+    x = NULL, y = "Employed (thousands)"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## 5) PMS (8693) — Professional and administrative services
+
+Same aggregate as section 3, switching only the activity category in
+classification `12355`:
+
+```{r}
+pms_professional <- ibge_variables(
+  aggregate = 8693,
+  variable = 7167,
+  periods = -12,
+  classification = list(
+    "11046" = "all",
+    "12355" = "31399"                       # Professional/administrative services
+  ),
+  localities = "N3[26]"
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_11046, locality_name, value)
+```
+
+```{r}
+pms_professional |>
+  ggplot(aes(period, value, color = classification_11046)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PMS — Index numbers (2022 = 100)",
+    subtitle = "Professional and administrative services (Pernambuco)",
+    x = NULL, y = "Index (2022 = 100)", color = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## 6) PNAD Contínua (5434) — Domestic services
+
+```{r}
+pnad_domestic <- ibge_variables(
+  aggregate = 5434,
+  variable = 4090,
+  periods = -12,
+  classification = list("888" = "56628"),   # Domestic services
+  localities = "N3[26]"
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_quarterly(period)
+  ) |>
+  select(period, classification_888, locality_name, value)
+```
+
+```{r}
+pnad_domestic |>
+  ggplot(aes(period, value)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PNAD Contínua — Employed persons (14+)",
+    subtitle = "Domestic services (Pernambuco, thousands)",
+    x = NULL, y = "Employed (thousands)"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## 7) PIM-PF (8888) — Industrial production (selected CNAE sectors)
+
+The PIM-PF (Monthly Industrial Survey — Physical Production) aggregate
+8888 covers manufacturing output. Classification `544` filters by
+industrial activity (CNAE sections).
+
+```{r}
+meta_8888 <- ibge_metadata(8888)
+unnest(meta_8888$classifications, categories)
+meta_8888$variables
+```
+
+```{r}
+pim_selected <- ibge_variables(
+  aggregate = 8888,
+  variable = 12606,                         # Index number (2022 = 100)
+  periods = -12,
+  classification = list(
+    "544" = c(129318, 129338)               # Beverages; Motor vehicles
+  ),
+  localities = "N3[26]"
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_544, locality_name, value)
+```
+
+```{r}
+pim_selected |>
+  ggplot(aes(period, value, color = classification_544)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PIM-PF — Index numbers (2022 = 100)",
+    subtitle = "Beverages and Motor vehicles (Pernambuco)",
+    x = NULL, y = "Index (2022 = 100)", color = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## 8) Construction (8886) — Typical construction inputs
+
+```{r}
+meta_8886 <- ibge_metadata(8886)
+meta_8886$variables
+```
+
+```{r}
+construction <- ibge_variables(
+  aggregate = 8886,
+  variable = 12606,                         # Index number (2022 = 100)
+  periods = -12,
+  localities = "N1"                         # Brazil
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, locality_name, value)
+```
+
+```{r}
+construction |>
+  ggplot(aes(period, value)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Construction — Typical inputs (physical production)",
+    subtitle = "Brazil, index number (2022 = 100)",
+    x = NULL, y = "Index (2022 = 100)"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## 9) PMC (8884 / 8757 / 8880) — Retail trade indices
+
+The Monthly Retail Trade Survey (PMC) publishes volume and revenue
+indices across different retail segments. The three aggregates below
+follow the same pattern — classification `11046` selects the index type
+(volume vs nominal revenue).
+
+### 9.1 Vehicles, motorcycles, parts and accessories (8884)
+
+```{r}
+meta_8884 <- ibge_metadata(8884)
+unnest(meta_8884$classifications, categories)
+meta_8884$variables
+```
+
+```{r}
+pmc_vehicles <- ibge_variables(
+  aggregate = 8884,
+  variable = 7169,                          # Index number (2022 = 100)
+  periods = -12,
+  classification = list("11046" = 56738),   # Volume index
+  localities = "N3[26]"
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_11046, locality_name, value)
+```
+
+```{r}
+pmc_vehicles |>
+  ggplot(aes(period, value)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PMC — Sales volume index (2022 = 100)",
+    subtitle = "Vehicles, motorcycles, parts and accessories (Pernambuco)",
+    x = NULL, y = "Index (2022 = 100)"
+  ) +
+  theme_minimal()
+```
+
+### 9.2 Construction materials (8757)
+
+```{r}
+pmc_construction <- ibge_variables(
+  aggregate = 8757,
+  variable = 7169,
+  periods = -12,
+  classification = list("11046" = 56732),   # Volume — construction materials
+  localities = "N3[26]"
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_11046, locality_name, value)
+```
+
+```{r}
+pmc_construction |>
+  ggplot(aes(period, value)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PMC — Sales volume index (2022 = 100)",
+    subtitle = "Construction materials (Pernambuco)",
+    x = NULL, y = "Index (2022 = 100)"
+  ) +
+  theme_minimal()
+```
+
+### 9.3 Retail trade (8880)
+
+```{r}
+pmc_retail <- ibge_variables(
+  aggregate = 8880,
+  variable = 7169,
+  periods = -12,
+  classification = list("11046" = 56734),   # Volume — retail trade
+  localities = "N3[26]"
+) |>
+  mutate(
+    value  = parse_ibge_value(value),
+    period = period_to_monthly(period)
+  ) |>
+  select(period, classification_11046, locality_name, value)
+```
+
+```{r}
+pmc_retail |>
+  ggplot(aes(period, value)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "PMC — Sales volume index (2022 = 100)",
+    subtitle = "Retail trade (Pernambuco)",
+    x = NULL, y = "Index (2022 = 100)"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## Next steps
+
+1. **Save the series** in a standardised format (e.g. `arrow::write_parquet()`
+   or a database) for reproducible dashboards.
+2. Build a **state GDP tracking dashboard** with normalisation (base 100),
+   smoothing (moving averages), and variation indicators (month-over-month,
+   year-over-year).
+3. Wrap each block (IPCA, PMS, PNAD, PIM-PF, PMC) into a dedicated function
+   to reduce repetition in production code.

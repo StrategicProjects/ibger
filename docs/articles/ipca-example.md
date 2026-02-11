@@ -1,0 +1,285 @@
+# Real-world example: IPCA inflation
+
+## Introduction
+
+This vignette walks through a realistic analysis using ibger:
+downloading IPCA (Índice Nacional de Preços ao Consumidor Amplo)
+inflation data and preparing it for visualization and reporting.
+
+IPCA is Brazil’s official consumer price index, calculated monthly by
+IBGE. The data is available through aggregate **7060**.
+
+## Step 1 — Explore the aggregate
+
+``` r
+
+library(ibger)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+meta <- ibge_metadata(7060)
+meta
+```
+
+Key information from the metadata:
+
+- **Periodicity**: monthly, from 202001 onwards
+- **Geographic levels**: N1 (Brazil), N6 (municipality), N7
+  (metropolitan area)
+- **Variables**: monthly change (63), year-to-date (69), 12-month
+  cumulative (2265), and monthly weight (66)
+- **Classification 315**: product groups — 365 categories organized in a
+  hierarchy from the general index down to individual items
+
+``` r
+
+# See what variables are available
+meta$variables
+
+# Peek at the classification categories
+tidyr::unnest(meta$classifications, categories) |>
+  head(20)
+```
+
+## Step 2 — Monthly IPCA for Brazil
+
+Let’s get the monthly variation for the last 24 months:
+
+``` r
+
+ipca_br <- ibge_variables(
+  aggregate  = 7060,
+  variable   = 63,
+  periods    = -24,
+  localities = "BR"
+)
+
+ipca_br
+```
+
+The `value` column is character because of the API’s special values (see
+[`?parse_ibge_value`](https://monitoramento.sepe.pe.gov.br/ibger/reference/parse_ibge_value.md)).
+Use
+[`parse_ibge_value()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/parse_ibge_value.md)
+to convert:
+
+``` r
+
+ipca_br <- ipca_br |>
+  mutate(
+    value = parse_ibge_value(value),
+    date  = as.Date(paste0(period, "01"), format = "%Y%m%d")
+  )
+```
+
+### Plot the monthly variation
+
+``` r
+
+ggplot(ipca_br, aes(date, value)) +
+  geom_col(fill = "#2e86c1", alpha = 0.8) +
+  geom_hline(yintercept = 0, linewidth = 0.3) +
+  labs(
+    title    = "IPCA — Monthly variation (%)",
+    subtitle = "Brazil, last 24 months",
+    x = NULL, y = "Variation (%)",
+    caption  = "Source: IBGE via ibger"
+  ) +
+  theme_minimal()
+```
+
+## Step 3 — Compare accumulation measures
+
+Get all three variation variables at once:
+
+``` r
+
+ipca_vars <- ibge_variables(
+  aggregate  = 7060,
+  variable   = c(63, 69, 2265),
+  periods    = -12,
+  localities = "BR"
+)
+
+ipca_vars <- ipca_vars |>
+  mutate(
+    value = parse_ibge_value(value),
+    date  = as.Date(paste0(period, "01"), format = "%Y%m%d")
+  )
+
+ggplot(ipca_vars, aes(date, value, colour = variable_name)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  labs(
+    title  = "IPCA — Three measures of variation",
+    x = NULL, y = "%", colour = NULL,
+    caption = "Source: IBGE via ibger"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Step 4 — Breakdown by product group
+
+Classification 315 organizes IPCA items hierarchically. The top-level
+groups (level 1 categories) are things like Food and beverages (7170),
+Housing (7445), Transportation (7486), etc.
+
+First, find the category IDs you need:
+
+``` r
+
+cats <- tidyr::unnest(meta$classifications, categories)
+
+# Level-1 groups (just below the general index)
+cats |> filter(category_level == "1")
+```
+
+Now query specific groups:
+
+``` r
+
+groups <- ibge_variables(
+  aggregate      = 7060,
+  variable       = 63,
+  periods        = -12,
+  localities     = "BR",
+  classification = list("315" = c(7170, 7445, 7486, 7558, 7625, 7660, 7712, 7766, 7786))
+)
+
+groups <- groups |>
+  mutate(
+    value = parse_ibge_value(value),
+    date  = as.Date(paste0(period, "01"), format = "%Y%m%d")
+  )
+
+ggplot(groups, aes(date, value, fill = classification_315)) +
+  geom_col(position = "dodge", alpha = 0.85) +
+  labs(
+    title = "IPCA by product group — Monthly variation",
+    x = NULL, y = "%", fill = NULL,
+    caption = "Source: IBGE via ibger"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.text = element_text(size = 7))
+```
+
+## Step 5 — Metropolitan area comparison
+
+Aggregate 7060 is available at level N7 (metropolitan areas). Compare
+inflation across major cities:
+
+``` r
+
+# Check available metropolitan areas
+metros <- ibge_localities(7060, level = "N7")
+metros
+```
+
+Pick a few and compare:
+
+``` r
+
+ipca_metros <- ibge_variables(
+  aggregate  = 7060,
+  variable   = 2265,
+  periods    = -12,
+  localities = list(N7 = c(3501, 3301, 2901, 4101, 1501))
+)
+
+ipca_metros <- ipca_metros |>
+  mutate(
+    value = parse_ibge_value(value),
+    date  = as.Date(paste0(period, "01"), format = "%Y%m%d")
+  )
+
+ggplot(ipca_metros, aes(date, value, colour = locality_name)) +
+  geom_line(linewidth = 0.8) +
+  labs(
+    title   = "IPCA — 12-month cumulative by metro area",
+    x = NULL, y = "%", colour = NULL,
+    caption = "Source: IBGE via ibger"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Step 6 — Building a complete dataset
+
+For a more complete analysis, combine multiple queries. For instance,
+download the general index for all metro areas and reshape:
+
+``` r
+
+all_metros <- ibge_variables(
+  aggregate      = 7060,
+  variable       = c(63, 69, 2265),
+  periods        = -12,
+  localities     = "N7",
+  classification = list("315" = 7169)
+)
+
+all_metros <- all_metros |>
+  mutate(value = parse_ibge_value(value)) |>
+  select(variable_name, locality_name, period, value) |>
+  pivot_wider(names_from = variable_name, values_from = value)
+
+all_metros
+```
+
+## Tips for large queries
+
+IPCA has 365 categories in classification 315. Querying all categories
+for all periods and all metro areas can easily exceed the 100,000-value
+limit. Strategies:
+
+1.  **Reduce periods**: use `-1` or `-3` instead of `-12`
+2.  **Reduce localities**: query one metro at a time
+3.  **Reduce categories**: pick only the groups you need
+4.  **Loop and bind**: query in chunks and combine with
+    [`dplyr::bind_rows()`](https://dplyr.tidyverse.org/reference/bind_rows.html)
+
+``` r
+
+# Example: query all categories for just 1 period, Brazil only
+full_breakdown <- ibge_variables(
+  aggregate      = 7060,
+  variable       = 63,
+  periods        = -1,
+  localities     = "BR",
+  classification = list("315" = "all")
+)
+
+nrow(full_breakdown)
+```
+
+## Handling special values
+
+The `value` column returned by
+[`ibge_variables()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_variables.md)
+is always character, because the IBGE API uses special codes for certain
+data conditions. Use
+[`parse_ibge_value()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/parse_ibge_value.md)
+to convert to numeric in one step:
+
+``` r
+
+ibge_variables(7060, localities = "BR") |>
+  mutate(value = parse_ibge_value(value))
+```
+
+The function handles all IBGE conventions:
+
+| Code  | Becomes | Meaning                               |
+|-------|---------|---------------------------------------|
+| `-`   | `0`     | Numeric zero (not from rounding)      |
+| `..`  | `NA`    | Not applicable                        |
+| `...` | `NA`    | Data not available                    |
+| `X`   | `NA`    | Suppressed to protect confidentiality |
+
+``` r
+
+parse_ibge_value(c("1.5", "10", "-", "..", "...", "X"))
+#> [1] 1.5  10.0  0.0   NA    NA    NA
+```
