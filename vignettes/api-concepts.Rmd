@@ -280,5 +280,4 @@ The ibger parameters map to URL path segments and query parameters:
 
 - [IBGE API documentation](https://servicodados.ibge.gov.br/api/docs/agregados?versao=3)
 - [SIDRA portal](https://sidra.ibge.gov.br/)
-- [SIDRA Query Builder](https://sidra.ibge.gov.br/pesquisa/) — useful for
-  exploring tables before writing R code
+- [IBGE Query Builder](https://servicodados.ibge.gov.br/api/docs/agregados?versao=3#api-bq) — useful for exploring tables before writing R code
