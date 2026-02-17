@@ -1,5 +1,5 @@
 Package: ibger
-Title: Access the IBGE (Brazilian Institute of Geography and Statistics) Aggregate Data 'API'
+Title: Access the 'IBGE' aggregate data 'API' from 'R'
 Version: 0.1.0
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
@@ -7,9 +7,9 @@ Authors@R: c(
     person("Hugo", "Vasconcelos", email = "hugo.vasconcelos@ufpe.br", role = "aut"),
     person("Carlos", "Amorin", email = "carlos.agaf@ufpe.br", role = "aut"),
     person("Diogo", "Bezerra", email = "diogo.bezerra@ufpe.br", role = "aut"))
-Description: 'Tidyverse'-friendly interface to the IBGE Aggregate Data 'API' 
+Description: 'Tidyverse'-friendly interface to the Brazilian Institute of Geography and Statistics ('IBGE') aggregate data 'API' 
     <https://servicodados.ibge.gov.br/api/docs/agregados?versao=3>. Query aggregates, variables, localities, periods, and metadata
-    from surveys and censuses conducted by IBGE (Brazilian Institute of Geography and Statistics).
+    from surveys and censuses conducted by 'IBGE'.
 License: MIT + file LICENSE
 URL: https://github.com/StrategicProjects/ibger
 BugReports: https://github.com/StrategicProjects/ibger/issues

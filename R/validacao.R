@@ -12,6 +12,7 @@ get_cached_metadata <- function(agregado) {
 #' Removes all cached metadata (aggregates and surveys), forcing fresh API
 #' calls on subsequent requests.
 #'
+#' @return No return value, called for side effects.
 #' @export
 ibge_clear_cache <- function() {
   rm(list = ls(envir = .ibger_cache), envir = .ibger_cache)

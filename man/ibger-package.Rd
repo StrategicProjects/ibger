@@ -4,9 +4,9 @@
 \name{ibger-package}
 \alias{ibger}
 \alias{ibger-package}
-\title{ibger: Access the IBGE (Brazilian Institute of Geography and Statistics) Aggregate Data 'API'}
+\title{ibger: Access the 'IBGE' aggregate data 'API' from 'R'}
 \description{
-'Tidyverse'-friendly interface to the IBGE Aggregate Data 'API' \url{https://servicodados.ibge.gov.br/api/docs/agregados?versao=3}. Query aggregates, variables, localities, periods, and metadata from surveys and censuses conducted by IBGE (Brazilian Institute of Geography and Statistics).
+'Tidyverse'-friendly interface to the Brazilian Institute of Geography and Statistics ('IBGE') aggregate data 'API' \url{https://servicodados.ibge.gov.br/api/docs/agregados?versao=3}. Query aggregates, variables, localities, periods, and metadata from surveys and censuses conducted by 'IBGE'.
 }
 \seealso{
 Useful links:
