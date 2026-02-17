@@ -1,5 +1,5 @@
 Package: ibger
-Title: Access the 'IBGE' aggregate data 'API' from 'R'
+Title: Access the 'IBGE' Aggregate Data API from 'R'
 Version: 0.1.0
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),

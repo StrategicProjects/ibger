@@ -4,6 +4,17 @@
 
 * This is a ressubmission.
 
+
+## Dear Prof. Ligges, 
+
+Thank you for the review. 
+
+The Title field has now been corrected to proper title case, and the unnecessary single quotes around API have been removed. 
+
+Best regards,
+André Leite
+
+
 ## Dear Konstanze,
 
 Thank you for the review. All three issues have been addressed:
