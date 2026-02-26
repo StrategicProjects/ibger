@@ -8,3 +8,7 @@ calls on subsequent requests.
 ``` r
 ibge_clear_cache()
 ```
+
+## Value
+
+No return value, called for side effects.

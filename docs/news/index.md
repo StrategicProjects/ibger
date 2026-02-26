@@ -2,6 +2,8 @@
 
 ## ibger 0.1.0
 
+CRAN release: 2026-02-20
+
 - Initial CRAN release.
 - Core functions:
   [`ibge_aggregates()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_aggregates.md),

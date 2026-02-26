@@ -1,5 +1,10 @@
 # ibger
 
+![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/ibger)  
+![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/ibger)  
+![License](https://img.shields.io/badge/license-MIT-darkviolet.svg) 
+![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)
+
 Tidyverse-friendly interface to the [IBGE Aggregate Data
 API](https://servicodados.ibge.gov.br/api/docs/agregados?versao=3)
 (version 3), which powers [SIDRA](https://sidra.ibge.gov.br/), the
@@ -225,39 +230,49 @@ differs:
 
 | Feature | ibger | sidrar | PNADcIBGE / SIPDIBGE |
 |----|----|----|----|
-| Data source | IBGE Aggregates API (SIDRA tables) | IBGE Aggregates API (SIDRA tables) | IBGE microdata (FTP/download) |
-| Output | Tibbles (tidy, long format) | data.frames | survey design objects (`survey`) |
-| Parameter format | Named R lists | Strings with SIDRA codes | File paths / year + quarter |
-| Validation | Pre-flight check against metadata | None (errors come from the API) | — |
-| Metadata browsing | [`ibge_metadata()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_metadata.md), [`ibge_periods()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_periods.md), [`ibge_localities()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_localities.md) | — | — |
-| Survey catalog | [`ibge_surveys()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_surveys.md), [`ibge_survey_metadata()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_survey_metadata.md) | — | — |
-| Special values | [`parse_ibge_value()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/parse_ibge_value.md) | Manual handling | — |
-| Caching | In-memory metadata cache | None | Local file cache |
+| Data source | IBGE Aggregates API (v3) | SIDRA API (`apisidra`) | IBGE microdata (FTP/download) |
+| API base URL | `servicodados.ibge.gov.br` | `apisidra.ibge.gov.br` | — |
+| Row limit per request | 100,000 | 20,000 | — |
+| Output | Tibbles (tidy, long format) | data.frames (wide by default) | survey design objects (`survey`) |
+| Parameter format | Named R lists | Positional + string codes | File paths / year + quarter |
+| Metadata discovery | Dedicated endpoints (`/metadados`, `/periodos`, `/localidades`) | HTML scraping of `desctabapi.aspx` | — |
+| Pre-flight validation | Checks metadata before querying | None (errors come from the API) | — |
+| Caching | In-memory metadata + aggregates cache | None | Local file cache |
+| HTTP stack | httr2 (automatic retry, structured errors) | httr v1 (no retry) | — |
 | Feedback | cli progress messages | None | None |
-| Retry on failure | Automatic (via httr2) | None | — |
 
 ### vs sidrar
 
 [sidrar](https://github.com/rpradosiqueira/sidrar/) is the closest
-alternative — it wraps the same IBGE Aggregates API. The key
-differences:
+alternative. Both packages access IBGE aggregate data, but they talk to
+**different APIs** hosted by IBGE:
 
-- **Parameter ergonomics**: sidrar requires a single string with raw API
-  codes (`"/t/1705/n3/all/v/284/p/last%206"`), while ibger uses natural
-  R objects (`ibge_variables(1705, variable = 284, localities = "N3")`).
+- **Different endpoints**: sidrar uses the legacy SIDRA API
+  (`apisidra.ibge.gov.br/values`), while ibger uses the IBGE Aggregates
+  API v3 (`servicodados.ibge.gov.br/api/v3/agregados`). IBGE’s own
+  documentation describes the Aggregates API as the standardized version
+  of the SIDRA API.
+- **Higher row limit**: the SIDRA API caps responses at 20,000 rows
+  (sidrar’s error message: *“more than 20k values”*); the Aggregates API
+  allows up to 100,000 values per request — a 5× increase.
+- **Structured metadata**: ibger queries dedicated JSON endpoints for
+  metadata (`/metadados`, `/periodos`, `/localidades/{nivel}`). sidrar
+  scrapes an HTML page (`desctabapi.aspx`) to discover classifications,
+  and `info_sidra()` opens metadata in the web browser rather than
+  returning it as data.
+- **Parameter ergonomics**: sidrar requires positional string codes
+  (`classific = "c315"`, `geo = "City"`,
+  `geo.filter = list("State" = 50)`), while ibger uses standard R
+  objects (`classification = list("315" = 7169)`,
+  `localities = list(N6 = 5002704)`).
 - **Pre-flight validation**: ibger checks your parameters (levels,
   periods, variables, classifications) against the aggregate metadata
   *before* hitting the API. Invalid requests fail fast with clear error
   messages showing the allowed values, instead of returning an opaque
   API error.
-- **Metadata exploration**: ibger exposes
-  [`ibge_metadata()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_metadata.md),
-  [`ibge_periods()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_periods.md),
-  and
-  [`ibge_localities()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_localities.md)
-  so you can discover what an aggregate offers without leaving R.
 - **Modern stack**: ibger uses httr2 (automatic retry, structured error
   handling), cli (progress messages), and returns tibbles by default.
+  sidrar uses httr v1 with no retry mechanism.
 
 ### vs PNADcIBGE and SIPDIBGE
 

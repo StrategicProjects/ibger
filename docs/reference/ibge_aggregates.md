@@ -1,7 +1,9 @@
 # List IBGE aggregates
 
 Retrieves the set of available aggregates (tables), grouped by survey.
-Each aggregate corresponds to a SIDRA table.
+Each aggregate corresponds to a SIDRA table. Results are cached in
+memory per unique combination of parameters, so repeated calls with the
+same filters are instant.
 
 ## Usage
 
@@ -24,7 +26,9 @@ ibge_aggregates(
 
 - subject:
 
-  Numeric subject code (e.g. `70` for animal slaughter).
+  Numeric subject code (e.g. `70` for animal slaughter). Use
+  [`ibge_subjects()`](https://monitoramento.sepe.pe.gov.br/ibger/reference/ibge_subjects.md)
+  to look up codes.
 
 - classification:
 

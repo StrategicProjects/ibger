@@ -1,10 +1,10 @@
-# ibger: Access the IBGE (Brazilian Institute of Geography and Statistics) Aggregate Data 'API'
+# ibger: Access the 'IBGE' Aggregate Data API from 'R'
 
-'Tidyverse'-friendly interface to the IBGE Aggregate Data 'API'
+'Tidyverse'-friendly interface to the Brazilian Institute of Geography
+and Statistics ('IBGE') aggregate data 'API'
 <https://servicodados.ibge.gov.br/api/docs/agregados?versao=3>. Query
 aggregates, variables, localities, periods, and metadata from surveys
-and censuses conducted by IBGE (Brazilian Institute of Geography and
-Statistics).
+and censuses conducted by 'IBGE'.
 
 ## See also
 

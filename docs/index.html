@@ -70,7 +70,7 @@
 </h1>
 </div>
 <!-- badges: start -->
-<!-- badges: end -->
+<p><img src="https://www.r-pkg.org/badges/version/ibger" alt="CRAN_Status_Badge">   <img src="https://cranlogs.r-pkg.org/badges/grand-total/ibger" alt="CRAN Downloads">   <img src="https://img.shields.io/badge/license-MIT-darkviolet.svg" alt="License">  <img src="https://img.shields.io/badge/devel%20version-0.1.0-blue.svg"><!-- badges: end --></p>
 <p>Tidyverse-friendly interface to the <a href="https://servicodados.ibge.gov.br/api/docs/agregados?versao=3" class="external-link">IBGE Aggregate Data API</a> (version 3), which powers <a href="https://sidra.ibge.gov.br/" class="external-link">SIDRA</a>, the automatic data retrieval system for all surveys and censuses conducted by IBGE (Brazilian Institute of Geography and Statistics).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -376,55 +376,58 @@
 <tbody>
 <tr>
 <td>Data source</td>
-<td>IBGE Aggregates API (SIDRA tables)</td>
-<td>IBGE Aggregates API (SIDRA tables)</td>
+<td>IBGE Aggregates API (v3)</td>
+<td>SIDRA API (<code>apisidra</code>)</td>
 <td>IBGE microdata (FTP/download)</td>
+</tr>
+<tr>
+<td>API base URL</td>
+<td><code>servicodados.ibge.gov.br</code></td>
+<td><code>apisidra.ibge.gov.br</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Row limit per request</td>
+<td>100,000</td>
+<td>20,000</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Output</td>
 <td>Tibbles (tidy, long format)</td>
-<td>data.frames</td>
+<td>data.frames (wide by default)</td>
 <td>survey design objects (<code>survey</code>)</td>
 </tr>
 <tr>
 <td>Parameter format</td>
 <td>Named R lists</td>
-<td>Strings with SIDRA codes</td>
+<td>Positional + string codes</td>
 <td>File paths / year + quarter</td>
 </tr>
 <tr>
-<td>Validation</td>
-<td>Pre-flight check against metadata</td>
+<td>Metadata discovery</td>
+<td>Dedicated endpoints (<code>/metadados</code>, <code>/periodos</code>, <code>/localidades</code>)</td>
+<td>HTML scraping of <code>desctabapi.aspx</code>
+</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Pre-flight validation</td>
+<td>Checks metadata before querying</td>
 <td>None (errors come from the API)</td>
 <td>—</td>
 </tr>
 <tr>
-<td>Metadata browsing</td>
-<td>
-<code><a href="reference/ibge_metadata.html">ibge_metadata()</a></code>, <code><a href="reference/ibge_periods.html">ibge_periods()</a></code>, <code><a href="reference/ibge_localities.html">ibge_localities()</a></code>
-</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Survey catalog</td>
-<td>
-<code><a href="reference/ibge_surveys.html">ibge_surveys()</a></code>, <code><a href="reference/ibge_survey_metadata.html">ibge_survey_metadata()</a></code>
-</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Special values</td>
-<td><code><a href="reference/parse_ibge_value.html">parse_ibge_value()</a></code></td>
-<td>Manual handling</td>
-<td>—</td>
-</tr>
-<tr>
 <td>Caching</td>
-<td>In-memory metadata cache</td>
+<td>In-memory metadata + aggregates cache</td>
 <td>None</td>
 <td>Local file cache</td>
+</tr>
+<tr>
+<td>HTTP stack</td>
+<td>httr2 (automatic retry, structured errors)</td>
+<td>httr v1 (no retry)</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Feedback</td>
@@ -432,27 +435,25 @@
 <td>None</td>
 <td>None</td>
 </tr>
-<tr>
-<td>Retry on failure</td>
-<td>Automatic (via httr2)</td>
-<td>None</td>
-<td>—</td>
-</tr>
 </tbody>
 </table>
 <div class="section level3">
 <h3 id="vs-sidrar">vs sidrar<a class="anchor" aria-label="anchor" href="#vs-sidrar"></a>
 </h3>
-<p><a href="https://github.com/rpradosiqueira/sidrar/" class="external-link">sidrar</a> is the closest alternative — it wraps the same IBGE Aggregates API. The key differences:</p>
+<p><a href="https://github.com/rpradosiqueira/sidrar/" class="external-link">sidrar</a> is the closest alternative. Both packages access IBGE aggregate data, but they talk to <strong>different APIs</strong> hosted by IBGE:</p>
 <ul>
 <li>
-<strong>Parameter ergonomics</strong>: sidrar requires a single string with raw API codes (<code>"/t/1705/n3/all/v/284/p/last%206"</code>), while ibger uses natural R objects (<code>ibge_variables(1705, variable = 284, localities = "N3")</code>).</li>
+<strong>Different endpoints</strong>: sidrar uses the legacy SIDRA API (<code>apisidra.ibge.gov.br/values</code>), while ibger uses the IBGE Aggregates API v3 (<code>servicodados.ibge.gov.br/api/v3/agregados</code>). IBGE’s own documentation describes the Aggregates API as the standardized version of the SIDRA API.</li>
+<li>
+<strong>Higher row limit</strong>: the SIDRA API caps responses at 20,000 rows (sidrar’s error message: <em>“more than 20k values”</em>); the Aggregates API allows up to 100,000 values per request — a 5× increase.</li>
+<li>
+<strong>Structured metadata</strong>: ibger queries dedicated JSON endpoints for metadata (<code>/metadados</code>, <code>/periodos</code>, <code>/localidades/{nivel}</code>). sidrar scrapes an HTML page (<code>desctabapi.aspx</code>) to discover classifications, and <code>info_sidra()</code> opens metadata in the web browser rather than returning it as data.</li>
+<li>
+<strong>Parameter ergonomics</strong>: sidrar requires positional string codes (<code>classific = "c315"</code>, <code>geo = "City"</code>, <code>geo.filter = list("State" = 50)</code>), while ibger uses standard R objects (<code>classification = list("315" = 7169)</code>, <code>localities = list(N6 = 5002704)</code>).</li>
 <li>
 <strong>Pre-flight validation</strong>: ibger checks your parameters (levels, periods, variables, classifications) against the aggregate metadata <em>before</em> hitting the API. Invalid requests fail fast with clear error messages showing the allowed values, instead of returning an opaque API error.</li>
 <li>
-<strong>Metadata exploration</strong>: ibger exposes <code><a href="reference/ibge_metadata.html">ibge_metadata()</a></code>, <code><a href="reference/ibge_periods.html">ibge_periods()</a></code>, and <code><a href="reference/ibge_localities.html">ibge_localities()</a></code> so you can discover what an aggregate offers without leaving R.</li>
-<li>
-<strong>Modern stack</strong>: ibger uses httr2 (automatic retry, structured error handling), cli (progress messages), and returns tibbles by default.</li>
+<strong>Modern stack</strong>: ibger uses httr2 (automatic retry, structured error handling), cli (progress messages), and returns tibbles by default. sidrar uses httr v1 with no retry mechanism.</li>
 </ul>
 </div>
 <div class="section level3">
@@ -474,6 +475,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=ibger" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/StrategicProjects/ibger/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/StrategicProjects/ibger/issues" class="external-link">Report a bug</a></li>
 </ul>
