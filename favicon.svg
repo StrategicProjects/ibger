@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="231"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="231"><svg viewBox="0 0 200 231" width="200" height="231" version="1.1" id="svg25" sodipodi:docname="logo.svg" inkscape:version="1.4 (e7c3feb1, 2024-10-09)" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview id="namedview25" pagecolor="#ffffff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" inkscape:zoom="3.7748918" inkscape:cx="104.37385" inkscape:cy="94.307339" inkscape:window-width="1664" inkscape:window-height="1021" inkscape:window-x="55" inkscape:window-y="31" inkscape:window-maximized="0" inkscape:current-layer="svg25"></sodipodi:namedview>
+  <defs id="defs10">
+    <linearGradient id="bg" x1="4.6437536" y1="0.29168235" x2="201.7453" y2="197.39322" gradientTransform="scale(0.96904366,1.0319452)" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#0d3b66;stop-opacity:1" id="stop1"></stop>
+      <stop offset="100%" style="stop-color:#1e6fa0;stop-opacity:1" id="stop2"></stop>
+    </linearGradient>
+    <linearGradient id="g1" x1="58.031339" y1="108.56203" x2="58.031339" y2="78.164661" gradientTransform="scale(0.72374686,1.3816986)" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#27ae60" id="stop3"></stop>
+      <stop offset="100%" style="stop-color:#58d68d" id="stop4"></stop>
+    </linearGradient>
+    <linearGradient id="g2" x1="130.2529" y1="82.91562" x2="130.2529" y2="43.116122" gradientTransform="scale(0.5527708,1.8090681)" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#f39c12" id="stop5"></stop>
+      <stop offset="100%" style="stop-color:#f7dc6f" id="stop6"></stop>
+    </linearGradient>
+    <linearGradient id="g3" x1="165.6162" y1="92.382264" x2="165.6162" y2="56.661122" gradientTransform="scale(0.61588176,1.6236883)" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#2e86c1" id="stop7"></stop>
+      <stop offset="100%" style="stop-color:#85c1e9" id="stop8"></stop>
+    </linearGradient>
+    <linearGradient id="g4" x1="254.84113" y1="77.695466" x2="254.84113" y2="35.221944" gradientTransform="scale(0.51796977,1.9306146)" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#cb4335" id="stop9"></stop>
+      <stop offset="100%" style="stop-color:#ec7063" id="stop10"></stop>
+    </linearGradient>
+  </defs>
+  <!-- Hex badge -->
+  <path d="m 100,2 94,50 V 152 L 100,202 6,152 V 52 Z" fill="url(#bg)" stroke="#082845" stroke-width="3" id="path10" style="fill:url(#bg)"></path>
+  <!-- Subtitle -->
+  <!-- Grid lines -->
+  <!-- Bar chart - 4 bars -->
+  <!-- Trend line with shadow -->
+  <!-- Data points -->
+  <g id="g25" transform="matrix(0.82809145,0,0,0.82809145,17.190855,5.0305487)">
+    <line x1="38" y1="68" x2="162" y2="68" stroke="#ffffff" stroke-opacity="0.08" stroke-width="0.5" id="line10"></line>
+    <line x1="38" y1="88" x2="162" y2="88" stroke="#ffffff" stroke-opacity="0.08" stroke-width="0.5" id="line11"></line>
+    <line x1="38" y1="108" x2="162" y2="108" stroke="#ffffff" stroke-opacity="0.08" stroke-width="0.5" id="line12"></line>
+    <line x1="38" y1="128" x2="162" y2="128" stroke="#ffffff" stroke-opacity="0.08" stroke-width="0.5" id="line13"></line>
+    <line x1="38" y1="148" x2="162" y2="148" stroke="#ffffff" stroke-opacity="0.08" stroke-width="0.5" id="line14"></line>
+    <rect x="42" y="108" width="22" height="42" rx="2.5" fill="url(#g1)" opacity="0.92" id="rect14" style="fill:url(#g1)"></rect>
+    <rect x="72" y="78" width="22" height="72" rx="2.5" fill="url(#g2)" opacity="0.92" id="rect15" style="fill:url(#g2)"></rect>
+    <rect x="102" y="92" width="22" height="58" rx="2.5" fill="url(#g3)" opacity="0.92" id="rect16" style="fill:url(#g3)"></rect>
+    <rect x="132" y="68" width="22" height="82" rx="2.5" fill="url(#g4)" opacity="0.92" id="rect17" style="fill:url(#g4)"></rect>
+    <polyline points="53,102 83,70 113,84 143,60" fill="none" stroke="#000000" stroke-opacity="0.15" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,2)" id="polyline17"></polyline>
+    <polyline points="53,102 83,70 113,84 143,60" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" id="polyline18"></polyline>
+    <circle cx="53" cy="102" r="4" fill="#ffffff" opacity="0.95" id="circle18"></circle>
+    <circle cx="53" cy="102" r="2" fill="#0d3b66" id="circle19"></circle>
+    <circle cx="83" cy="70" r="4" fill="#ffffff" opacity="0.95" id="circle20"></circle>
+    <circle cx="83" cy="70" r="2" fill="#0d3b66" id="circle21"></circle>
+    <circle cx="113" cy="84" r="4" fill="#ffffff" opacity="0.95" id="circle22"></circle>
+    <circle cx="113" cy="84" r="2" fill="#0d3b66" id="circle23"></circle>
+    <circle cx="143" cy="60" r="4" fill="#ffffff" opacity="0.95" id="circle24"></circle>
+    <circle cx="143" cy="60" r="2" fill="#0d3b66" id="circle25"></circle>
+  </g>
+  <!-- Package name -->
+  <text x="101.09603" y="166.86241" text-anchor="middle" font-family="'Fira Code', 'Courier New', monospace" font-size="29.6844px" font-weight="700" fill="#ffffff" letter-spacing="3" id="text25" style="fill:#ffffff;stroke-width:0.781168"><tspan style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'.Savoye LET CC.';-inkscape-font-specification:'.Savoye LET CC.';fill:#ffffff;stroke-width:0.781168" id="tspan25">ibger</tspan></text>
+</svg></svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
