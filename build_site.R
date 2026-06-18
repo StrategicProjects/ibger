@@ -11,8 +11,10 @@
 # Build the site
 pkgdown::build_site()
 
-# The site will be generated in the docs/ folder.
+# The site will be generated in the docs/ folder (gitignored).
 # Open docs/index.html in your browser to preview.
 
-# To deploy to GitHub Pages, push the docs/ folder or configure
-# GitHub Actions. See: https://pkgdown.r-lib.org/articles/pkgdown.html
+# Deployment is automated: the .github/workflows/pkgdown.yaml GitHub Action
+# rebuilds the site on every push to main and publishes it to the gh-pages
+# branch, which GitHub Pages serves at https://strategicprojects.github.io/ibger/.
+# You normally don't need to run this script except for a local preview.

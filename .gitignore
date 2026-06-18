@@ -1,4 +1,10 @@
 .DS_Store
+
+# Claude Code: local guidance and memory (not for the repo)
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+
 # History files
 .Rhistory
 .Rapp.history
