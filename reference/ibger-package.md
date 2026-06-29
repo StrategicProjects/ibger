@@ -20,10 +20,10 @@ Useful links:
 
 Authors:
 
-- Marcos Wasilew <marcos.wasilew@gmail.com>
+- Marcos Wasiliew <marcos.wasilew@gmail.com>
 
 - Hugo Vasconcelos <hugo.vasconcelos@ufpe.br>
 
-- Carlos Amorin <carlos.agaf@ufpe.br>
+- Carlos Amorim <carlos.agaf@ufpe.br>
 
 - Diogo Bezerra <diogo.bezerra@ufpe.br>
