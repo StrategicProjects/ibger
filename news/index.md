@@ -1,5 +1,16 @@
 # Changelog
 
+## ibger (development version)
+
+- Expanded the test suite to cover all exported functions (~85%
+  coverage): pure helpers and parsers are tested directly, and API
+  interactions are tested against recorded fixtures with `httptest2` (no
+  network needed).
+- Added continuous integration: `R CMD check` on Linux/macOS/Windows and
+  test coverage reporting via GitHub Actions.
+- Added `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` and `codemeta.json` in
+  preparation for rOpenSci submission.
+
 ## ibger 0.2.0
 
 - [`ibge_variables()`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md)
