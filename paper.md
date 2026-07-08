@@ -10,7 +10,7 @@ tags:
   - API client
 authors:
   - name: André Leite
-    orcid: 0000-0000-0000-0000
+    orcid: 0000-0002-4718-9766
     corresponding: true
     affiliation: 1
   - name: Marcos Wasiliew
