@@ -17,15 +17,15 @@ authors:
     affiliation: 1
   - name: Hugo Vasconcelos
     orcid: 0000-0001-6249-0920
-    affiliation: "1, 2"
+    affiliation: 2
   - name: Carlos Amorim
     orcid: 0000-0001-6315-8305
     affiliation: "1, 2"
   - name: Diogo Bezerra
     orcid: 0000-0002-1216-8674
-    affiliation: "1, 2"
+    affiliation: 2
 affiliations:
-  - name: Governo de Pernambuco, Recife, Brazil
+  - name: Secretaria de Projetos Estratégicos, Governo de Pernambuco, Recife, Brazil
     index: 1
   - name: Universidade Federal de Pernambuco, Recife, Brazil
     index: 2
