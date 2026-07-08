@@ -12,18 +12,23 @@ authors:
   - name: André Leite
     orcid: 0000-0002-4718-9766
     corresponding: true
-    affiliation: 1
+    affiliation: "1, 2"
   - name: Marcos Wasiliew
     affiliation: 1
   - name: Hugo Vasconcelos
-    affiliation: 1
+    orcid: 0000-0001-6249-0920
+    affiliation: "1, 2"
   - name: Carlos Amorim
-    affiliation: 1
+    orcid: 0000-0001-6315-8305
+    affiliation: "1, 2"
   - name: Diogo Bezerra
-    affiliation: 1
+    orcid: 0000-0002-1216-8674
+    affiliation: "1, 2"
 affiliations:
-  - name: Universidade Federal de Pernambuco, Recife, Brazil
+  - name: Governo de Pernambuco, Recife, Brazil
     index: 1
+  - name: Universidade Federal de Pernambuco, Recife, Brazil
+    index: 2
 date: 8 July 2026
 bibliography: paper.bib
 ---
@@ -89,9 +94,13 @@ municipalities in a single call).
 
 The package is aimed at researchers, statistical agencies, journalists
 and analysts who need reliable, reproducible pipelines over Brazilian
-official statistics. It is available on CRAN, documented with four
-vignettes and a pkgdown site, and tested against recorded API fixtures
-so its behaviour is verified offline.
+official statistics. It grew out of the production needs of
+Pernambuco's Strategic Monitoring Data Science Team, which builds
+R-based data solutions for monitoring state public policies
+[@medeiros2025], and IBGE aggregate series are a recurring input to
+that work. `ibger` is available on CRAN, documented with four vignettes
+and a pkgdown site, and tested against recorded API fixtures so its
+behaviour is verified offline.
 
 # Acknowledgements
 

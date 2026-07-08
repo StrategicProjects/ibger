@@ -26,7 +26,8 @@
       "@type": "Person",
       "givenName": "Andre",
       "familyName": "Leite",
-      "email": "leite@castlab.org"
+      "email": "leite@castlab.org",
+      "@id": "https://orcid.org/0000-0002-4718-9766"
     },
     {
       "@type": "Person",
@@ -38,19 +39,22 @@
       "@type": "Person",
       "givenName": "Hugo",
       "familyName": "Vasconcelos",
-      "email": "hugo.vasconcelos@ufpe.br"
+      "email": "hugo.vasconcelos@ufpe.br",
+      "@id": "https://orcid.org/0000-0001-6249-0920"
     },
     {
       "@type": "Person",
       "givenName": "Carlos",
       "familyName": "Amorim",
-      "email": "carlos.agaf@ufpe.br"
+      "email": "carlos.agaf@ufpe.br",
+      "@id": "https://orcid.org/0000-0001-6315-8305"
     },
     {
       "@type": "Person",
       "givenName": "Diogo",
       "familyName": "Bezerra",
-      "email": "diogo.bezerra@ufpe.br"
+      "email": "diogo.bezerra@ufpe.br",
+      "@id": "https://orcid.org/0000-0002-1216-8674"
     }
   ],
   "maintainer": [
@@ -58,7 +62,8 @@
       "@type": "Person",
       "givenName": "Andre",
       "familyName": "Leite",
-      "email": "leite@castlab.org"
+      "email": "leite@castlab.org",
+      "@id": "https://orcid.org/0000-0002-4718-9766"
     }
   ],
   "softwareSuggestions": [
@@ -317,7 +322,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "485.19KB",
+  "fileSize": "485.68KB",
   "releaseNotes": "https://github.com/StrategicProjects/ibger/blob/main/NEWS.md",
   "readme": "https://github.com/StrategicProjects/ibger/blob/main/README.md",
   "contIntegration": ["https://github.com/StrategicProjects/ibger/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/StrategicProjects/ibger"],
