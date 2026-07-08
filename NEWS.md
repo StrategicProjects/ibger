@@ -1,3 +1,16 @@
+# ibger 0.2.0
+
+* `ibge_variables()` gains a `chunk` argument (default `TRUE`): queries whose
+  estimated result exceeds the API's value limit are now transparently split
+  into multiple smaller requests (by periods, then by localities) and
+  combined into a single tibble, instead of failing with HTTP 500
+  (#1, @danielvartan). Use `chunk = FALSE` to disable, or a positive number
+  for a custom per-request limit. The documented API limit is 100,000 values,
+  but empirically requests fail above ~50,000, so that is the default.
+* Period and locality id lists fetched for chunking are cached per session
+  (cleared by `ibge_clear_cache()`).
+* Initial test suite (testthat) covering the chunking logic.
+
 # ibger 0.1.0
 
 * Initial CRAN release.

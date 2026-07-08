@@ -9,7 +9,7 @@ ibge_explorer(launch.browser = TRUE)
 \arguments{
 \item{launch.browser}{Logical or function. If \code{TRUE}, opens the app in
 the default browser. If \code{FALSE}, opens in the RStudio Viewer pane
-(default). You can also pass a function such as \code{\link[shiny:viewer]{shiny::paneViewer()}}.}
+(default). You can also pass a function such as \code{\link[shiny:paneViewer]{shiny::paneViewer()}}.}
 }
 \value{
 This function is called for its side effect (launching the app).

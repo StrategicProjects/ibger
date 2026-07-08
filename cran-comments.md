@@ -1,45 +1,20 @@
+## Submission: ibger 0.2.0
+
+This is a minor release. Main changes (see NEWS.md):
+
+* `ibge_variables()` gains a `chunk` argument (default `TRUE`): queries whose
+  estimated result exceeds the IBGE API per-request value limit are now
+  transparently split into multiple smaller requests and combined into a
+  single tibble, instead of failing with an HTTP 500 error
+  (https://github.com/StrategicProjects/ibger/issues/1).
+* Added an initial testthat suite. Tests do not require network access; all
+  code that reaches the IBGE API is only exercised in examples wrapped in
+  \dontrun{}.
+
 ## R CMD check results
 
-0 errors | 0 warnings | 0 note
+0 errors | 0 warnings | 0 notes
 
-* This is a ressubmission.
+## Test environments
 
-
-## Dear Prof. Ligges, 
-
-Thank you for the review. 
-
-The Title field has now been corrected to proper title case, and the unnecessary single quotes around API have been removed. 
-
-Best regards,
-André Leite
-
-
-## Dear Konstanze,
-
-Thank you for the review. All three issues have been addressed:
-
-1. Software names in single quotes: 'IBGE' is now quoted in both Title and Description.
-
-2. Title length: shortened to 47 characters ("Access the 'IBGE' Aggregate Data 'API' from R").
-
-3. Missing \value tag: added to ibge_clear_cache.Rd ("No return value, called for side effects.").
-
-The corrected version has been resubmitted.
-
-Best regards,
-Andre Leite
-
-
-## Uwe Ligges
-We see: Found the following (possibly) invalid URLs:
-     URL: https://sidra.ibge.gov.br/pesquisa/
-       From: inst/doc/api-concepts.html
-       Status: 404
-       Message: Not Found
-
-- This URL has been corrected to the proper and currently valid SIDRA address. 
-
-Thanks!
-
-
+* local: macOS (aarch64-apple-darwin), R 4.6.0

@@ -29,6 +29,17 @@
 #' @param view Display mode: `NULL` (default), `"OLAP"` or `"flat"`.
 #' @param validate Logical. If `TRUE` (default), validates parameters against
 #'   aggregate metadata before querying. Use `FALSE` to skip.
+#' @param chunk Controls automatic splitting of large queries. The IBGE API
+#'   rejects requests whose result is too large with an HTTP 500 error (the
+#'   documented limit is 100,000 values, but in practice requests fail above
+#'   about 50,000). Can be:
+#'   - `TRUE` (default): estimates the result size (variables x periods x
+#'     localities x categories) and, when it exceeds 50,000 values,
+#'     transparently splits the query into multiple smaller requests (by
+#'     periods, then by localities) and combines the results.
+#'   - `FALSE`: always performs a single request.
+#'   - Positive number: same as `TRUE`, but with a custom per-request value
+#'     limit.
 #'
 #' @return A [tibble][tibble::tibble] in tidy (long) format with columns:
 #'   `variable_id`, `variable_name`, `variable_unit`,
@@ -43,6 +54,10 @@
 #'
 #' # Specific variables for states
 #' ibge_variables(1705, variable = c(284, 285), localities = "N3")
+#'
+#' # Large query (all municipalities): split automatically into
+#' # multiple requests to respect the API's 100,000 value limit
+#' ibge_variables(1612, localities = "N6")
 #'
 #' # Specific municipalities with classification
 #' ibge_variables(
@@ -62,7 +77,10 @@ ibge_variables <- function(aggregate,
                            localities = "BR",
                            classification = NULL,
                            view = NULL,
-                           validate = TRUE) {
+                           validate = TRUE,
+                           chunk = TRUE) {
+
+  meta <- NULL
 
   if (validate) {
     meta <- get_cached_metadata(aggregate)
@@ -80,19 +98,56 @@ ibge_variables <- function(aggregate,
   localities_str <- format_localities(localities)
   classification_str <- format_classification(classification)
 
-  query <- list(
-    localidades   = localities_str,
-    classificacao = classification_str,
-    view          = view
-  )
+  chunk_limit <- resolve_chunk_limit(chunk)
 
-  data <- ibge_request(
-    aggregate, "periodos", periods_str, "variaveis", variable_str,
-    query = query,
-    .label = glue::glue("variables for aggregate {aggregate}")
-  )
+  plan <- NULL
+  if (!is.null(chunk_limit)) {
+    plan <- build_chunk_plan(
+      aggregate      = aggregate,
+      meta           = meta,
+      variable       = variable,
+      periods        = periods,
+      localities     = localities,
+      classification = classification,
+      limit          = chunk_limit
+    )
+  }
 
-  result <- parse_variables(data, view = view)
+  if (is.null(plan)) {
+    query <- list(
+      localidades   = localities_str,
+      classificacao = classification_str,
+      view          = view
+    )
+
+    data <- ibge_request(
+      aggregate, "periodos", periods_str, "variaveis", variable_str,
+      query = query,
+      .label = glue::glue("variables for aggregate {aggregate}")
+    )
+
+    result <- parse_variables(data, view = view)
+  } else {
+    n_chunks <- length(plan)
+    cli::cli_alert_info(
+      "Estimated result exceeds the API limit ({chunk_limit} values); splitting into {n_chunks} request{?s}."
+    )
+
+    pieces <- purrr::imap(plan, function(ch, i) {
+      data <- ibge_request(
+        aggregate, "periodos", ch$periods_str, "variaveis", variable_str,
+        query = list(
+          localidades   = ch$localities_str,
+          classificacao = classification_str,
+          view          = view
+        ),
+        .label = glue::glue("chunk {i}/{n_chunks} for aggregate {aggregate}")
+      )
+      parse_variables(data, view = view)
+    })
+
+    result <- dplyr::bind_rows(pieces)
+  }
 
   n <- nrow(result)
   cli::cli_alert_success("{n} record{?s} retrieved.")

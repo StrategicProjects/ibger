@@ -6,12 +6,15 @@
 \alias{ibger-package}
 \title{ibger: Access the 'IBGE' Aggregate Data API from 'R'}
 \description{
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
 'Tidyverse'-friendly interface to the Brazilian Institute of Geography and Statistics ('IBGE') aggregate data 'API' \url{https://servicodados.ibge.gov.br/api/docs/agregados?versao=3}. Query aggregates, variables, localities, periods, and metadata from surveys and censuses conducted by 'IBGE'.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/StrategicProjects/ibger}
+  \item \url{https://strategicprojects.github.io/ibger/}
   \item Report bugs at \url{https://github.com/StrategicProjects/ibger/issues}
 }
 
@@ -21,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Andre Leite \email{leite@castlab.org}
   \item Marcos Wasiliew \email{marcos.wasilew@gmail.com}
   \item Hugo Vasconcelos \email{hugo.vasconcelos@ufpe.br}
   \item Carlos Amorim \email{carlos.agaf@ufpe.br}
