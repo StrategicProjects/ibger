@@ -13,7 +13,8 @@ ibge_variables(
   localities = "BR",
   classification = NULL,
   view = NULL,
-  validate = TRUE
+  validate = TRUE,
+  chunk = TRUE
 )
 ```
 
@@ -70,6 +71,23 @@ ibge_variables(
   Logical. If `TRUE` (default), validates parameters against aggregate
   metadata before querying. Use `FALSE` to skip.
 
+- chunk:
+
+  Controls automatic splitting of large queries. The IBGE API rejects
+  requests whose result is too large with an HTTP 500 error (the
+  documented limit is 100,000 values, but in practice requests fail
+  above about 50,000). Can be:
+
+  - `TRUE` (default): estimates the result size (variables x periods x
+    localities x categories) and, when it exceeds 50,000 values,
+    transparently splits the query into multiple smaller requests (by
+    periods, then by localities) and combines the results.
+
+  - `FALSE`: always performs a single request.
+
+  - Positive number: same as `TRUE`, but with a custom per-request value
+    limit.
+
 ## Value
 
 A [tibble](https://tibble.tidyverse.org/reference/tibble.html) in tidy
@@ -92,6 +110,10 @@ ibge_variables(7060, localities = "BR")
 
 # Specific variables for states
 ibge_variables(1705, variable = c(284, 285), localities = "N3")
+
+# Large query (all municipalities): split automatically into
+# multiple requests to respect the API's 100,000 value limit
+ibge_variables(1612, localities = "N6")
 
 # Specific municipalities with classification
 ibge_variables(

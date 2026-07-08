@@ -12,6 +12,8 @@ Useful links:
 
 - <https://github.com/StrategicProjects/ibger>
 
+- <https://strategicprojects.github.io/ibger/>
+
 - Report bugs at <https://github.com/StrategicProjects/ibger/issues>
 
 ## Author
@@ -19,6 +21,8 @@ Useful links:
 **Maintainer**: Andre Leite <leite@castlab.org>
 
 Authors:
+
+- Andre Leite <leite@castlab.org>
 
 - Marcos Wasiliew <marcos.wasilew@gmail.com>
 

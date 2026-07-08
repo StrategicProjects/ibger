@@ -9,7 +9,7 @@ aggregate for the specified localities, periods and classifications."><meta prop
 
     <a class="navbar-brand me-2" href="../index.html">ibger</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,8 @@ aggregate for the specified localities, periods and classifications.</p>
 <span>  localities <span class="op">=</span> <span class="st">"BR"</span>,</span>
 <span>  classification <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  view <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  validate <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  validate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  chunk <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -106,6 +107,20 @@ E.g. <code>list("226" = c(4844, 96608), "218" = 4780)</code></p></dd>
 <dd><p>Logical. If <code>TRUE</code> (default), validates parameters against
 aggregate metadata before querying. Use <code>FALSE</code> to skip.</p></dd>
 
+
+<dt id="arg-chunk">chunk<a class="anchor" aria-label="anchor" href="#arg-chunk"></a></dt>
+<dd><p>Controls automatic splitting of large queries. The IBGE API
+rejects requests whose result is too large with an HTTP 500 error (the
+documented limit is 100,000 values, but in practice requests fail above
+about 50,000). Can be:</p><ul><li><p><code>TRUE</code> (default): estimates the result size (variables x periods x
+localities x categories) and, when it exceeds 50,000 values,
+transparently splits the query into multiple smaller requests (by
+periods, then by localities) and combines the results.</p></li>
+<li><p><code>FALSE</code>: always performs a single request.</p></li>
+<li><p>Positive number: same as <code>TRUE</code>, but with a custom per-request value
+limit.</p></li>
+</ul></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -131,6 +146,10 @@ showing the allowed values.</p>
 <span class="r-in"><span><span class="co"># Specific variables for states</span></span></span>
 <span class="r-in"><span><span class="fu">ibge_variables</span><span class="op">(</span><span class="fl">1705</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">284</span>, <span class="fl">285</span><span class="op">)</span>, localities <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Large query (all municipalities): split automatically into</span></span></span>
+<span class="r-in"><span><span class="co"># multiple requests to respect the API's 100,000 value limit</span></span></span>
+<span class="r-in"><span><span class="fu">ibge_variables</span><span class="op">(</span><span class="fl">1612</span>, localities <span class="op">=</span> <span class="st">"N6"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Specific municipalities with classification</span></span></span>
 <span class="r-in"><span><span class="fu">ibge_variables</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  aggregate      <span class="op">=</span> <span class="fl">1712</span>,</span></span>
@@ -153,7 +172,7 @@ showing the allowed values.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
