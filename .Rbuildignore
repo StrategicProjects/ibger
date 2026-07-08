@@ -19,3 +19,6 @@
 ^CONTRIBUTING\.md$
 ^codemeta\.json$
 ^\.covrignore$
+^paper\.md$
+^paper\.bib$
+^paper\.pdf$
