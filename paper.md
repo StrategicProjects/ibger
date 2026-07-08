@@ -65,9 +65,13 @@ in a single call).
 
 The package is aimed at researchers, statistical agencies, journalists
 and analysts who need reliable, reproducible pipelines over Brazilian
-official statistics. It is available on CRAN, documented with four
-vignettes and a pkgdown site, and tested against recorded API fixtures
-so its behaviour is verified offline.
+official statistics. It grew out of the production needs of Pernambuco’s
+Strategic Monitoring Data Science Team, which builds R-based data
+solutions for monitoring state public policies \[@medeiros2025\], and
+IBGE aggregate series are a recurring input to that work. `ibger` is
+available on CRAN, documented with four vignettes and a pkgdown site,
+and tested against recorded API fixtures so its behaviour is verified
+offline.
 
 # Acknowledgements
 

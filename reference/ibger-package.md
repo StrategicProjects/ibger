@@ -19,15 +19,20 @@ Useful links:
 ## Author
 
 **Maintainer**: Andre Leite <leite@castlab.org>
+([ORCID](https://orcid.org/0000-0002-4718-9766))
 
 Authors:
 
 - Andre Leite <leite@castlab.org>
+  ([ORCID](https://orcid.org/0000-0002-4718-9766))
 
 - Marcos Wasiliew <marcos.wasilew@gmail.com>
 
 - Hugo Vasconcelos <hugo.vasconcelos@ufpe.br>
+  ([ORCID](https://orcid.org/0000-0001-6249-0920))
 
 - Carlos Amorim <carlos.agaf@ufpe.br>
+  ([ORCID](https://orcid.org/0000-0001-6315-8305))
 
 - Diogo Bezerra <diogo.bezerra@ufpe.br>
+  ([ORCID](https://orcid.org/0000-0002-1216-8674))
