@@ -46,7 +46,7 @@
 <li>Added <code>CONTRIBUTING.md</code>, <code>CODE_OF_CONDUCT.md</code> and <code>codemeta.json</code> in preparation for rOpenSci submission.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="ibger-020">ibger 0.2.0<a class="anchor" aria-label="anchor" href="#ibger-020"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="ibger-020">ibger 0.2.0<a class="anchor" aria-label="anchor" href="#ibger-020"></a></h2><p class="text-muted">CRAN release: 2026-07-08</p>
 <ul><li>
 <code><a href="../reference/ibge_variables.html">ibge_variables()</a></code> gains a <code>chunk</code> argument (default <code>TRUE</code>): queries whose estimated result exceeds the API’s value limit are now transparently split into multiple smaller requests (by periods, then by localities) and combined into a single tibble, instead of failing with HTTP 500 (<a href="https://github.com/StrategicProjects/ibger/issues/1" class="external-link">#1</a>, <a href="https://github.com/danielvartan" class="external-link">@danielvartan</a>). Use <code>chunk = FALSE</code> to disable, or a positive number for a custom per-request limit. The documented API limit is 100,000 values, but empirically requests fail above ~50,000, so that is the default.</li>
 <li>Period and locality id lists fetched for chunking are cached per session (cleared by <code><a href="../reference/ibge_clear_cache.html">ibge_clear_cache()</a></code>).</li>

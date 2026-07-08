@@ -13,6 +13,8 @@
 
 ## ibger 0.2.0
 
+CRAN release: 2026-07-08
+
 - [`ibge_variables()`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md)
   gains a `chunk` argument (default `TRUE`): queries whose estimated
   result exceeds the API’s value limit are now transparently split into
