@@ -1,10 +1,13 @@
 # ibger <img src="man/figures/logo.svg" align="right" height="139" />
 
 <!-- badges: start -->
+[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/ibger)  
 ![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/ibger)
   ![License](https://img.shields.io/badge/license-MIT-darkviolet.svg) 
-![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)
+![](https://img.shields.io/badge/devel%20version-0.2.0-blue.svg)
+[![R-CMD-check](https://github.com/StrategicProjects/ibger/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/StrategicProjects/ibger/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/StrategicProjects/ibger/graph/badge.svg)](https://app.codecov.io/gh/StrategicProjects/ibger)
 <!-- badges: end -->
 
 Tidyverse-friendly interface to the [IBGE Aggregate Data
@@ -201,7 +204,7 @@ Several R packages provide access to IBGE data. Here is how ibger differs:
 |---------|-------|--------|----------------------|
 | Data source | IBGE Aggregates API (v3) | SIDRA API (`apisidra`) | IBGE microdata (FTP/download) |
 | API base URL | `servicodados.ibge.gov.br` | `apisidra.ibge.gov.br` | — |
-| Row limit per request | 100,000 | 20,000 | — |
+| Large queries | Automatic chunking (splits and combines requests) | Fails above 20,000 values | — |
 | Output | Tibbles (tidy, long format) | data.frames (wide by default) | survey design objects (`survey`) |
 | Parameter format | Named R lists | Positional + string codes | File paths / year + quarter |
 | Metadata discovery | Dedicated endpoints (`/metadados`, `/periodos`, `/localidades`) | HTML scraping of `desctabapi.aspx` | — |
@@ -221,9 +224,12 @@ alternative. Both packages access IBGE aggregate data, but they talk to
   API v3 (`servicodados.ibge.gov.br/api/v3/agregados`). IBGE's own
   documentation describes the Aggregates API as the standardized version
   of the SIDRA API.
-- **Higher row limit**: the SIDRA API caps responses at 20,000 rows
-  (sidrar's error message: *"more than 20k values"*); the Aggregates API
-  allows up to 100,000 values per request — a 5× increase.
+- **No practical size limit**: the SIDRA API caps responses at 20,000 rows
+  (sidrar's error message: *"more than 20k values"*) and leaves splitting
+  to the user. ibger estimates the result size before querying and, when it
+  exceeds the Aggregates API per-request limit, automatically splits the
+  query into multiple requests and combines the results
+  (`ibge_variables(..., chunk = TRUE)`, the default).
 - **Structured metadata**: ibger queries dedicated JSON endpoints for
   metadata (`/metadados`, `/periodos`, `/localidades/{nivel}`). sidrar
   scrapes an HTML page (`desctabapi.aspx`) to discover classifications,
@@ -275,3 +281,9 @@ refer to [ibge.gov.br](https://www.ibge.gov.br).
 
 API availability, rate limits, and response formats are controlled by IBGE
 and may change without notice.
+
+## Code of Conduct
+
+Please note that the ibger project is released with a
+[Contributor Code of Conduct](https://strategicprojects.github.io/ibger/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.

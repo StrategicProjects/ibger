@@ -1,0 +1,36 @@
+[
+    {
+        "id": "112",
+        "variavel": "Rendimento médio da produção",
+        "unidade": "Quilogramas por Hectare",
+        "resultados": [
+            {
+                "classificacoes": [
+                    {
+                        "id": "81",
+                        "nome": "Produto das lavouras temporárias",
+                        "categoria": {
+                            "0": "Total"
+                        }
+                    }
+                ],
+                "series": [
+                    {
+                        "localidade": {
+                            "id": "1",
+                            "nivel": {
+                                "id": "N1",
+                                "nome": "Brasil"
+                            },
+                            "nome": "Brasil"
+                        },
+                        "serie": {
+                            "2023": "..",
+                            "2024": ".."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

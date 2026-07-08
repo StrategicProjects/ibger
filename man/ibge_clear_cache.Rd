@@ -13,3 +13,7 @@ No return value, called for side effects.
 Removes all cached metadata (aggregates and surveys), forcing fresh API
 calls on subsequent requests.
 }
+\examples{
+ibge_clear_cache()
+
+}

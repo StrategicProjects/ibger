@@ -1,0 +1,533 @@
+{
+ "situacao_ingles": "Active",
+ "categoria_ingles": "Structural",
+ "tipo": "Censo demográfico",
+ "tipo_ingles": "Population census",
+ "area": "Estatísticos",
+ "sigla": "CD",
+ "data_inicio": "01/01/1872",
+ "data_desativacao": "",
+ "url_sidra": "https://sidra.ibge.gov.br/pesquisa/censo-demografico",
+ "url_concla": null,
+ "periodicidade_coleta_ingles": "Decennial",
+ "periodicidade_divulgacao_ingles": "Decennial",
+ "ocorrencias_pesquisa": [
+  {
+   "sigla": "CD2022",
+   "data_inicio_coleta": "01/08/2022",
+   "data_fim_coleta": "30/11/2022",
+   "data_previsao_divulgacao": "28/06/2023",
+   "historico": "Os Censos Demográficos são a principal fonte de informação sobre a situação de vida da população em cada um dos municípios e localidades do País. As demais pesquisas domiciliares são, por exemplo, lev...",
+   "historico_ingles": null,
+   "objetivo": "O Censo Demográfico tem por objetivo contar os habitantes do território nacional, identificar suas características e revelar como vivem os brasileiros, produzindo informações imprescindíveis para a de...",
+   "objetivo_ingles": null,
+   "populacao_alvo": "O censo brasileiro adota o conceito de população residente ou \"de direito\", ou seja, a população é enumerada no seu local de residência habitual. Outros países fazem o levantamento da população \"de fato\", ou seja, no local em que se encontrava na data de referência do censo. Dadas as características continentais do Brasil e a forma de utilização da informação censitária, a escolha vem recaindo em todos os últimos censos sobre o uso da primeira alternativa.",
+   "populacao_alvo_ingles": null,
+   "metodologia": "A coleta das informações foi conduzida, em geral, através de entrevista presencial (entrevista direta – face a face – com os moradores do domicílio) e ocorreu de acordo com as orientações do IBGE, tra...",
+   "metodologia_ingles": null,
+   "notas_ocorrencia": "O Censo Experimental foi realizado em Poços de Caldas - MG no ano de 2019.",
+   "notas_ocorrencia_ingles": null,
+   "ind_divulgacao": "S",
+   "principais_variaveis": "Variáveis Geográficas\n•\tUnidade da Federação\n•\tMunicípio \n•\tRegião Geográfica\n•\tConcentração Urbana\n•\tSituação do domicílio \n\nVariáveis do Registro de Domicílios \n•\tEspécie\n•\tTipo de espécie \n•\tDomicí...",
+   "principais_variaveis_ingles": null,
+   "niveis_divulgacao": "Os resultados do Censo Demográfico foram divulgados para o Brasil, Grandes Regiões, Unidades da Federação, Mesorregiões e Microrregiões, Municípios, Distritos, Subdistritos, Concentração urbana, bairros, setores censitários (resultados do Universo) e áreas de ponderação (arquivos de microdados da amostra).",
+   "niveis_divulgacao_ingles": null,
+   "nivel_geografico_abrangencia": "Nacional",
+   "nivel_geografico_abrangencia_ingles": "National",
+   "nivel_geografico_desagregacao": "Área de ponderação",
+   "nivel_geografico_desagregacao_ingles": "Weighting area",
+   "instituicoes_responsaveis": [
+    {
+     "nome": "Instituto Brasileiro de Geografia e Estatística - Diretoria de Pesquisas - Gerência Técnica do Censo Demográfico - Investigador Primário",
+     "nome_ingles": "Brazilian Institute of Geography and Statistics - Primary Researcher"
+    },
+    {
+     "nome": "Instituto Brasileiro de Geografia e Estatística - Diretoria de Pesquisas - Gerência Técnica do Censo Demográfico - Produtor de Metadados",
+     "nome_ingles": "Brazilian Institute of Geography and Statistics - Metadata Producer"
+    },
+    {
+     "nome": "Instituto Brasileiro de Geografia e Estatística - Diretoria de Pesquisas - Gerência Técnica do Censo Demográfico - Responsável pela Coleta de Dados",
+     "nome_ingles": "Brazilian Institute of Geography and Statistics - Data Collection Representative"
+    }
+   ],
+   "periodos_referencia": [
+    {
+     "nome": "Ano - 01/08/2021 a 31/07/2022",
+     "nome_ingles": "Year - 01/08/2021 a 31/07/2022"
+    },
+    {
+     "nome": "Data (noite) - 31/07/2022 a 01/08/2022",
+     "nome_ingles": "Day (night) - 31/07/2022 a 01/08/2022"
+    },
+    {
+     "nome": "Mês - 01/07/2022 a 31/07/2022",
+     "nome_ingles": "Month - 01/07/2022 a 31/07/2022"
+    },
+    {
+     "nome": "Período de 5 anos - 01/08/2017 a 31/07/2022",
+     "nome_ingles": "5-year period - 01/08/2017 a 31/07/2022"
+    },
+    {
+     "nome": "Semana - 25/07/2022 a 31/07/2022",
+     "nome_ingles": "Week - 25/07/2022 a 31/07/2022"
+    }
+   ],
+   "tipos_dados": [
+    {
+     "nome": "Dados de pesquisa por amostragem probabilística",
+     "nome_ingles": "Data from probability sampling surveys"
+    },
+    {
+     "nome": "Dados de Censo",
+     "nome_ingles": "Census data"
+    },
+    {
+     "nome": "Dados agregados",
+     "nome_ingles": "Aggregated data"
+    }
+   ],
+   "unidades_informante": [
+    {
+     "nome": "Pessoa",
+     "nome_ingles": "Person"
+    }
+   ],
+   "unidades_investigacao": [
+    {
+     "nome": "Pessoa",
+     "nome_ingles": "Person"
+    },
+    {
+     "nome": "Domicílio",
+     "nome_ingles": "Household"
+    }
+   ],
+   "unidades_analise": [
+    {
+     "nome": "Pessoa",
+     "nome_ingles": "Person"
+    },
+    {
+     "nome": "Domicílio",
+     "nome_ingles": "Household"
+    }
+   ],
+   "tecnicas_coleta": [
+    {
+     "nome": "CASI - Questionário eletrônico autopreenchido",
+     "nome_ingles": "CASI - Computer-Assisted Self Interviewing"
+    },
+    {
+     "nome": "CAPI - Entrevista pessoal assistida por computador",
+     "nome_ingles": "CAPI - Computer-Assisted Personal Interviewing"
+    }
+   ],
+   "formas_disseminacao": [
+    {
+     "nome": "Banco de Dados Agregados - SIDRA",
+     "nome_ingles": "Aggregated Database - SIDRA"
+    },
+    {
+     "nome": "Banco Multidimensional de Estatísticas - BME",
+     "nome_ingles": "Statistical Multidimensional Database - BME"
+    },
+    {
+     "nome": "Microdados no Portal do IBGE",
+     "nome_ingles": "Microdata on the IBGE website"
+    }
+   ],
+   "nivel_desagregacao": "Área de ponderação",
+   "nivel_desagregacao_ingles": "Weighting area",
+   "instrumentos_coleta": [
+    {
+     "nome": "CD - Questionário Amostra",
+     "nome_ingles": null,
+     "link": "https://biblioteca.ibge.gov.br/visualizacao/instrumentos_de_coleta/doc5633.pdf"
+    },
+    {
+     "nome": "CD - Questionário Básico",
+     "nome_ingles": null,
+     "link": "https://biblioteca.ibge.gov.br/visualizacao/instrumentos_de_coleta/doc5632.pdf"
+    }
+   ],
+   "palavras_chave": "Características gerais da população, Cor ou Raça, Etnia e Língua Indígena ou Quilombola, religião, pessoas com deficiência, Educação, deslocamento, Trabalho, rendimento, domicílios, Nupcialidade, fecundidade, migração, Mortalidade",
+   "palavras_chave_ingles": null,
+   "definicao_fatores_expansao": null,
+   "definicao_fatores_expansao_ingles": null,
+   "notas_coleta_dados": "Além de recensear todos os moradores nos domicílios particulares ocupados e nos domicílios coletivos, o Censo 2022 fez o cadastro ou a listagem de todas as unidades domiciliares – domicílios sem entre...",
+   "notas_coleta_dados_ingles": null,
+   "supervisao": null,
+   "supervisao_ingles": null,
+   "critica_imputacao": "Todos os dados coletados passaram, no momento da entrevista, pelo processo de crítica eletrônica, cuja finalidade era eliminar inconsistências entre as informações dos diversos quesitos do questionári...",
+   "critica_imputacao_ingles": null,
+   "outras_info_processamento": null,
+   "outras_info_processamento_ingles": null,
+   "calculo_erro_amostral": null,
+   "calculo_erro_amostral_ingles": null,
+   "outras_info_qualidade": null,
+   "outras_info_qualidade_ingles": null,
+   "autoridade_acesso": null,
+   "autoridade_acesso_ingles": null,
+   "confidencialidade": null,
+   "confidencialidade_ingles": null,
+   "condicoes_acesso": null,
+   "condicoes_acesso_ingles": null,
+   "referencia_citacao_fonte": null,
+   "referencia_citacao_fonte_ingles": null,
+   "base_legal": null,
+   "base_legal_ingles": null,
+   "direitos_autorais": null,
+   "direitos_autorais_ingles": null,
+   "contato": "0800 721 8181 - ibge@ibge.gov.br",
+   "contato_ingles": null,
+   "procedimento_amostragem": "A partir do Censo de 1960 foi adotado um modelo de técnica de amostragem probabilística que vem se mantendo para os demais censos, onde utilizou-se dois modelos de questionários: amostra e básico (não...",
+   "procedimento_amostragem_ingles": null,
+   "ocorrencias_variavel": [
+    {
+     "conceito": "Forma de declaração de idade (presumida ou não)",
+     "conceito_ingles": null,
+     "populacao_alvo": null,
+     "populacao_alvo_ingles": null,
+     "fonte_informacao": null,
+     "fonte_informacao_ingles": null,
+     "notas": null,
+     "notas_ingles": null,
+     "tipo_variavel": "Primária",
+     "tipo_variavel_ingles": "Primary",
+     "ind_variavel_temporal": "N",
+     "ind_variavel_ponderacao": "N",
+     "periodo_referencia": "Ano - 01/08/2021 a 31/07/2022",
+     "periodo_referencia_ingles": "Year - 01/08/2021 a 31/07/2022",
+     "classificacoes_tematicas": [
+      {
+       "nome": "Características gerais da população",
+       "nome_ingles": "General characteristics of the population",
+       "descricao": "Compreende as informações sobre tamanho e estrutura (por idade e sexo), distribuição da população, densidade e urbanização.",
+       "descricao_ingles": "Covers information about size and structure (age and sex), population distribution, density and urbanization.",
+       "dominio": "Estatísticas sociais",
+       "dominio_ingles": "Social statistics"
+      },
+      {
+       "nome": "População",
+       "nome_ingles": "Population",
+       "descricao": "Compreende as informações sobre características gerais da população, as componentes demográficas (fecundidade, migração, mortalidade); estatísticas vitais, famílias, nupcialidade, grupos populacionais específicos, entre outros.\r\n\r\nEste tema não compreende:\r\n\r\n- Causas de mortalidade (<i>Saúde</i>)\r\n- Religião (<i>Cultura, recreação e esportes</i>)\r\n- Gênero (<i>Estatísticas multidomínio</i>)",
+       "descricao_ingles": "Includes information on general characteristics of the population, demographic components (fertility, migration, mortality); vital statistics, families, nuptiality, specific population groups, among others.\r\n\r\nThis theme does not include:\r\nCauses of death (1.04)\r\nGender (3.01.5)\r\nReligion (3.01.6)",
+       "dominio": "Estatísticas sociais",
+       "dominio_ingles": "Social statistics"
+      }
+     ],
+     "num_pergunta_questionario": "6.000",
+     "pergunta_literal": "Forma de declaração de idade (presumida ou não)",
+     "pergunta_literal_ingles": null,
+     "pre_pergunta": null,
+     "pre_pergunta_ingles": null,
+     "pos_pergunta": null,
+     "pos_pergunta_ingles": null,
+     "instrucoes_entrevistador": null,
+     "instrucoes_entrevistador_ingles": null,
+     "critica": null,
+     "critica_ingles": null,
+     "imputacao": null,
+     "imputacao_ingles": null,
+     "categorias_resposta": [
+      {
+       "codigo": 1,
+       "nome": "Data de nascimento",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 2,
+       "nome": "Idade declarada",
+       "nome_ingles": null
+      }
+     ],
+     "nome": "Forma de declaração de idade da pessoa, categoria",
+     "nome_ingles": null,
+     "unidade_estatistica": "pessoa",
+     "unidade_estatistica_ingles": "person",
+     "forma_representacao": "categoria",
+     "forma_representacao_ingles": "category",
+     "descricao_comum": "Características da pessoa",
+     "descricao_comum_ingles": "Caracteristics of the person",
+     "propriedade": "Forma de declaração de idade",
+     "propriedade_ingles": null,
+     "sigla": "PECP0400",
+     "status": "Aceita"
+    },
+    {
+     "conceito": "Investiga a principal forma de abastecimento de água utilizada no domicílio (a mais utilizada). ",
+     "conceito_ingles": null,
+     "populacao_alvo": null,
+     "populacao_alvo_ingles": null,
+     "fonte_informacao": null,
+     "fonte_informacao_ingles": null,
+     "notas": null,
+     "notas_ingles": null,
+     "tipo_variavel": "Primária",
+     "tipo_variavel_ingles": "Primary",
+     "ind_variavel_temporal": "N",
+     "ind_variavel_ponderacao": "N",
+     "periodo_referencia": "",
+     "periodo_referencia_ingles": "",
+     "classificacoes_tematicas": [
+      {
+       "nome": "Habitação",
+       "nome_ingles": "Housing",
+       "descricao": "Compreende as informações sobre habitação, abrangendo tipo de domicílio; material utilizado na construção do domicílio (piso, parede); serviços de infraestrutura básica (abastecimento de água, esgotamento sanitário, destino do lixo e iluminação elétrica) disponíveis no domicílio; urbanização e vizinhança; condição de ocupação; posse de bens duráveis; e gestão pública da habitação, entre outros aspectos.\r\n\r\nEste tema não compreende:\r\n\r\n- Despesas das famílias com aluguéis (<i>Rendimento, despesa e consumo</i>)",
+       "descricao_ingles": null,
+       "dominio": "Estatísticas sociais",
+       "dominio_ingles": "Social statistics"
+      }
+     ],
+     "num_pergunta_questionario": "3.01",
+     "pergunta_literal": "Qual a principal forma de abastecimento de água utilizada neste domicílio? ",
+     "pergunta_literal_ingles": null,
+     "pre_pergunta": null,
+     "pre_pergunta_ingles": null,
+     "pos_pergunta": null,
+     "pos_pergunta_ingles": null,
+     "instrucoes_entrevistador": null,
+     "instrucoes_entrevistador_ingles": null,
+     "critica": null,
+     "critica_ingles": null,
+     "imputacao": null,
+     "imputacao_ingles": null,
+     "categorias_resposta": [
+      {
+       "codigo": 1,
+       "nome": "Rede geral de distribuição",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 2,
+       "nome": "Poço profundo ou artesiano",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 3,
+       "nome": "Poço raso, freático ou cacimba",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 4,
+       "nome": "Fonte, nascente ou mina",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 5,
+       "nome": "Carro-pipa",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 6,
+       "nome": "Água da chuva armazenada",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 7,
+       "nome": "Rios, açudes, córregos, lagos e igarapés",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 8,
+       "nome": "Outra",
+       "nome_ingles": null
+      },
+      {
+       "codigo": 9,
+       "nome": "Ignorado",
+       "nome_ingles": null
+      }
+     ],
+     "nome": "Abastecimento de água do domicílio, categoria",
+     "nome_ingles": null,
+     "unidade_estatistica": "domicílio",
+     "unidade_estatistica_ingles": "household",
+     "forma_representacao": "categoria",
+     "forma_representacao_ingles": "category",
+     "descricao_comum": "Características do domicílio",
+     "descricao_comum_ingles": "Characteristics of the household",
+     "propriedade": "Abastecimento de água",
+     "propriedade_ingles": null,
+     "sigla": "DOCA0011",
+     "status": "Aceita"
+    }
+   ],
+   "qualidade": {
+    "necessidade_usuarios": null,
+    "necessidade_usuarios_ingles": null,
+    "indice_satisfacao_usuario": null
+   },
+   "observacoes_sidra": null,
+   "observacoes_sidra_ingles": null,
+   "recomendacoes_internacionais_referencias_metodologicas": null,
+   "recomendacoes_internacionais_referencias_metodologicas_ingles": null,
+   "ano": 2022,
+   "mes": 0,
+   "ordem_periodo": 0,
+   "nome_ocorrencia": "Censo Demográfico - 2022",
+   "nome_ocorrencia_ingles": "Population and Housing Census - 2022"
+  }
+ ],
+ "codigo": "CD",
+ "nome": "Censo Demográfico",
+ "nome_ingles": null,
+ "situacao": "Ativa",
+ "categoria": "Estrutural",
+ "periodicidade_coleta": "Decenal",
+ "periodicidade_divulgacao": "Decenal",
+ "classificacoes_tematicas": [
+  {
+   "nome": "Família",
+   "nome_ingles": "Household",
+   "descricao": "Compreende informações sobre as estruturas familiares e das unidades domésticas, seus padrões de organização (famílias reconstituídas, casais do mesmo sexo, casais que moram separados, crianças com dupla residência, famílias monoparentais e pessoas que moram sozinhas) e os ciclos de vida familiar (considerando a presença de crianças e jovens em diferentes faixas etárias, idosos e participação dos adultos membros no mercado de trabalho).",
+   "descricao_ingles": "Covers information about family structures and households, their patterns of organization (reconstituted families, same-sex couples, couples living apart, children with dual residence, single parents and people who live alone) and family life cycles (considering the presence of children and young people in different age groups, the elderly and participation of adult members in the labor market).",
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Grupos populacionais específicos",
+   "nome_ingles": "Specific population groups",
+   "descricao": "Compreende as estatísticas agrupadas por segmentos específicos da população a partir dos grupos geracionais (crianças, adolescentes, jovens, idosos), étnico raciais (indígenas, quilombolas, entre outros) ou regionais.\r\nCompreende também pessoas com deficiência.\r\n\r\nEste tema não compreende:\r\n\r\n- Gênero (<i>Estatísticas multidomínio</i>)",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Trabalho",
+   "nome_ingles": "Labor",
+   "descricao": "Compreende trabalho remunerado e outras formas de trabalho.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Trabalho remunerado",
+   "nome_ingles": "Paid work",
+   "descricao": "Compreende as informações sobre força de trabalho e mercado de trabalho, abrangendo informações sobre população na força de trabalho, ocupação, desocupação, posição na ocupação, horas trabalhadas; características do empreendimento ou negócio (atividade econômica, tamanho do empreendimento, existência de estabelecimento para funcionar); saúde e segurança no trabalho (acidentes e enfermidades ocupacionais); trabalho decente; e grupos vulneráveis, entre outros aspectos. \r\nEste tema não compreende: \r\n\r\n- Trabalho para o próprio consumo, o trabalho voluntário, afazeres domésticos e cuidados de pessoas moradoras no próprio domicílio ou familiares residentes em outros domicílios. (<i>Outras formas de trabalho</i>) \r\n- Rendimento do trabalho (<i>Rendimento, despesa e consumo</i>) \r\n- Seguro desemprego e benefícios de proteção social (<i>Proteção social</i>) \r\n- Participação sindical (<i>Participação política e conexões sociais</i>)\r\n- Setor informal (<i>Estatísticas econômicas</i>) ",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Outras formas de trabalho",
+   "nome_ingles": "Other forms of work",
+   "descricao": "Compreende as informações sobre as outras formas de trabalho (trabalho para o próprio consumo, trabalho voluntário, afazeres domésticos e cuidados de pessoas moradoras do próprio domicílio ou familiares residentes em outros domicílios). \r\n\r\nEste tema não compreende: \r\n\r\n- Trabalho remunerado\r\n- Uso do tempo",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Rendimento, despesa e consumo",
+   "nome_ingles": "Income, expenditure and consumption",
+   "descricao": "Compreende as informações sobre rendimento (monetário e não monetário), abrangendo tipos e distribuição de rendimentos e despesas; transferências recebidas e pagas; padrões de consumo; posse de bens de consumo e duráveis; e orçamentos familiares, entre outros aspectos.\r\n\r\nEste tema não compreende:\r\n\r\n- Companhias de seguro como atores sociais (<i>Estatísticas financeiras</i>)\r\n- Fundos de pensão como atores em mercados financeiros (<i>Estatísticas financeiras</i>)\r\n- Condições de vida, pobreza e desigualdade\r\n- Inclusão ou exclusão social (<i>Condições de vida, pobreza e desigualdade</i>)",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Estatísticas multidomínio",
+   "nome_ingles": "Multidomain statistics",
+   "descricao": "Compreende as abordagens temáticas específicas que perpassam pelo menos dois domínios – demografia e estatísticas sociais, estatísticas econômicas e estatísticas ambientais.\r\nCompreende os subtemas Condições de vida, pobreza e desigualdade; Sociedade da informação; Empreendedorismo; Gênero; Cultura, recreação e esporte; e Turismo.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas multidomínio e meio ambiente",
+   "dominio_ingles": "Multidomain statistics and environment"
+  },
+  {
+   "nome": "Gênero",
+   "nome_ingles": "Gender",
+   "descricao": "Compreende as estatísticas sobre a forma como a sociedade cria os diferentes papéis sociais e comportamentos relacionados aos homens e às mulheres, criando padrões do que é próprio para o feminino e para o masculino e a partir destas compreensões estabelecem relações diversas e/ou desiguais nas várias dimensões da vida social.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas multidomínio e meio ambiente",
+   "dominio_ingles": "Multidomain statistics and environment"
+  },
+  {
+   "nome": "População",
+   "nome_ingles": "Population",
+   "descricao": "Compreende as informações sobre características gerais da população, as componentes demográficas (fecundidade, migração, mortalidade); estatísticas vitais, famílias, nupcialidade, grupos populacionais específicos, entre outros.\r\n\r\nEste tema não compreende:\r\n\r\n- Causas de mortalidade (<i>Saúde</i>)\r\n- Religião (<i>Cultura, recreação e esportes</i>)\r\n- Gênero (<i>Estatísticas multidomínio</i>)",
+   "descricao_ingles": "Includes information on general characteristics of the population, demographic components (fertility, migration, mortality); vital statistics, families, nuptiality, specific population groups, among others.\r\n\r\nThis theme does not include:\r\nCauses of death (1.04)\r\nGender (3.01.5)\r\nReligion (3.01.6)",
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Condições de vida, pobreza e desigualdade",
+   "nome_ingles": "Living conditions, poverty and inequality",
+   "descricao": "Compreende as informações sobre condições de vida da população em seu sentido mais amplo, abrangendo medidas de desigualdade e pobreza; inclusão ou exclusão social; indicadores de situação social, qualidade de vida e de vulnerabilidade ambiental; entre outros aspectos.",
+   "descricao_ingles": "Includes information about conditions of life in its broadest sense, encompassing measures of inequality and poverty; social inclusion or exclusion; indicators of social status, quality of life and environmental vulnerability; among other things.",
+   "dominio": "Estatísticas multidomínio e meio ambiente",
+   "dominio_ingles": "Multidomain statistics and environment"
+  },
+  {
+   "nome": "Educação",
+   "nome_ingles": "Education",
+   "descricao": "Compreende as informações sobre educação, abrangendo condição de alfabetização, frequência a creche ou escola, rede e área de ensino, grau de instrução, e gestão da educação, entre outros aspectos.",
+   "descricao_ingles": "Compreende as informações sobre educação, abrangendo condição de alfabetização, frequência a creche ou escola, rede e área de ensino, grau de instrução, e gestão da educação, entre outros aspectos.",
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Nupcialidade",
+   "nome_ingles": "Nuptiality",
+   "descricao": "Compreende informações sobre os modelos de formação e dissolução dos arranjos conjugais, casamentos e divórcios, e as transformações econômicas e culturais que impactam sobre a nupcialidade da população brasileira.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Características gerais da população",
+   "nome_ingles": "General characteristics of the population",
+   "descricao": "Compreende as informações sobre tamanho e estrutura (por idade e sexo), distribuição da população, densidade e urbanização.",
+   "descricao_ingles": "Covers information about size and structure (age and sex), population distribution, density and urbanization.",
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Habitação",
+   "nome_ingles": "Housing",
+   "descricao": "Compreende as informações sobre habitação, abrangendo tipo de domicílio; material utilizado na construção do domicílio (piso, parede); serviços de infraestrutura básica (abastecimento de água, esgotamento sanitário, destino do lixo e iluminação elétrica) disponíveis no domicílio; urbanização e vizinhança; condição de ocupação; posse de bens duráveis; e gestão pública da habitação, entre outros aspectos.\r\n\r\nEste tema não compreende:\r\n\r\n- Despesas das famílias com aluguéis (<i>Rendimento, despesa e consumo</i>)",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Cultura, recreação e esporte",
+   "nome_ingles": "Culture, recreation and sports",
+   "descricao": "Compreende as informações sobre os hábitos e práticas culturais, esportivas e recreativas da população brasileira, abrangendo a religião, a língua falada e demais traços étnicos, a infraestrutura e o acesso aos bens e serviços culturais e esportivos, a produção cultural e o patrimônio, os meios de comunicação, bem como os gastos públicos e das famílias, financiamentos e gestão da cultura e do esporte, entre outros aspectos.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas multidomínio e meio ambiente",
+   "dominio_ingles": "Multidomain statistics and environment"
+  },
+  {
+   "nome": "Sociedade da Informação",
+   "nome_ingles": "Information society",
+   "descricao": "Compreende as informações sobre Tecnologias de Informação e Comunicação - TIC, abrangendo infraestrutura; acesso e utilização (inclusive Internet) por empresas e indivíduos; gastos e investimentos; redes de telecomunicações; comunicações eletrônicas; comércio eletrônico; e-learning; setor TIC; e comércio internacional de produtos, entre outros aspectos.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas multidomínio e meio ambiente",
+   "dominio_ingles": "Multidomain statistics and environment"
+  },
+  {
+   "nome": "Saúde",
+   "nome_ingles": "Health",
+   "descricao": "Compreende as informações sobre saúde, abrangendo morbidade e causas de mortalidade; acesso e utilização de serviços de saúde; gastos com saúde; estilo de vida (alimentação, tabagismo, consumo de álcool); nutrição (aquisição de alimentos, segurança alimentar e nutricional, avaliação nutricional); deficiência e capacidade funcional; infraestrutura e gestão da saúde; e conta-satélite da saúde, entre outros aspectos.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Componentes da dinâmica demográfica e estatísticas vitais",
+   "nome_ingles": "Components of the population dynamics and vital statistics",
+   "descricao": "Compreende as informações sobre os níveis e características da fecundidade, migração e mortalidade da população, bem como sobre os nascimentos e óbitos.",
+   "descricao_ingles": "Covers information about levels and characteristics of fertility, mortality and migration of the population, as well as births and deaths.",
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  },
+  {
+   "nome": "Proteção social",
+   "nome_ingles": "Social protection",
+   "descricao": "Compreende as informações sobre ações, cuidados, atenções, benefícios e auxílios para a redução e prevenção de vulnerabilidades e riscos, vitimizações, fragilidades, contingências, que cidadãos e suas famílias enfrentam na trajetória de seu ciclo de vida, por decorrência de restrições sociais, econômicas, políticas, naturais ou de ofensas à dignidade humana, tais como: desemprego; doença; invalidez; envelhecimento; e perda de cônjuge ou pais. Inclui também ações, cuidados, atenções, benefícios e auxílios para enfrentamento da pobreza e da desigualdade, e para promoção de bem-estar e proteção social a famílias, crianças, adolescentes e jovens, pessoas com deficiência e idosos, entre outros.\r\n\r\nCompreende também a gestão pública da assistência social.",
+   "descricao_ingles": null,
+   "dominio": "Estatísticas sociais",
+   "dominio_ingles": "Social statistics"
+  }
+ ]
+}

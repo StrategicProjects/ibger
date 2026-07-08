@@ -1,0 +1,78 @@
+[
+    {
+        "id": "AB",
+        "nome": "Pesquisa Mensal de Abate de Animais",
+        "agregados": [
+            {
+                "id": "19",
+                "nome": "Quantidade de outros animais de criação abatidos"
+            },
+            {
+                "id": "20",
+                "nome": "Peso das carcaças de outros animais de criação abatidos"
+            },
+            {
+                "id": "41",
+                "nome": "Quantidade de bovinos abatidos"
+            },
+            {
+                "id": "42",
+                "nome": "Quantidade de suínos abatidos"
+            },
+            {
+                "id": "43",
+                "nome": "Quantidade de equídeos abatidos"
+            },
+            {
+                "id": "44",
+                "nome": "Quantidade de aves abatidas"
+            },
+            {
+                "id": "45",
+                "nome": "Peso das carcaças de bovinos abatidos"
+            },
+            {
+                "id": "46",
+                "nome": "Peso das carcaças de suínos abatidos"
+            },
+            {
+                "id": "47",
+                "nome": "Peso das carcaças de equídeos abatidos"
+            },
+            {
+                "id": "48",
+                "nome": "Peso das carcaças de aves abatidas"
+            }
+        ]
+    },
+    {
+        "id": "AX",
+        "nome": "Pesquisa Trimestral do Abate de Animais",
+        "agregados": [
+            {
+                "id": "1092",
+                "nome": "Número de informantes, Quantidade e Peso total das carcaças dos bovinos abatidos, no mês e no trimestre, por tipo de rebanho e tipo de inspeção"
+            },
+            {
+                "id": "1093",
+                "nome": "Número de informantes, Quantidade e Peso total das carcaças dos suínos abatidos, no mês e no trimestre, por tipo de inspeção"
+            },
+            {
+                "id": "1094",
+                "nome": "Número de informantes, Quantidade e Peso total das carcaças dos frangos abatidos, no mês e no trimestre, por tipo de inspeção"
+            },
+            {
+                "id": "6669",
+                "nome": "Quantidade e Peso total das carcaças dos animais abatidos, por tipo de rebanho - Primeiros Resultados (série encerrada)"
+            },
+            {
+                "id": "6829",
+                "nome": "Quantidade e Peso total das carcaças dos animais abatidos, no mês e no trimestre, por tipo de rebanho - Primeiros Resultados"
+            },
+            {
+                "id": "9395",
+                "nome": "Número de informantes, Quantidade e Peso total das carcaças dos frangos abatidos, no mês e no trimestre, por tipo de inspeção (série encerrada com última divulgação em 7/12/2022)"
+            }
+        ]
+    }
+]

@@ -37,7 +37,9 @@ Suggests:
     bslib (>= 0.6.0),
     bsicons,
     rstudioapi,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    httptest2,
+    withr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

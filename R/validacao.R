@@ -13,6 +13,10 @@ get_cached_metadata <- function(agregado) {
 #' calls on subsequent requests.
 #'
 #' @return No return value, called for side effects.
+#'
+#' @examples
+#' ibge_clear_cache()
+#'
 #' @export
 ibge_clear_cache <- function() {
   rm(list = ls(envir = .ibger_cache), envir = .ibger_cache)
