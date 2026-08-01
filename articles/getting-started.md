@@ -362,18 +362,12 @@ Each request can return at most **100,000 values**, computed as:
 If exceeded, the API returns HTTP 500. Split your request into smaller
 chunks when working with many localities or categories.
 
-The `value` column may contain special characters instead of numbers:
-
-| Value | Meaning                                                |
-|-------|--------------------------------------------------------|
-| `-`   | Numeric zero (not from rounding)                       |
-| `..`  | Not applicable                                         |
-| `...` | Data not available                                     |
-| `X`   | Suppressed to avoid identifying individual respondents |
-
-These come through as character strings in the `value` column. Use
+The `value` column may contain special codes instead of numbers (`-`,
+`..`, `...`, `X`), so it comes through as a character column. Use
 [`parse_ibge_value()`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.md)
-to convert to numeric in one step:
+to convert it to numeric in one step — its documentation
+([`?parse_ibge_value`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.md))
+has the full table of codes and how each one is handled:
 
 ``` r
 

@@ -75,9 +75,24 @@ meta_7060 <- ibge_metadata(7060)
 unnest(meta_7060$classifications, categories) |>
   filter(str_detect(category_name, "Plano|Índice")) |>
   select(id, category_id, category_name, category_level)
+#> # A tibble: 5 × 4
+#>   id    category_id category_name                    category_level
+#>   <chr> <chr>       <chr>                            <chr>         
+#> 1 315   7169        Índice geral                     0             
+#> 2 315   7695        6203.Plano de saúde              3             
+#> 3 315   7696        6203001.Plano de saúde           4             
+#> 4 315   47668       9101002.Plano de telefonia fixa  4             
+#> 5 315   47669       9101008.Plano de telefonia móvel 4
 
 # Available variables
 meta_7060$variables
+#> # A tibble: 4 × 3
+#>   id    name                                  unit 
+#>   <chr> <chr>                                 <chr>
+#> 1 63    IPCA - Variação mensal                %    
+#> 2 69    IPCA - Variação acumulada no ano      %    
+#> 3 2265  IPCA - Variação acumulada em 12 meses %    
+#> 4 66    IPCA - Peso mensal                    %
 ```
 
 Reading the output:
@@ -121,6 +136,21 @@ ipca_health |>
     values_from = value
   ) |>
   arrange(desc(period))
+#> # A tibble: 12 × 4
+#>    period     locality_name `Índice geral` `6203.Plano de saúde`
+#>    <date>     <chr>                  <dbl>                 <dbl>
+#>  1 2026-06-01 Recife (PE)            -0.04                  0.34
+#>  2 2026-05-01 Recife (PE)             0.95                  0.5 
+#>  3 2026-04-01 Recife (PE)             0.82                  0.5 
+#>  4 2026-03-01 Recife (PE)             1.1                   0.5 
+#>  5 2026-02-01 Recife (PE)             0.73                  0.5 
+#>  6 2026-01-01 Recife (PE)             0.28                  0.5 
+#>  7 2025-12-01 Recife (PE)             0.54                  0.5 
+#>  8 2025-11-01 Recife (PE)            -0.08                  0.5 
+#>  9 2025-10-01 Recife (PE)             0.17                  0.5 
+#> 10 2025-09-01 Recife (PE)             0.56                  0.5 
+#> 11 2025-08-01 Recife (PE)            -0.24                  0.5 
+#> 12 2025-07-01 Recife (PE)             0.32                  0.38
 ```
 
 ### 1.4 Plot
@@ -140,6 +170,10 @@ ipca_health |>
   theme(legend.position = "bottom")
 ```
 
+![plot of chunk unnamed-chunk-6](tutorial-unnamed-chunk-6-1.png)
+
+plot of chunk unnamed-chunk-6
+
 ------------------------------------------------------------------------
 
 ## 2) IPCA (7060) — Vehicle insurance
@@ -152,6 +186,11 @@ Same logic — only the category changes in classification `"315"`.
 unnest(meta_7060$classifications, categories) |>
   filter(str_detect(category_name, "Seguro|Índice")) |>
   select(id, category_id, category_name)
+#> # A tibble: 2 × 3
+#>   id    category_id category_name                       
+#>   <chr> <chr>       <chr>                               
+#> 1 315   7169        Índice geral                        
+#> 2 315   7643        5102005.Seguro voluntário de veículo
 ```
 
 ``` r
@@ -185,6 +224,10 @@ ipca_vehicle_ins |>
   theme(legend.position = "bottom")
 ```
 
+![plot of chunk unnamed-chunk-9](tutorial-unnamed-chunk-9-1.png)
+
+plot of chunk unnamed-chunk-9
+
 ------------------------------------------------------------------------
 
 ## 3) PMS (8693) — Transportation and postal services
@@ -202,7 +245,27 @@ meta_8693 <- ibge_metadata(8693)
 
 # Browse classifications and categories
 unnest(meta_8693$classifications, categories)
+#> # A tibble: 8 × 6
+#>   id    name              category_id category_name category_unit category_level
+#>   <chr> <chr>             <chr>       <chr>         <chr>         <chr>         
+#> 1 11046 Tipos de índice   56725       Índice de re… <NA>          0             
+#> 2 11046 Tipos de índice   56726       Índice de vo… <NA>          0             
+#> 3 12355 Atividades de se… 107071      Total         <NA>          0             
+#> 4 12355 Atividades de se… 106869      1. Serviços … <NA>          1             
+#> 5 12355 Atividades de se… 106874      2. Serviços … <NA>          1             
+#> 6 12355 Atividades de se… 31399       3. Serviços … <NA>          1             
+#> 7 12355 Atividades de se… 106876      4. Transport… <NA>          1             
+#> 8 12355 Atividades de se… 31426       5. Outros se… <NA>          1
 meta_8693$variables
+#> # A tibble: 6 × 3
+#>   id    name                                                               unit 
+#>   <chr> <chr>                                                              <chr>
+#> 1 7167  PMS - Número-índice (2022=100)                                     Núme…
+#> 2 7168  PMS - Número-índice com ajuste sazonal (2022=100)                  Núme…
+#> 3 11623 PMS - Variação mês/mês imediatamente anterior, com ajuste sazonal… %    
+#> 4 11624 PMS - Variação mês/mesmo mês do ano anterior (M/M-12)              %    
+#> 5 11625 PMS - Variação acumulada no ano (em relação ao mesmo período do a… %    
+#> 6 11626 PMS - Variação acumulada em 12 meses (em relação ao período anter… %
 ```
 
 ``` r
@@ -239,6 +302,10 @@ pms_transport |>
   theme(legend.position = "bottom")
 ```
 
+![plot of chunk unnamed-chunk-12](tutorial-unnamed-chunk-12-1.png)
+
+plot of chunk unnamed-chunk-12
+
 ------------------------------------------------------------------------
 
 ## 4) PNAD Contínua (5434) — Accommodation and food services
@@ -250,7 +317,30 @@ The Continuous PNAD aggregate 5434 provides quarterly employment data
 
 meta_5434 <- ibge_metadata(5434)
 unnest(meta_5434$classifications, categories)
+#> # A tibble: 13 × 6
+#>    id    name             category_id category_name category_unit category_level
+#>    <chr> <chr>            <chr>       <chr>         <chr>         <chr>         
+#>  1 888   Grupamento de a… 47946       Total         <NA>          0             
+#>  2 888   Grupamento de a… 47947       Agricultura,… <NA>          1             
+#>  3 888   Grupamento de a… 47948       Indústria ge… <NA>          1             
+#>  4 888   Grupamento de a… 60031       Indústria de… <NA>          2             
+#>  5 888   Grupamento de a… 47949       Construção    <NA>          1             
+#>  6 888   Grupamento de a… 47950       Comércio, re… <NA>          1             
+#>  7 888   Grupamento de a… 56622       Transporte, … <NA>          1             
+#>  8 888   Grupamento de a… 56623       Alojamento e… <NA>          1             
+#>  9 888   Grupamento de a… 56624       Informação, … <NA>          1             
+#> 10 888   Grupamento de a… 60032       Administraçã… <NA>          1             
+#> 11 888   Grupamento de a… 56627       Outros servi… <NA>          1             
+#> 12 888   Grupamento de a… 56628       Serviços dom… <NA>          1             
+#> 13 888   Grupamento de a… 60033       Atividades m… <NA>          1
 meta_5434$variables
+#> # A tibble: 4 × 3
+#>   id    name                                                               unit 
+#>   <chr> <chr>                                                              <chr>
+#> 1 4090  Pessoas de 14 anos ou mais de idade ocupadas na semana de referên… Mil …
+#> 2 4091  Coeficiente de variação - Pessoas de 14 anos ou mais de idade ocu… %    
+#> 3 4108  Distribuição percentual das pessoas de 14 anos ou mais de idade o… %    
+#> 4 4109  Coeficiente de variação - Distribuição percentual das pessoas de … %
 ```
 
 ``` r
@@ -282,6 +372,10 @@ pnad_accommodation |>
   ) +
   theme_minimal()
 ```
+
+![plot of chunk unnamed-chunk-15](tutorial-unnamed-chunk-15-1.png)
+
+plot of chunk unnamed-chunk-15
 
 ------------------------------------------------------------------------
 
@@ -324,6 +418,10 @@ pms_professional |>
   theme(legend.position = "bottom")
 ```
 
+![plot of chunk unnamed-chunk-17](tutorial-unnamed-chunk-17-1.png)
+
+plot of chunk unnamed-chunk-17
+
 ------------------------------------------------------------------------
 
 ## 6) PNAD Contínua (5434) — Domestic services
@@ -358,6 +456,10 @@ pnad_domestic |>
   theme_minimal()
 ```
 
+![plot of chunk unnamed-chunk-19](tutorial-unnamed-chunk-19-1.png)
+
+plot of chunk unnamed-chunk-19
+
 ------------------------------------------------------------------------
 
 ## 7) PIM-PF (8888) — Industrial production (selected CNAE sectors)
@@ -370,7 +472,30 @@ industrial activity (CNAE sections).
 
 meta_8888 <- ibge_metadata(8888)
 unnest(meta_8888$classifications, categories)
+#> # A tibble: 27 × 6
+#>    id    name             category_id category_name category_unit category_level
+#>    <chr> <chr>            <chr>       <chr>         <chr>         <chr>         
+#>  1 544   Seções e ativid… 129314      1 Indústria … <NA>          0             
+#>  2 544   Seções e ativid… 129315      2 Indústrias… <NA>          0             
+#>  3 544   Seções e ativid… 129316      3 Indústrias… <NA>          0             
+#>  4 544   Seções e ativid… 129317      3.10 Fabrica… <NA>          0             
+#>  5 544   Seções e ativid… 129318      3.11 Fabrica… <NA>          0             
+#>  6 544   Seções e ativid… 129319      3.12 Fabrica… <NA>          0             
+#>  7 544   Seções e ativid… 129320      3.13 Fabrica… <NA>          0             
+#>  8 544   Seções e ativid… 129321      3.14 Confecç… <NA>          0             
+#>  9 544   Seções e ativid… 129322      3.15 Prepara… <NA>          0             
+#> 10 544   Seções e ativid… 129323      3.16 Fabrica… <NA>          0             
+#> # ℹ 17 more rows
 meta_8888$variables
+#> # A tibble: 6 × 3
+#>   id    name                                                               unit 
+#>   <chr> <chr>                                                              <chr>
+#> 1 12606 PIMPF - Número-índice (2022=100)                                   Núme…
+#> 2 12607 PIMPF - Número-índice com ajuste sazonal (2022=100)                Núme…
+#> 3 11601 PIMPF - Variação mês/mês imediatamente anterior, com ajuste sazon… %    
+#> 4 11602 PIMPF - Variação mês/mesmo mês do ano anterior (M/M-12)            %    
+#> 5 11603 PIMPF - Variação acumulada no ano (em relação ao mesmo período do… %    
+#> 6 11604 PIMPF - Variação acumulada em 12 meses (em relação ao período ant… %
 ```
 
 ``` r
@@ -406,6 +531,10 @@ pim_selected |>
   theme(legend.position = "bottom")
 ```
 
+![plot of chunk unnamed-chunk-22](tutorial-unnamed-chunk-22-1.png)
+
+plot of chunk unnamed-chunk-22
+
 ------------------------------------------------------------------------
 
 ## 8) Construction (8886) — Typical construction inputs
@@ -414,6 +543,13 @@ pim_selected |>
 
 meta_8886 <- ibge_metadata(8886)
 meta_8886$variables
+#> # A tibble: 4 × 3
+#>   id    name                                                               unit 
+#>   <chr> <chr>                                                              <chr>
+#> 1 12606 PIMPF - Número-índice (2022=100)                                   Núme…
+#> 2 11602 PIMPF - Variação mês/mesmo mês do ano anterior (M/M-12)            %    
+#> 3 11603 PIMPF - Variação acumulada no ano (em relação ao mesmo período do… %    
+#> 4 11604 PIMPF - Variação acumulada em 12 meses (em relação ao período ant… %
 ```
 
 ``` r
@@ -445,6 +581,10 @@ construction |>
   theme_minimal()
 ```
 
+![plot of chunk unnamed-chunk-25](tutorial-unnamed-chunk-25-1.png)
+
+plot of chunk unnamed-chunk-25
+
 ------------------------------------------------------------------------
 
 ## 9) PMC (8884 / 8757 / 8880) — Retail trade indices
@@ -460,7 +600,21 @@ follow the same pattern — classification `11046` selects the index type
 
 meta_8884 <- ibge_metadata(8884)
 unnest(meta_8884$classifications, categories)
+#> # A tibble: 2 × 6
+#>   id    name            category_id category_name   category_unit category_level
+#>   <chr> <chr>           <chr>       <chr>           <chr>         <chr>         
+#> 1 11046 Tipos de índice 56737       Índice de rece… <NA>          0             
+#> 2 11046 Tipos de índice 56738       Índice de volu… <NA>          0
 meta_8884$variables
+#> # A tibble: 6 × 3
+#>   id    name                                                               unit 
+#>   <chr> <chr>                                                              <chr>
+#> 1 7169  PMC - Número-índice (2022=100)                                     Núme…
+#> 2 7170  PMC - Número-índice com ajuste sazonal (2022=100)                  Núme…
+#> 3 11708 PMC - Variação mês/mês imediatamente anterior, com ajuste sazonal… %    
+#> 4 11709 PMC - Variação mês/mesmo mês do ano anterior (M/M-12)              %    
+#> 5 11710 PMC - Variação acumulada no ano (em relação ao mesmo período do a… %    
+#> 6 11711 PMC - Variação acumulada em 12 meses (em relação ao período anter… %
 ```
 
 ``` r
@@ -492,6 +646,10 @@ pmc_vehicles |>
   ) +
   theme_minimal()
 ```
+
+![plot of chunk unnamed-chunk-28](tutorial-unnamed-chunk-28-1.png)
+
+plot of chunk unnamed-chunk-28
 
 ### 9.2 Construction materials (8757)
 
@@ -525,6 +683,10 @@ pmc_construction |>
   theme_minimal()
 ```
 
+![plot of chunk unnamed-chunk-30](tutorial-unnamed-chunk-30-1.png)
+
+plot of chunk unnamed-chunk-30
+
 ### 9.3 Retail trade (8880)
 
 ``` r
@@ -556,6 +718,10 @@ pmc_retail |>
   ) +
   theme_minimal()
 ```
+
+![plot of chunk unnamed-chunk-32](tutorial-unnamed-chunk-32-1.png)
+
+plot of chunk unnamed-chunk-32
 
 ------------------------------------------------------------------------
 

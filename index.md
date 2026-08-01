@@ -14,11 +14,18 @@ by IBGE (Brazilian Institute of Geography and Statistics).
 remotes::install_github("StrategicProjects/ibger")
 ```
 
-> **Note**: if you encounter the error
-> `curl_modify_url is not an exported object`, update the curl package
-> with `install.packages("curl")`. Version 6.0.0 or higher is required.
+ibger requires curl \>= 6.0.0 (declared in `DESCRIPTION`, so it is
+enforced at install time). If an existing installation raises the error
+`curl_modify_url is not an exported object`, update curl with
+`install.packages("curl")`.
 
 ## Quick start
+
+If you are new to the IBGE API, the vignette [Understanding the IBGE
+Aggregate Data
+API](https://strategicprojects.github.io/ibger/articles/api-concepts.html)
+explains the terminology used below (aggregates, variables,
+classifications, localities, periods).
 
 ``` r
 
@@ -80,22 +87,21 @@ ibge_variables(
 In accordance with official IBGE data standards, the `value` column
 returned by the API may be of type `character` rather than numeric.
 
-This occurs because IBGE uses special symbols to represent specific data
-conditions, which are part of the statistical dissemination standard and
-should not be treated as errors.
-
-The possible values are:
-
-| Value | Meaning                                                |
-|-------|--------------------------------------------------------|
-| `-`   | Numeric zero (not resulting from rounding)             |
-| `..`  | Not applicable                                         |
-| `...` | Data not available                                     |
-| `X`   | Suppressed to avoid identifying individual respondents |
+This occurs because IBGE uses special symbols (such as `-`, `..`, `...`
+and `X`) to represent specific data conditions, which are part of the
+statistical dissemination standard and should not be treated as errors.
 
 As a consequence, users should not assume that the `value` column is
-always numeric. When numerical analysis is required, these symbols must
-be handled explicitly before coercion.
+always numeric. Use
+[`parse_ibge_value()`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.html)
+to convert it to numeric in one step — its documentation lists every
+special code and how it is handled:
+
+``` r
+
+ibge_variables(7060, localities = "BR") |>
+  dplyr::mutate(value = parse_ibge_value(value))
+```
 
 ## Design
 
@@ -152,71 +158,28 @@ be handled explicitly before coercion.
 
 ## Interactive Aggregate Explorer
 
-The function
 [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md)
-launches an interactive Shiny application that allows you to browse,
-filter, and export the full catalog of IBGE aggregates available via the
-API.
-
-It is designed to make exploration easier before calling functions such
-as
-[`ibge_metadata()`](https://strategicprojects.github.io/ibger/reference/ibge_metadata.md),
-[`ibge_variables()`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md),
-or
-[`ibge_aggregates()`](https://strategicprojects.github.io/ibger/reference/ibge_aggregates.md).
-
-### ✨ Features
-
-- 📊 Summary value boxes with total counts  
-- 🔍 Global and column-level table filtering  
-- 🧭 Filter by survey  
-- 📥 CSV download of filtered results  
-- 🆔 Click a row to display the corresponding
-  [`ibge_metadata()`](https://strategicprojects.github.io/ibger/reference/ibge_metadata.md)
-  call
-
-------------------------------------------------------------------------
-
-### 🚀 Usage
+launches a Shiny application to browse, filter, and export the full
+catalog of IBGE aggregates available through the API. It is useful when
+you don’t remember an aggregate ID, want to search by survey name, or
+prefer a visual look at the catalog before writing code: clicking a row
+displays the corresponding
+[`ibge_metadata()`](https://strategicprojects.github.io/ibger/reference/ibge_metadata.md)
+call, ready to copy.
 
 ``` r
 
-# Open in RStudio Viewer (default behavior)
+# Open in the RStudio Viewer (default)
 ibge_explorer()
 
-# Open in your system browser
+# Open in the system browser
 ibge_explorer(launch.browser = TRUE)
 ```
 
-------------------------------------------------------------------------
-
-### 📦 Dependencies
-
-The explorer requires the following packages:
-
-- `shiny`
-- `DT`
-- `bslib`
-- `bsicons`
-
-If any of them are not installed,
+The explorer requires the suggested packages `shiny`, `DT`, `bslib`, and
+`bsicons`; if any of them is missing,
 [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md)
-will display a friendly CLI error message.
-
-------------------------------------------------------------------------
-
-### 💡 When to Use It?
-
-Use
-[`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md)
-when you:
-
-- Don’t remember an aggregate ID  
-- Want to search by survey name  
-- Need a quick way to copy the correct
-  [`ibge_metadata()`](https://strategicprojects.github.io/ibger/reference/ibge_metadata.md)
-  call  
-- Prefer a visual workflow before writing code
+says which ones to install.
 
 ## Comparison with other packages
 

@@ -431,35 +431,12 @@ computed as:</p>
 </blockquote>
 <p>If exceeded, the API returns HTTP 500. Split your request into
 smaller chunks when working with many localities or categories.</p>
-<p>The <code>value</code> column may contain special characters instead
-of numbers:</p>
-<table class="table">
-<thead><tr class="header">
-<th>Value</th>
-<th>Meaning</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>-</code></td>
-<td>Numeric zero (not from rounding)</td>
-</tr>
-<tr class="even">
-<td><code>..</code></td>
-<td>Not applicable</td>
-</tr>
-<tr class="odd">
-<td><code>...</code></td>
-<td>Data not available</td>
-</tr>
-<tr class="even">
-<td><code>X</code></td>
-<td>Suppressed to avoid identifying individual respondents</td>
-</tr>
-</tbody>
-</table>
-<p>These come through as character strings in the <code>value</code>
-column. Use <code><a href="../reference/parse_ibge_value.html">parse_ibge_value()</a></code> to convert to numeric in one
-step:</p>
+<p>The <code>value</code> column may contain special codes instead of
+numbers (<code>-</code>, <code>..</code>, <code>...</code>,
+<code>X</code>), so it comes through as a character column. Use
+<code><a href="../reference/parse_ibge_value.html">parse_ibge_value()</a></code> to convert it to numeric in one step —
+its documentation (<code><a href="../reference/parse_ibge_value.html">?parse_ibge_value</a></code>) has the full table of
+codes and how each one is handled:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">7060</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="../reference/parse_ibge_value.html">parse_ibge_value</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>

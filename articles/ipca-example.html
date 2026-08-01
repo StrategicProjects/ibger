@@ -73,6 +73,12 @@
 
     
     
+<!--
+ipca-example.Rmd is generated from ipca-example.Rmd.orig by
+vignettes/precompile.R, which runs the code against the live IBGE API.
+Edit the .orig file, then re-run the script and commit the regenerated
+.Rmd and figures.
+-->
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -111,10 +117,40 @@ items</li>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># See what variables are available</span></span>
 <span><span class="va">meta</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                  unit </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                 &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 63    IPCA - Variação mensal                %    </span></span>
+<span><span class="co">#&gt; 2 69    IPCA - Variação acumulada no ano      %    </span></span>
+<span><span class="co">#&gt; 3 2265  IPCA - Variação acumulada em 12 meses %    </span></span>
+<span><span class="co">#&gt; 4 66    IPCA - Peso mensal                    %</span></span>
 <span></span>
 <span><span class="co"># Peek at the classification categories</span></span>
 <span><span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 6</span></span>
+<span><span class="co">#&gt;    id    name             category_id category_name category_unit category_level</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt;  1 315   Geral, grupo, s… 7169        Índice geral  &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  2 315   Geral, grupo, s… 7170        1.Alimentaçã… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt;  3 315   Geral, grupo, s… 7171        11.Alimentaç… &lt;NA&gt;          2             </span></span>
+<span><span class="co">#&gt;  4 315   Geral, grupo, s… 7172        1101.Cereais… &lt;NA&gt;          3             </span></span>
+<span><span class="co">#&gt;  5 315   Geral, grupo, s… 7173        1101002.Arroz &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt;  6 315   Geral, grupo, s… 7175        1101051.Feij… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt;  7 315   Geral, grupo, s… 7176        1101052.Feij… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt;  8 315   Geral, grupo, s… 47617       1101053.Feij… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt;  9 315   Geral, grupo, s… 12222       1101073.Feij… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 10 315   Geral, grupo, s… 47618       1101079.Milh… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 11 315   Geral, grupo, s… 7184        1102.Farinha… &lt;NA&gt;          3             </span></span>
+<span><span class="co">#&gt; 12 315   Geral, grupo, s… 7185        1102001.Fari… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 13 315   Geral, grupo, s… 7187        1102006.Maca… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 14 315   Geral, grupo, s… 7188        1102008.Fubá… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 15 315   Geral, grupo, s… 7190        1102010.Floc… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 16 315   Geral, grupo, s… 7191        1102012.Fari… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 17 315   Geral, grupo, s… 7195        1102023.Fari… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 18 315   Geral, grupo, s… 107608      1102029.Mass… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 19 315   Geral, grupo, s… 47619       1102061.Maca… &lt;NA&gt;          4             </span></span>
+<span><span class="co">#&gt; 20 315   Geral, grupo, s… 7200        1103.Tubércu… &lt;NA&gt;          3</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="step-2-monthly-ipca-for-brazil">Step 2 — Monthly IPCA for Brazil<a class="anchor" aria-label="anchor" href="#step-2-monthly-ipca-for-brazil"></a>
@@ -128,7 +164,23 @@ items</li>
 <span>  localities <span class="op">=</span> <span class="st">"BR"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ipca_br</span></span></code></pre></div>
+<span><span class="va">ipca_br</span></span>
+<span><span class="co">#&gt; # A tibble: 24 × 9</span></span>
+<span><span class="co">#&gt;    variable_id variable_name        variable_unit classification_315 locality_id</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;                &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;      </span></span>
+<span><span class="co">#&gt;  1 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  2 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  3 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  4 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  5 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  6 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  7 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  8 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  9 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt; 10 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt; # ℹ 14 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 4 more variables: locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   value &lt;chr&gt;</span></span></code></pre></div>
 <p>The <code>value</code> column is character because of the API’s
 special values (see <code><a href="../reference/parse_ibge_value.html">?parse_ibge_value</a></code>). Use
 <code><a href="../reference/parse_ibge_value.html">parse_ibge_value()</a></code> to convert:</p>
@@ -152,6 +204,9 @@ special values (see <code><a href="../reference/parse_ibge_value.html">?parse_ib
 <span>    caption  <span class="op">=</span> <span class="st">"Source: IBGE via ibger"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="ipca-example-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><div class="figcaption">plot of chunk unnamed-chunk-6</div>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -182,6 +237,9 @@ special values (see <code><a href="../reference/parse_ibge_value.html">?parse_ib
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="ipca-example-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"><div class="figcaption">plot of chunk unnamed-chunk-7</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="step-4-breakdown-by-product-group">Step 4 — Breakdown by product group<a class="anchor" aria-label="anchor" href="#step-4-breakdown-by-product-group"></a>
@@ -194,7 +252,19 @@ Housing (7445), Transportation (7486), etc.</p>
 <code class="sourceCode R"><span><span class="va">cats</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Level-1 groups (just below the general index)</span></span>
-<span><span class="va">cats</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">category_level</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">cats</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">category_level</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 9 × 6</span></span>
+<span><span class="co">#&gt;   id    name              category_id category_name category_unit category_level</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1 315   Geral, grupo, su… 7170        1.Alimentaçã… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 2 315   Geral, grupo, su… 7445        2.Habitação   &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 3 315   Geral, grupo, su… 7486        3.Artigos de… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 4 315   Geral, grupo, su… 7558        4.Vestuário   &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 5 315   Geral, grupo, su… 7625        5.Transportes &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 6 315   Geral, grupo, su… 7660        6.Saúde e cu… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 7 315   Geral, grupo, su… 7712        7.Despesas p… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 8 315   Geral, grupo, su… 7766        8.Educação    &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 9 315   Geral, grupo, su… 7786        9.Comunicação &lt;NA&gt;          1</span></span></code></pre></div>
 <p>Now query specific groups:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
@@ -220,6 +290,9 @@ Housing (7445), Transportation (7486), etc.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>, legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="ipca-example-unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"><div class="figcaption">plot of chunk unnamed-chunk-9</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="step-5-metropolitan-area-comparison">Step 5 — Metropolitan area comparison<a class="anchor" aria-label="anchor" href="#step-5-metropolitan-area-comparison"></a>
@@ -229,7 +302,8 @@ inflation across major cities:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check available metropolitan areas</span></span>
 <span><span class="va">metros</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_localities.html">ibge_localities</a></span><span class="op">(</span><span class="fl">7060</span>, level <span class="op">=</span> <span class="st">"N7"</span><span class="op">)</span></span>
-<span><span class="va">metros</span></span></code></pre></div>
+<span><span class="va">metros</span></span>
+<span><span class="co">#&gt; # A tibble: 0 × 0</span></span></code></pre></div>
 <p>Pick a few and compare:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ipca_metros</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
@@ -254,6 +328,9 @@ inflation across major cities:</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="ipca-example-unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11"><div class="figcaption">plot of chunk unnamed-chunk-11</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="step-6-building-a-complete-dataset">Step 6 — Building a complete dataset<a class="anchor" aria-label="anchor" href="#step-6-building-a-complete-dataset"></a>
@@ -274,7 +351,23 @@ download the general index for all metro areas and reshape:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">variable_name</span>, <span class="va">locality_name</span>, <span class="va">period</span>, <span class="va">value</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">variable_name</span>, values_from <span class="op">=</span> <span class="va">value</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">all_metros</span></span></code></pre></div>
+<span><span class="va">all_metros</span></span>
+<span><span class="co">#&gt; # A tibble: 120 × 5</span></span>
+<span><span class="co">#&gt;    locality_name period `IPCA - Variação mensal` IPCA - Variação acumulada no …¹</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;         &lt;chr&gt;                     &lt;dbl&gt;                           &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 Belém - PA    202507                    -0.04                            3.35</span></span>
+<span><span class="co">#&gt;  2 Belém - PA    202508                    -0.15                            3.19</span></span>
+<span><span class="co">#&gt;  3 Belém - PA    202509                     0.27                            3.47</span></span>
+<span><span class="co">#&gt;  4 Belém - PA    202510                     0.26                            3.74</span></span>
+<span><span class="co">#&gt;  5 Belém - PA    202511                     0.11                            3.85</span></span>
+<span><span class="co">#&gt;  6 Belém - PA    202512                    -0.1                             3.75</span></span>
+<span><span class="co">#&gt;  7 Belém - PA    202601                     0.16                            0.16</span></span>
+<span><span class="co">#&gt;  8 Belém - PA    202602                     0.62                            0.78</span></span>
+<span><span class="co">#&gt;  9 Belém - PA    202603                     1.31                            2.11</span></span>
+<span><span class="co">#&gt; 10 Belém - PA    202604                     1.08                            3.21</span></span>
+<span><span class="co">#&gt; # ℹ 110 more rows</span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​`IPCA - Variação acumulada no ano`</span></span>
+<span><span class="co">#&gt; # ℹ 1 more variable: `IPCA - Variação acumulada em 12 meses` &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="tips-for-large-queries">Tips for large queries<a class="anchor" aria-label="anchor" href="#tips-for-large-queries"></a>
@@ -307,7 +400,8 @@ need</li>
 <span>  classification <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"315"</span> <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">full_breakdown</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">full_breakdown</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 457</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="handling-special-values">Handling special values<a class="anchor" aria-label="anchor" href="#handling-special-values"></a>
@@ -318,45 +412,30 @@ uses special codes for certain data conditions. Use
 <code><a href="../reference/parse_ibge_value.html">parse_ibge_value()</a></code> to convert to numeric in one step:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">7060</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="../reference/parse_ibge_value.html">parse_ibge_value</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The function handles all IBGE conventions:</p>
-<table class="table">
-<colgroup>
-<col width="9%">
-<col width="18%">
-<col width="72%">
-</colgroup>
-<thead><tr class="header">
-<th>Code</th>
-<th>Becomes</th>
-<th>Meaning</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>-</code></td>
-<td><code>0</code></td>
-<td>Numeric zero (not from rounding)</td>
-</tr>
-<tr class="even">
-<td><code>..</code></td>
-<td><code>NA</code></td>
-<td>Not applicable</td>
-</tr>
-<tr class="odd">
-<td><code>...</code></td>
-<td><code>NA</code></td>
-<td>Data not available</td>
-</tr>
-<tr class="even">
-<td><code>X</code></td>
-<td><code>NA</code></td>
-<td>Suppressed to protect confidentiality</td>
-</tr>
-</tbody>
-</table>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="../reference/parse_ibge_value.html">parse_ibge_value</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 24 × 9</span></span>
+<span><span class="co">#&gt;    variable_id variable_name        variable_unit classification_315 locality_id</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;                &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;      </span></span>
+<span><span class="co">#&gt;  1 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  2 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  3 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  4 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  5 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  6 63          IPCA - Variação men… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  7 69          IPCA - Variação acu… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  8 69          IPCA - Variação acu… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt;  9 69          IPCA - Variação acu… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt; 10 69          IPCA - Variação acu… %             Índice geral       1          </span></span>
+<span><span class="co">#&gt; # ℹ 14 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 4 more variables: locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   value &lt;dbl&gt;</span></span></code></pre></div>
+<p>The function handles all IBGE conventions — <code>"-"</code> becomes
+<code>0</code> and the “not available” codes become <code>NA</code>. See
+<code><a href="../reference/parse_ibge_value.html">?parse_ibge_value</a></code> for the full table of codes and their
+meanings.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/parse_ibge_value.html">parse_ibge_value</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1.5"</span>, <span class="st">"10"</span>, <span class="st">"-"</span>, <span class="st">".."</span>, <span class="st">"..."</span>, <span class="st">"X"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.5  10.0  0.0   NA    NA    NA</span></span></code></pre></div>
+<span><span class="co">#&gt; [1]  1.5 10.0  0.0   NA   NA   NA</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -167,6 +167,10 @@
 <h3 id="offline-fixture-based-testing">Offline, fixture-based testing<a class="anchor" aria-label="anchor" href="#offline-fixture-based-testing"></a></h3>
 <p>All API interactions are tested against <code>httptest2</code> recorded fixtures (<code>tests/testthat/api/</code>), so the suite needs no network and is insensitive to IBGE server availability. <code>httptest2</code> lives in <code>Suggests</code> and the API test file skips when it is unavailable, following the recommended pattern. Pure logic (formatters, parsers, chunk planning, validation) is tested directly. Fixtures are re-recorded with <code><a href="https://enpiar.com/httptest2/reference/capture_requests.html" class="external-link">httptest2::capture_requests()</a></code> when the API’s responses change.</p>
 </div>
+<div class="section level3">
+<h3 id="precomputed-vignettes-for-network-dependent-examples">Precomputed vignettes for network-dependent examples<a class="anchor" aria-label="anchor" href="#precomputed-vignettes-for-network-dependent-examples"></a></h3>
+<p>Two vignettes (<code>ipca-example</code>, <code>tutorial</code>) run real queries and produce figures, which cannot happen on CRAN or CI. They follow the rOpenSci precomputation pattern: the executable sources are <code>vignettes/*.Rmd.orig</code>, and <code>vignettes/precompile.R</code> knits them locally against the live API into the <code>.Rmd</code> files (with output and figures baked in) that ship with the package. The other two vignettes (<code>getting-started</code>, <code>api-concepts</code>) keep <code>eval = FALSE</code> with hand-checked output, as they are mostly conceptual.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="why-the-internal-function-graph-is-larger-than-the-exported-api">Why the Internal Function Graph Is Larger than the Exported API<a class="anchor" aria-label="anchor" href="#why-the-internal-function-graph-is-larger-than-the-exported-api"></a></h2>

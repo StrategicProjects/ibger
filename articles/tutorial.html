@@ -73,6 +73,11 @@
 
     
     
+<!--
+tutorial.Rmd is generated from tutorial.Rmd.orig by vignettes/precompile.R,
+which runs the code against the live IBGE API. Edit the .orig file, then
+re-run the script and commit the regenerated .Rmd and figures.
+-->
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -147,9 +152,24 @@ insurance sub-item for the Recife Metropolitan Area.</p>
 <span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta_7060</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">category_name</span>, <span class="st">"Plano|Índice"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">category_id</span>, <span class="va">category_name</span>, <span class="va">category_level</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
+<span><span class="co">#&gt;   id    category_id category_name                    category_level</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;                            &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1 315   7169        Índice geral                     0             </span></span>
+<span><span class="co">#&gt; 2 315   7695        6203.Plano de saúde              3             </span></span>
+<span><span class="co">#&gt; 3 315   7696        6203001.Plano de saúde           4             </span></span>
+<span><span class="co">#&gt; 4 315   47668       9101002.Plano de telefonia fixa  4             </span></span>
+<span><span class="co">#&gt; 5 315   47669       9101008.Plano de telefonia móvel 4</span></span>
 <span></span>
 <span><span class="co"># Available variables</span></span>
-<span><span class="va">meta_7060</span><span class="op">$</span><span class="va">variables</span></span></code></pre></div>
+<span><span class="va">meta_7060</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                  unit </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                 &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 63    IPCA - Variação mensal                %    </span></span>
+<span><span class="co">#&gt; 2 69    IPCA - Variação acumulada no ano      %    </span></span>
+<span><span class="co">#&gt; 3 2265  IPCA - Variação acumulada em 12 meses %    </span></span>
+<span><span class="co">#&gt; 4 66    IPCA - Peso mensal                    %</span></span></code></pre></div>
 <p>Reading the output:</p>
 <ul>
 <li>
@@ -193,7 +213,22 @@ both categories simultaneously.</li>
 <span>    names_from <span class="op">=</span> <span class="va">classification_315</span>,</span>
 <span>    values_from <span class="op">=</span> <span class="va">value</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">period</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">period</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 12 × 4</span></span>
+<span><span class="co">#&gt;    period     locality_name `Índice geral` `6203.Plano de saúde`</span></span>
+<span><span class="co">#&gt;    &lt;date&gt;     &lt;chr&gt;                  &lt;dbl&gt;                 &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 2026-06-01 Recife (PE)            -0.04                  0.34</span></span>
+<span><span class="co">#&gt;  2 2026-05-01 Recife (PE)             0.95                  0.5 </span></span>
+<span><span class="co">#&gt;  3 2026-04-01 Recife (PE)             0.82                  0.5 </span></span>
+<span><span class="co">#&gt;  4 2026-03-01 Recife (PE)             1.1                   0.5 </span></span>
+<span><span class="co">#&gt;  5 2026-02-01 Recife (PE)             0.73                  0.5 </span></span>
+<span><span class="co">#&gt;  6 2026-01-01 Recife (PE)             0.28                  0.5 </span></span>
+<span><span class="co">#&gt;  7 2025-12-01 Recife (PE)             0.54                  0.5 </span></span>
+<span><span class="co">#&gt;  8 2025-11-01 Recife (PE)            -0.08                  0.5 </span></span>
+<span><span class="co">#&gt;  9 2025-10-01 Recife (PE)             0.17                  0.5 </span></span>
+<span><span class="co">#&gt; 10 2025-09-01 Recife (PE)             0.56                  0.5 </span></span>
+<span><span class="co">#&gt; 11 2025-08-01 Recife (PE)            -0.24                  0.5 </span></span>
+<span><span class="co">#&gt; 12 2025-07-01 Recife (PE)             0.32                  0.38</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plot">1.4 Plot<a class="anchor" aria-label="anchor" href="#plot"></a>
@@ -210,6 +245,9 @@ both categories simultaneously.</li>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><div class="figcaption">plot of chunk unnamed-chunk-6</div>
+</div>
 <hr>
 </div>
 </div>
@@ -222,7 +260,12 @@ both categories simultaneously.</li>
 <code class="sourceCode R"><span><span class="co"># Find category ID for "Seguro" (insurance)</span></span>
 <span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta_7060</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">category_name</span>, <span class="st">"Seguro|Índice"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">category_id</span>, <span class="va">category_name</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">category_id</span>, <span class="va">category_name</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span><span class="co">#&gt;   id    category_id category_name                       </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;                               </span></span>
+<span><span class="co">#&gt; 1 315   7169        Índice geral                        </span></span>
+<span><span class="co">#&gt; 2 315   7643        5102005.Seguro voluntário de veículo</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ipca_vehicle_ins</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  aggregate <span class="op">=</span> <span class="fl">7060</span>,</span>
@@ -248,6 +291,9 @@ both categories simultaneously.</li>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"><div class="figcaption">plot of chunk unnamed-chunk-9</div>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -268,7 +314,27 @@ transportation, storage and postal services</li>
 <span></span>
 <span><span class="co"># Browse classifications and categories</span></span>
 <span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta_8693</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
-<span><span class="va">meta_8693</span><span class="op">$</span><span class="va">variables</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 8 × 6</span></span>
+<span><span class="co">#&gt;   id    name              category_id category_name category_unit category_level</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1 11046 Tipos de índice   56725       Índice de re… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt; 2 11046 Tipos de índice   56726       Índice de vo… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt; 3 12355 Atividades de se… 107071      Total         &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt; 4 12355 Atividades de se… 106869      1. Serviços … &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 5 12355 Atividades de se… 106874      2. Serviços … &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 6 12355 Atividades de se… 31399       3. Serviços … &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 7 12355 Atividades de se… 106876      4. Transport… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 8 12355 Atividades de se… 31426       5. Outros se… &lt;NA&gt;          1</span></span>
+<span><span class="va">meta_8693</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                                               unit </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                                              &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 7167  PMS - Número-índice (2022=100)                                     Núme…</span></span>
+<span><span class="co">#&gt; 2 7168  PMS - Número-índice com ajuste sazonal (2022=100)                  Núme…</span></span>
+<span><span class="co">#&gt; 3 11623 PMS - Variação mês/mês imediatamente anterior, com ajuste sazonal… %    </span></span>
+<span><span class="co">#&gt; 4 11624 PMS - Variação mês/mesmo mês do ano anterior (M/M-12)              %    </span></span>
+<span><span class="co">#&gt; 5 11625 PMS - Variação acumulada no ano (em relação ao mesmo período do a… %    </span></span>
+<span><span class="co">#&gt; 6 11626 PMS - Variação acumulada em 12 meses (em relação ao período anter… %</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pms_transport</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  aggregate <span class="op">=</span> <span class="fl">8693</span>,</span>
@@ -297,6 +363,9 @@ transportation, storage and postal services</li>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"><div class="figcaption">plot of chunk unnamed-chunk-12</div>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -307,7 +376,30 @@ transportation, storage and postal services</li>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta_5434</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">5434</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta_5434</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
-<span><span class="va">meta_5434</span><span class="op">$</span><span class="va">variables</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 13 × 6</span></span>
+<span><span class="co">#&gt;    id    name             category_id category_name category_unit category_level</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt;  1 888   Grupamento de a… 47946       Total         &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  2 888   Grupamento de a… 47947       Agricultura,… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt;  3 888   Grupamento de a… 47948       Indústria ge… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt;  4 888   Grupamento de a… 60031       Indústria de… &lt;NA&gt;          2             </span></span>
+<span><span class="co">#&gt;  5 888   Grupamento de a… 47949       Construção    &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt;  6 888   Grupamento de a… 47950       Comércio, re… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt;  7 888   Grupamento de a… 56622       Transporte, … &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt;  8 888   Grupamento de a… 56623       Alojamento e… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt;  9 888   Grupamento de a… 56624       Informação, … &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 10 888   Grupamento de a… 60032       Administraçã… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 11 888   Grupamento de a… 56627       Outros servi… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 12 888   Grupamento de a… 56628       Serviços dom… &lt;NA&gt;          1             </span></span>
+<span><span class="co">#&gt; 13 888   Grupamento de a… 60033       Atividades m… &lt;NA&gt;          1</span></span>
+<span><span class="va">meta_5434</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                                               unit </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                                              &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 4090  Pessoas de 14 anos ou mais de idade ocupadas na semana de referên… Mil …</span></span>
+<span><span class="co">#&gt; 2 4091  Coeficiente de variação - Pessoas de 14 anos ou mais de idade ocu… %    </span></span>
+<span><span class="co">#&gt; 3 4108  Distribuição percentual das pessoas de 14 anos ou mais de idade o… %    </span></span>
+<span><span class="co">#&gt; 4 4109  Coeficiente de variação - Distribuição percentual das pessoas de … %</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pnad_accommodation</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  aggregate <span class="op">=</span> <span class="fl">5434</span>,</span>
@@ -332,6 +424,9 @@ transportation, storage and postal services</li>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Employed (thousands)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15"><div class="figcaption">plot of chunk unnamed-chunk-15</div>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -367,6 +462,9 @@ classification <code>12355</code>:</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-17-1.png" alt="plot of chunk unnamed-chunk-17"><div class="figcaption">plot of chunk unnamed-chunk-17</div>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -396,6 +494,9 @@ classification <code>12355</code>:</p>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Employed (thousands)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-19-1.png" alt="plot of chunk unnamed-chunk-19"><div class="figcaption">plot of chunk unnamed-chunk-19</div>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -408,7 +509,30 @@ aggregate 8888 covers manufacturing output. Classification
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta_8888</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">8888</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta_8888</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
-<span><span class="va">meta_8888</span><span class="op">$</span><span class="va">variables</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 27 × 6</span></span>
+<span><span class="co">#&gt;    id    name             category_id category_name category_unit category_level</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt;  1 544   Seções e ativid… 129314      1 Indústria … &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  2 544   Seções e ativid… 129315      2 Indústrias… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  3 544   Seções e ativid… 129316      3 Indústrias… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  4 544   Seções e ativid… 129317      3.10 Fabrica… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  5 544   Seções e ativid… 129318      3.11 Fabrica… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  6 544   Seções e ativid… 129319      3.12 Fabrica… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  7 544   Seções e ativid… 129320      3.13 Fabrica… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  8 544   Seções e ativid… 129321      3.14 Confecç… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  9 544   Seções e ativid… 129322      3.15 Prepara… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt; 10 544   Seções e ativid… 129323      3.16 Fabrica… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt; # ℹ 17 more rows</span></span>
+<span><span class="va">meta_8888</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                                               unit </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                                              &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 12606 PIMPF - Número-índice (2022=100)                                   Núme…</span></span>
+<span><span class="co">#&gt; 2 12607 PIMPF - Número-índice com ajuste sazonal (2022=100)                Núme…</span></span>
+<span><span class="co">#&gt; 3 11601 PIMPF - Variação mês/mês imediatamente anterior, com ajuste sazon… %    </span></span>
+<span><span class="co">#&gt; 4 11602 PIMPF - Variação mês/mesmo mês do ano anterior (M/M-12)            %    </span></span>
+<span><span class="co">#&gt; 5 11603 PIMPF - Variação acumulada no ano (em relação ao mesmo período do… %    </span></span>
+<span><span class="co">#&gt; 6 11604 PIMPF - Variação acumulada em 12 meses (em relação ao período ant… %</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pim_selected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  aggregate <span class="op">=</span> <span class="fl">8888</span>,</span>
@@ -436,6 +560,9 @@ aggregate 8888 covers manufacturing output. Classification
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-22-1.png" alt="plot of chunk unnamed-chunk-22"><div class="figcaption">plot of chunk unnamed-chunk-22</div>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -443,7 +570,14 @@ aggregate 8888 covers manufacturing output. Classification
 </h2>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta_8886</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">8886</span><span class="op">)</span></span>
-<span><span class="va">meta_8886</span><span class="op">$</span><span class="va">variables</span></span></code></pre></div>
+<span><span class="va">meta_8886</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                                               unit </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                                              &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 12606 PIMPF - Número-índice (2022=100)                                   Núme…</span></span>
+<span><span class="co">#&gt; 2 11602 PIMPF - Variação mês/mesmo mês do ano anterior (M/M-12)            %    </span></span>
+<span><span class="co">#&gt; 3 11603 PIMPF - Variação acumulada no ano (em relação ao mesmo período do… %    </span></span>
+<span><span class="co">#&gt; 4 11604 PIMPF - Variação acumulada em 12 meses (em relação ao período ant… %</span></span></code></pre></div>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">construction</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  aggregate <span class="op">=</span> <span class="fl">8886</span>,</span>
@@ -467,6 +601,9 @@ aggregate 8888 covers manufacturing output. Classification
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Index (2022 = 100)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-25-1.png" alt="plot of chunk unnamed-chunk-25"><div class="figcaption">plot of chunk unnamed-chunk-25</div>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -482,7 +619,21 @@ index type (volume vs nominal revenue).</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta_8884</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">8884</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta_8884</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
-<span><span class="va">meta_8884</span><span class="op">$</span><span class="va">variables</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span><span class="co">#&gt;   id    name            category_id category_name   category_unit category_level</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;       &lt;chr&gt;           &lt;chr&gt;         &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1 11046 Tipos de índice 56737       Índice de rece… &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt; 2 11046 Tipos de índice 56738       Índice de volu… &lt;NA&gt;          0</span></span>
+<span><span class="va">meta_8884</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                                               unit </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                                              &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 7169  PMC - Número-índice (2022=100)                                     Núme…</span></span>
+<span><span class="co">#&gt; 2 7170  PMC - Número-índice com ajuste sazonal (2022=100)                  Núme…</span></span>
+<span><span class="co">#&gt; 3 11708 PMC - Variação mês/mês imediatamente anterior, com ajuste sazonal… %    </span></span>
+<span><span class="co">#&gt; 4 11709 PMC - Variação mês/mesmo mês do ano anterior (M/M-12)              %    </span></span>
+<span><span class="co">#&gt; 5 11710 PMC - Variação acumulada no ano (em relação ao mesmo período do a… %    </span></span>
+<span><span class="co">#&gt; 6 11711 PMC - Variação acumulada em 12 meses (em relação ao período anter… %</span></span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pmc_vehicles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  aggregate <span class="op">=</span> <span class="fl">8884</span>,</span>
@@ -507,6 +658,9 @@ index type (volume vs nominal revenue).</p>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Index (2022 = 100)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"><div class="figcaption">plot of chunk unnamed-chunk-28</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="construction-materials-8757">9.2 Construction materials (8757)<a class="anchor" aria-label="anchor" href="#construction-materials-8757"></a>
@@ -535,6 +689,9 @@ index type (volume vs nominal revenue).</p>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Index (2022 = 100)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"><div class="figcaption">plot of chunk unnamed-chunk-30</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="retail-trade-8880">9.3 Retail trade (8880)<a class="anchor" aria-label="anchor" href="#retail-trade-8880"></a>
@@ -563,6 +720,9 @@ index type (volume vs nominal revenue).</p>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Index (2022 = 100)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="tutorial-unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"><div class="figcaption">plot of chunk unnamed-chunk-32</div>
+</div>
 <hr>
 </div>
 </div>

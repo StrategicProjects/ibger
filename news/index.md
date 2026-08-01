@@ -2,6 +2,29 @@
 
 ## ibger (development version)
 
+### Changes from the rOpenSci review (ropensci/software-review#787)
+
+- `curl (>= 6.0.0)` is now declared in `Imports`, enforcing at install
+  time the version requirement that was previously only documented in
+  the README (older curl versions fail with
+  `curl_modify_url is not an exported object`).
+- The table of IBGE special value codes (`-`, `..`, `...`, `X`) is now
+  documented in a single place —
+  [`?parse_ibge_value`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.md)
+  — and linked from the README and vignettes instead of being repeated.
+- The `ipca-example` and `tutorial` vignettes are now precompiled from
+  `.Rmd.orig` sources against the live IBGE API
+  (`vignettes/precompile.R`), so their output and ggplot2 figures render
+  on the pkgdown site.
+- README: added the rOpenSci review badge, linked the API-concepts
+  vignette from the quick start, pointed the “Value column” section to
+  [`parse_ibge_value()`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.md),
+  and rewrote the
+  [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md)
+  section to match the tone of the rest of the page.
+
+### Other changes
+
 - Expanded the test suite to cover all exported functions (~85%
   coverage): pure helpers and parsers are tested directly, and API
   interactions are tested against recorded fixtures with `httptest2` (no

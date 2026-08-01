@@ -41,10 +41,21 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ibger-development-version">ibger (development version)<a class="anchor" aria-label="anchor" href="#ibger-development-version"></a></h2>
+<div class="section level3">
+<h3 id="changes-from-the-ropensci-review-ropenscisoftware-review787-development-version">Changes from the rOpenSci review (ropensci/software-review#787)<a class="anchor" aria-label="anchor" href="#changes-from-the-ropensci-review-ropenscisoftware-review787-development-version"></a></h3>
+<ul><li>
+<code>curl (&gt;= 6.0.0)</code> is now declared in <code>Imports</code>, enforcing at install time the version requirement that was previously only documented in the README (older curl versions fail with <code>curl_modify_url is not an exported object</code>).</li>
+<li>The table of IBGE special value codes (<code>-</code>, <code>..</code>, <code>...</code>, <code>X</code>) is now documented in a single place — <code><a href="../reference/parse_ibge_value.html">?parse_ibge_value</a></code> — and linked from the README and vignettes instead of being repeated.</li>
+<li>The <code>ipca-example</code> and <code>tutorial</code> vignettes are now precompiled from <code>.Rmd.orig</code> sources against the live IBGE API (<code>vignettes/precompile.R</code>), so their output and ggplot2 figures render on the pkgdown site.</li>
+<li>README: added the rOpenSci review badge, linked the API-concepts vignette from the quick start, pointed the “Value column” section to <code><a href="../reference/parse_ibge_value.html">parse_ibge_value()</a></code>, and rewrote the <code><a href="../reference/ibge_explorer.html">ibge_explorer()</a></code> section to match the tone of the rest of the page.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-development-version">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
 <ul><li>Expanded the test suite to cover all exported functions (~85% coverage): pure helpers and parsers are tested directly, and API interactions are tested against recorded fixtures with <code>httptest2</code> (no network needed).</li>
 <li>Added continuous integration: <code>R CMD check</code> on Linux/macOS/Windows and test coverage reporting via GitHub Actions.</li>
 <li>Added <code>CONTRIBUTING.md</code>, <code>CODE_OF_CONDUCT.md</code> and <code>codemeta.json</code> in preparation for rOpenSci submission.</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="ibger-020">ibger 0.2.0<a class="anchor" aria-label="anchor" href="#ibger-020"></a></h2><p class="text-muted">CRAN release: 2026-07-08</p>
 <ul><li>

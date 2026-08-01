@@ -36,10 +36,40 @@ Key information from the metadata:
 
 # See what variables are available
 meta$variables
+#> # A tibble: 4 × 3
+#>   id    name                                  unit 
+#>   <chr> <chr>                                 <chr>
+#> 1 63    IPCA - Variação mensal                %    
+#> 2 69    IPCA - Variação acumulada no ano      %    
+#> 3 2265  IPCA - Variação acumulada em 12 meses %    
+#> 4 66    IPCA - Peso mensal                    %
 
 # Peek at the classification categories
 tidyr::unnest(meta$classifications, categories) |>
   head(20)
+#> # A tibble: 20 × 6
+#>    id    name             category_id category_name category_unit category_level
+#>    <chr> <chr>            <chr>       <chr>         <chr>         <chr>         
+#>  1 315   Geral, grupo, s… 7169        Índice geral  <NA>          0             
+#>  2 315   Geral, grupo, s… 7170        1.Alimentaçã… <NA>          1             
+#>  3 315   Geral, grupo, s… 7171        11.Alimentaç… <NA>          2             
+#>  4 315   Geral, grupo, s… 7172        1101.Cereais… <NA>          3             
+#>  5 315   Geral, grupo, s… 7173        1101002.Arroz <NA>          4             
+#>  6 315   Geral, grupo, s… 7175        1101051.Feij… <NA>          4             
+#>  7 315   Geral, grupo, s… 7176        1101052.Feij… <NA>          4             
+#>  8 315   Geral, grupo, s… 47617       1101053.Feij… <NA>          4             
+#>  9 315   Geral, grupo, s… 12222       1101073.Feij… <NA>          4             
+#> 10 315   Geral, grupo, s… 47618       1101079.Milh… <NA>          4             
+#> 11 315   Geral, grupo, s… 7184        1102.Farinha… <NA>          3             
+#> 12 315   Geral, grupo, s… 7185        1102001.Fari… <NA>          4             
+#> 13 315   Geral, grupo, s… 7187        1102006.Maca… <NA>          4             
+#> 14 315   Geral, grupo, s… 7188        1102008.Fubá… <NA>          4             
+#> 15 315   Geral, grupo, s… 7190        1102010.Floc… <NA>          4             
+#> 16 315   Geral, grupo, s… 7191        1102012.Fari… <NA>          4             
+#> 17 315   Geral, grupo, s… 7195        1102023.Fari… <NA>          4             
+#> 18 315   Geral, grupo, s… 107608      1102029.Mass… <NA>          4             
+#> 19 315   Geral, grupo, s… 47619       1102061.Maca… <NA>          4             
+#> 20 315   Geral, grupo, s… 7200        1103.Tubércu… <NA>          3
 ```
 
 ## Step 2 — Monthly IPCA for Brazil
@@ -56,6 +86,22 @@ ipca_br <- ibge_variables(
 )
 
 ipca_br
+#> # A tibble: 24 × 9
+#>    variable_id variable_name        variable_unit classification_315 locality_id
+#>    <chr>       <chr>                <chr>         <chr>              <chr>      
+#>  1 63          IPCA - Variação men… %             Índice geral       1          
+#>  2 63          IPCA - Variação men… %             Índice geral       1          
+#>  3 63          IPCA - Variação men… %             Índice geral       1          
+#>  4 63          IPCA - Variação men… %             Índice geral       1          
+#>  5 63          IPCA - Variação men… %             Índice geral       1          
+#>  6 63          IPCA - Variação men… %             Índice geral       1          
+#>  7 63          IPCA - Variação men… %             Índice geral       1          
+#>  8 63          IPCA - Variação men… %             Índice geral       1          
+#>  9 63          IPCA - Variação men… %             Índice geral       1          
+#> 10 63          IPCA - Variação men… %             Índice geral       1          
+#> # ℹ 14 more rows
+#> # ℹ 4 more variables: locality_name <chr>, locality_level <chr>, period <chr>,
+#> #   value <chr>
 ```
 
 The `value` column is character because of the API’s special values (see
@@ -89,6 +135,10 @@ ggplot(ipca_br, aes(date, value)) +
   theme_minimal()
 ```
 
+![plot of chunk unnamed-chunk-6](ipca-example-unnamed-chunk-6-1.png)
+
+plot of chunk unnamed-chunk-6
+
 ## Step 3 — Compare accumulation measures
 
 Get all three variation variables at once:
@@ -120,6 +170,10 @@ ggplot(ipca_vars, aes(date, value, colour = variable_name)) +
   theme(legend.position = "bottom")
 ```
 
+![plot of chunk unnamed-chunk-7](ipca-example-unnamed-chunk-7-1.png)
+
+plot of chunk unnamed-chunk-7
+
 ## Step 4 — Breakdown by product group
 
 Classification 315 organizes IPCA items hierarchically. The top-level
@@ -134,6 +188,18 @@ cats <- tidyr::unnest(meta$classifications, categories)
 
 # Level-1 groups (just below the general index)
 cats |> filter(category_level == "1")
+#> # A tibble: 9 × 6
+#>   id    name              category_id category_name category_unit category_level
+#>   <chr> <chr>             <chr>       <chr>         <chr>         <chr>         
+#> 1 315   Geral, grupo, su… 7170        1.Alimentaçã… <NA>          1             
+#> 2 315   Geral, grupo, su… 7445        2.Habitação   <NA>          1             
+#> 3 315   Geral, grupo, su… 7486        3.Artigos de… <NA>          1             
+#> 4 315   Geral, grupo, su… 7558        4.Vestuário   <NA>          1             
+#> 5 315   Geral, grupo, su… 7625        5.Transportes <NA>          1             
+#> 6 315   Geral, grupo, su… 7660        6.Saúde e cu… <NA>          1             
+#> 7 315   Geral, grupo, su… 7712        7.Despesas p… <NA>          1             
+#> 8 315   Geral, grupo, su… 7766        8.Educação    <NA>          1             
+#> 9 315   Geral, grupo, su… 7786        9.Comunicação <NA>          1
 ```
 
 Now query specific groups:
@@ -165,6 +231,10 @@ ggplot(groups, aes(date, value, fill = classification_315)) +
   theme(legend.position = "bottom", legend.text = element_text(size = 7))
 ```
 
+![plot of chunk unnamed-chunk-9](ipca-example-unnamed-chunk-9-1.png)
+
+plot of chunk unnamed-chunk-9
+
 ## Step 5 — Metropolitan area comparison
 
 Aggregate 7060 is available at level N7 (metropolitan areas). Compare
@@ -175,6 +245,7 @@ inflation across major cities:
 # Check available metropolitan areas
 metros <- ibge_localities(7060, level = "N7")
 metros
+#> # A tibble: 0 × 0
 ```
 
 Pick a few and compare:
@@ -205,6 +276,10 @@ ggplot(ipca_metros, aes(date, value, colour = locality_name)) +
   theme(legend.position = "bottom")
 ```
 
+![plot of chunk unnamed-chunk-11](ipca-example-unnamed-chunk-11-1.png)
+
+plot of chunk unnamed-chunk-11
+
 ## Step 6 — Building a complete dataset
 
 For a more complete analysis, combine multiple queries. For instance,
@@ -226,6 +301,22 @@ all_metros <- all_metros |>
   pivot_wider(names_from = variable_name, values_from = value)
 
 all_metros
+#> # A tibble: 120 × 5
+#>    locality_name period `IPCA - Variação mensal` IPCA - Variação acumulada no …¹
+#>    <chr>         <chr>                     <dbl>                           <dbl>
+#>  1 Belém - PA    202507                    -0.04                            3.35
+#>  2 Belém - PA    202508                    -0.15                            3.19
+#>  3 Belém - PA    202509                     0.27                            3.47
+#>  4 Belém - PA    202510                     0.26                            3.74
+#>  5 Belém - PA    202511                     0.11                            3.85
+#>  6 Belém - PA    202512                    -0.1                             3.75
+#>  7 Belém - PA    202601                     0.16                            0.16
+#>  8 Belém - PA    202602                     0.62                            0.78
+#>  9 Belém - PA    202603                     1.31                            2.11
+#> 10 Belém - PA    202604                     1.08                            3.21
+#> # ℹ 110 more rows
+#> # ℹ abbreviated name: ¹​`IPCA - Variação acumulada no ano`
+#> # ℹ 1 more variable: `IPCA - Variação acumulada em 12 meses` <dbl>
 ```
 
 ## Tips for large queries
@@ -252,6 +343,7 @@ full_breakdown <- ibge_variables(
 )
 
 nrow(full_breakdown)
+#> [1] 457
 ```
 
 ## Handling special values
@@ -267,19 +359,31 @@ to convert to numeric in one step:
 
 ibge_variables(7060, localities = "BR") |>
   mutate(value = parse_ibge_value(value))
+#> # A tibble: 24 × 9
+#>    variable_id variable_name        variable_unit classification_315 locality_id
+#>    <chr>       <chr>                <chr>         <chr>              <chr>      
+#>  1 63          IPCA - Variação men… %             Índice geral       1          
+#>  2 63          IPCA - Variação men… %             Índice geral       1          
+#>  3 63          IPCA - Variação men… %             Índice geral       1          
+#>  4 63          IPCA - Variação men… %             Índice geral       1          
+#>  5 63          IPCA - Variação men… %             Índice geral       1          
+#>  6 63          IPCA - Variação men… %             Índice geral       1          
+#>  7 69          IPCA - Variação acu… %             Índice geral       1          
+#>  8 69          IPCA - Variação acu… %             Índice geral       1          
+#>  9 69          IPCA - Variação acu… %             Índice geral       1          
+#> 10 69          IPCA - Variação acu… %             Índice geral       1          
+#> # ℹ 14 more rows
+#> # ℹ 4 more variables: locality_name <chr>, locality_level <chr>, period <chr>,
+#> #   value <dbl>
 ```
 
-The function handles all IBGE conventions:
-
-| Code  | Becomes | Meaning                               |
-|-------|---------|---------------------------------------|
-| `-`   | `0`     | Numeric zero (not from rounding)      |
-| `..`  | `NA`    | Not applicable                        |
-| `...` | `NA`    | Data not available                    |
-| `X`   | `NA`    | Suppressed to protect confidentiality |
+The function handles all IBGE conventions — `"-"` becomes `0` and the
+“not available” codes become `NA`. See
+[`?parse_ibge_value`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.md)
+for the full table of codes and their meanings.
 
 ``` r
 
 parse_ibge_value(c("1.5", "10", "-", "..", "...", "X"))
-#> [1] 1.5  10.0  0.0   NA    NA    NA
+#> [1]  1.5 10.0  0.0   NA   NA   NA
 ```
