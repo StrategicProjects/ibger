@@ -32,6 +32,9 @@ CLAUDE.local.md
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+# purl() leftovers from local builds (precompile.R is the real script)
+vignettes/*.R
+!vignettes/precompile.R
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth

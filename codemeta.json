@@ -249,6 +249,19 @@
     },
     "3": {
       "@type": "SoftwareApplication",
+      "identifier": "curl",
+      "name": "curl",
+      "version": ">= 6.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=curl"
+    },
+    "4": {
+      "@type": "SoftwareApplication",
       "identifier": "cli",
       "name": "cli",
       "version": ">= 3.6.0",
@@ -260,7 +273,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=cli"
     },
-    "4": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -272,7 +285,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "5": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
@@ -284,7 +297,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
@@ -296,7 +309,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -308,7 +321,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "8": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
@@ -322,9 +335,14 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "485.68KB",
+  "fileSize": "984.414KB",
   "releaseNotes": "https://github.com/StrategicProjects/ibger/blob/main/NEWS.md",
   "readme": "https://github.com/StrategicProjects/ibger/blob/main/README.md",
   "contIntegration": ["https://github.com/StrategicProjects/ibger/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/StrategicProjects/ibger"],
-  "developmentStatus": "https://www.repostatus.org/#active"
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "review": {
+    "@type": "Review",
+    "url": "https://github.com/ropensci/software-review/issues/787",
+    "provider": "https://ropensci.org"
+  }
 }

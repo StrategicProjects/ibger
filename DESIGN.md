@@ -203,6 +203,16 @@ Pure logic (formatters, parsers, chunk planning, validation) is tested
 directly. Fixtures are re-recorded with `httptest2::capture_requests()`
 when the API's responses change.
 
+### Precomputed vignettes for network-dependent examples
+
+Two vignettes (`ipca-example`, `tutorial`) run real queries and produce
+figures, which cannot happen on CRAN or CI. They follow the rOpenSci
+precomputation pattern: the executable sources are `vignettes/*.Rmd.orig`,
+and `vignettes/precompile.R` knits them locally against the live API into
+the `.Rmd` files (with output and figures baked in) that ship with the
+package. The other two vignettes (`getting-started`, `api-concepts`) keep
+`eval = FALSE` with hand-checked output, as they are mostly conceptual.
+
 ## Why the Internal Function Graph Is Larger than the Exported API
 
 Static checks see 14 exported functions but ~45 internal ones and a call

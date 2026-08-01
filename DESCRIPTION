@@ -22,8 +22,9 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 4.1.0)
-Imports: 
+Imports:
     httr2 (>= 1.0.0),
+    curl (>= 6.0.0),
     cli (>= 3.6.0),
     tibble,
     purrr,

@@ -22,3 +22,8 @@
 ^paper\.md$
 ^paper\.bib$
 ^paper\.pdf$
+^paper-figure\.R$
+^paper-figure1\.png$
+^DESIGN\.md$
+^vignettes/.*\.Rmd\.orig$
+^vignettes/precompile\.R$
