@@ -100,7 +100,7 @@ scope, reference period, and more.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 # Structural survey (no month needed)
 ibge_survey_metadata("CD", year = 2022)
 
@@ -112,12 +112,12 @@ meta <- ibge_survey_metadata("CD", year = 2022)
 names(meta$occurrences[[1]])
 
 # Invalid code: clear error with suggestions
-ibge_survey_metadata("PMS", year = 2024)
+try(ibge_survey_metadata("PMS", year = 2024))
 #> Error: Survey code "PMS" not found in the IBGE catalog.
 
 # Invalid year: error with available range
 ibge_survey_metadata("CD", year = 1800)
 #> Error: Year 1800 not available for survey "CD".
 #> i Available years: 1940 to 2022 (9 total).
-} # }
+}
 ```

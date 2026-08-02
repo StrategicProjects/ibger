@@ -37,11 +37,11 @@ call. A CSV download button is also available.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 # Open in RStudio Viewer
 ibge_explorer(launch.browser = FALSE)
 
 # Open in browser
 ibge_explorer()
-} # }
+}
 ```

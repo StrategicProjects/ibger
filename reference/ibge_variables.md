@@ -104,7 +104,7 @@ showing the allowed values.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 # IPCA in Brazil
 ibge_variables(7060, localities = "BR")
 
@@ -123,6 +123,6 @@ ibge_variables(
   localities     = list(N6 = c(3550308, 3304557)),
   classification = list("226" = c(4844, 96608))
 )
-} # }
 
+}
 ```

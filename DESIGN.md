@@ -261,11 +261,13 @@ internal surface supports four needs:
   helpers rather than one large function, so each quirk can be tested
   and fixed in isolation.
 
-The same preference explains the handful of functions with high
-cyclomatic complexity flagged by `pkgcheck`: they are concentrated in
-the SIDRA URL parser and the
+The functions `pkgcheck` originally flagged for high cyclomatic
+complexity — the SIDRA URL parser and the
 [`print()`](https://rdrr.io/r/base/print.html) methods, which by nature
-enumerate many optional fields, not in the retrieval path.
+enumerate many optional fields — were later decomposed along the same
+lines (one helper per URL component, per metadata block, per printed
+section), bringing every function under the threshold of 15 without
+changing behavior.
 
 ## Relationship to the Python Sibling (`ibgepy`)
 

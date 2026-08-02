@@ -22,7 +22,7 @@ columns: `id`, `literal`, `modification`
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 ibge_periods(1705)
-} # }
+}
 ```

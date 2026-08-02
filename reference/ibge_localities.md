@@ -35,8 +35,8 @@ columns: `id`, `name`, `level_id`, `level_name`
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 ibge_localities(1437, level = "N1")
 ibge_localities(1437, level = c("N6", "N7"))
-} # }
+}
 ```

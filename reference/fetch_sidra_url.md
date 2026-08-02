@@ -31,12 +31,15 @@ A [tibble](https://tibble.tidyverse.org/reference/tibble.html) in tidy
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-url <- "https://apisidra.ibge.gov.br/values/t/7060/n1/all/v/63/p/last%2012/c315/7169"
+if (FALSE) { # interactive()
+url <- paste0(
+  "https://apisidra.ibge.gov.br/values",
+  "/t/7060/n1/all/v/63/p/last%2012/c315/7169"
+)
 fetch_sidra_url(url)
 
 # Pipe-friendly: inspect then fetch
 url |> parse_sidra_url()
 url |> fetch_sidra_url()
-} # }
+}
 ```

@@ -35,10 +35,10 @@ A list of class `ibge_metadata` with:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 meta <- ibge_metadata(7060)
 meta$variables
 meta$classifications
 tidyr::unnest(meta$classifications, categories)
-} # }
+}
 ```

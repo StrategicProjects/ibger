@@ -52,9 +52,9 @@ columns: `survey_id`, `survey_name`, `aggregate_id`, `aggregate_name`
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 ibge_aggregates()
 ibge_aggregates(periodicity = "P5")
 ibge_aggregates(level = "N6")
-} # }
+}
 ```

@@ -47,7 +47,7 @@ columns:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 # Conjunctural survey (monthly periods)
 ibge_survey_periods("SC")   # Pesquisa Mensal de Serviços
 
@@ -55,10 +55,10 @@ ibge_survey_periods("SC")   # Pesquisa Mensal de Serviços
 ibge_survey_periods("CD")   # Censo Demográfico
 
 # Invalid code: helpful error with suggestions
-ibge_survey_periods("PMS")
+try(ibge_survey_periods("PMS"))
 #> Error: Survey code "PMS" not found in the IBGE catalog.
 #> i Did you mean one of these?
 #>   * SC - Pesquisa Mensal de Serviços
 #>   ...
-} # }
+}
 ```

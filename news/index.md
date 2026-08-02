@@ -22,6 +22,25 @@
   and rewrote the
   [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md)
   section to match the tone of the rest of the page.
+- Examples no longer use `\dontrun{}`: examples that query the live IBGE
+  API (or launch the Shiny explorer) are now guarded with
+  `@examplesIf interactive()`, so they render in the docs and run for
+  interactive users without hitting the network during checks.
+- Internal refactor to address the remaining pkgcheck/goodpractice
+  notes: every function is now below the cyclomatic-complexity threshold
+  of 15 (long functions such as
+  [`parse_sidra_url()`](https://strategicprojects.github.io/ibger/reference/parse_sidra_url.md),
+  [`fetch_sidra_url()`](https://strategicprojects.github.io/ibger/reference/fetch_sidra_url.md),
+  [`ibge_metadata()`](https://strategicprojects.github.io/ibger/reference/ibge_metadata.md)
+  and
+  [`ibge_survey_metadata()`](https://strategicprojects.github.io/ibger/reference/ibge_survey_metadata.md)
+  were decomposed into focused helpers), duplicated `@param` docs were
+  replaced with `@inheritParams`, and the lintr issues flagged in the
+  review (long lines, `expect_equal()` vs `expect_identical()`, static
+  regexes without `fixed = TRUE`, duplicate `cli` bullet names, `<<-`,
+  [`require()`](https://rdrr.io/r/base/library.html) in the Shiny app,
+  [`setwd()`](https://rdrr.io/r/base/getwd.html) in `precompile.R`) were
+  cleaned up. No user-facing behavior changes.
 
 ### Other changes
 

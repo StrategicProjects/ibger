@@ -183,7 +183,7 @@
 <strong>Chunking</strong> needs its own estimators (per dimension), a plan builder, splitters and cached id lookups.</li>
 <li>
 <strong>Parsing</strong> the API’s two response layouts (nested default and flat view) plus the Metadata API’s document tree is done with narrow, named helpers rather than one large function, so each quirk can be tested and fixed in isolation.</li>
-</ul><p>The same preference explains the handful of functions with high cyclomatic complexity flagged by <code>pkgcheck</code>: they are concentrated in the SIDRA URL parser and the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> methods, which by nature enumerate many optional fields, not in the retrieval path.</p>
+</ul><p>The functions <code>pkgcheck</code> originally flagged for high cyclomatic complexity — the SIDRA URL parser and the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> methods, which by nature enumerate many optional fields — were later decomposed along the same lines (one helper per URL component, per metadata block, per printed section), bringing every function under the threshold of 15 without changing behavior.</p>
 </div>
 <div class="section level2">
 <h2 id="relationship-to-the-python-sibling-ibgepy">Relationship to the Python Sibling (<code>ibgepy</code>)<a class="anchor" aria-label="anchor" href="#relationship-to-the-python-sibling-ibgepy"></a></h2>

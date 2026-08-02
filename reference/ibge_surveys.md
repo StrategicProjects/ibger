@@ -76,7 +76,7 @@ surveys.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 # Full catalog
 ibge_surveys()
 
@@ -87,5 +87,5 @@ ibge_surveys(thematic_classifications = FALSE)
 library(dplyr)
 ibge_surveys(thematic_classifications = FALSE) |>
   filter(status == "Ativa", category == "Conjuntural")
-} # }
+}
 ```

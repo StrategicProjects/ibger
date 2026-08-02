@@ -38,8 +38,11 @@ A list of class `sidra_query` with:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-url <- "https://apisidra.ibge.gov.br/values/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623"
+if (FALSE) { # interactive()
+url <- paste0(
+  "https://apisidra.ibge.gov.br/values",
+  "/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623"
+)
 parse_sidra_url(url)
-} # }
+}
 ```

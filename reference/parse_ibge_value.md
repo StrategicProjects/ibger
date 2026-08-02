@@ -47,11 +47,11 @@ parse_ibge_value(c("1.5", "10", "-", "..", "...", "X", NA))
 #> [1]  1.5 10.0  0.0   NA   NA   NA   NA
 #> [1] 1.5  10.0  0.0   NA    NA    NA    NA
 
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 # Typical usage after ibge_variables()
 library(dplyr)
 
 ibge_variables(7060, localities = "BR") |>
   mutate(value = parse_ibge_value(value))
-} # }
+}
 ```
