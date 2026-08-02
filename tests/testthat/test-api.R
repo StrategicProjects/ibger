@@ -20,12 +20,12 @@ test_that("ibge_metadata fetches and parses aggregate metadata", {
   })
 
   expect_s3_class(meta, "ibge_metadata")
-  expect_equal(as.character(meta$id), "1612")
+  expect_identical(as.character(meta$id), "1612")
   expect_gt(nrow(meta$variables), 0)
   expect_true(all(c("id", "name", "unit") %in% names(meta$variables)))
   expect_gt(nrow(meta$classifications), 0)
   expect_s3_class(meta$classifications$categories[[1]], "tbl_df")
-  expect_equal(meta$periodicity$frequency, "anual")
+  expect_identical(meta$periodicity$frequency, "anual")
 
   # Second call comes from the cache (no HTTP)
   meta2 <- ibge_metadata(1612)
@@ -52,26 +52,27 @@ test_that("ibge_localities returns localities for a level", {
 
   expect_s3_class(locs, "tbl_df")
   expect_named(locs, c("id", "name", "level_id", "level_name"))
-  expect_equal(nrow(locs), 27)
+  expect_identical(nrow(locs), 27L)
   expect_true("Pernambuco" %in% locs$name)
 })
 
 test_that("ibge_variables fetches and tidies a small query", {
   local_clear_caches()
   httptest2::with_mock_dir("api", {
-    result <- ibge_variables(1612, variable = 112, periods = -2, localities = "BR")
+    result <- ibge_variables(1612, variable = 112, periods = -2,
+                             localities = "BR")
   })
 
   expect_s3_class(result, "tbl_df")
-  expect_equal(nrow(result), 2)
-  expect_equal(unique(result$variable_id), "112")
-  expect_equal(unique(result$locality_name), "Brasil")
+  expect_identical(nrow(result), 2L)
+  expect_identical(unique(result$variable_id), "112")
+  expect_identical(unique(result$locality_name), "Brasil")
   expect_type(result$value, "character")
   # Values coerce cleanly (numbers or IBGE special codes -> NA)
   expect_type(parse_ibge_value(result$value), "double")
 })
 
-test_that("ibge_variables validation rejects a bad level before any data request", {
+test_that("ibge_variables validation rejects a bad level before a request", {
   local_clear_caches()
   httptest2::with_mock_dir("api", {
     expect_error(
@@ -88,7 +89,10 @@ test_that("ibge_aggregates lists tables filtered by subject", {
   })
 
   expect_s3_class(aggs, "tbl_df")
-  expect_named(aggs, c("survey_id", "survey_name", "aggregate_id", "aggregate_name"))
+  expect_named(
+    aggs,
+    c("survey_id", "survey_name", "aggregate_id", "aggregate_name")
+  )
   expect_gt(nrow(aggs), 0)
 
   # Second call with the same filters comes from the cache
@@ -134,19 +138,22 @@ test_that("ibge_survey_metadata fetches and structures survey metadata", {
   })
 
   expect_s3_class(meta, "ibge_survey_metadata")
-  expect_equal(meta$acronym, "CD")
-  expect_equal(tolower(meta$category), "estrutural")
+  expect_identical(meta$acronym, "CD")
+  expect_identical(tolower(meta$category), "estrutural")
   expect_s3_class(meta$thematic_classifications, "tbl_df")
   expect_gt(length(meta$occurrences), 0)
 
   expect_invisible(print(meta))
   out <- cli::cli_fmt(print(meta))
-  expect_true(any(grepl("CD", out)))
+  expect_true(any(grepl("CD", out, fixed = TRUE)))
 })
 
 test_that("ibge_survey_metadata validates inputs before any request", {
   expect_error(ibge_survey_metadata("CD", year = "x"), "single integer")
-  expect_error(ibge_survey_metadata("CD", year = 2022, month = 13), "between 1 and 12")
+  expect_error(
+    ibge_survey_metadata("CD", year = 2022, month = 13),
+    "between 1 and 12"
+  )
 
   local_clear_caches()
   httptest2::with_mock_dir("api", {

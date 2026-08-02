@@ -17,8 +17,7 @@ A \link[tibble:tibble]{tibble} with columns:
 Retrieves available periods for an aggregate.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ibge_periods(1705)
-}
-
+\dontshow{\}) # examplesIf}
 }

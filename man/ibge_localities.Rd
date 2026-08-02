@@ -26,9 +26,8 @@ levels. Validates the requested level(s) against the aggregate metadata
 before querying.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ibge_localities(1437, level = "N1")
 ibge_localities(1437, level = c("N6", "N7"))
-}
-
+\dontshow{\}) # examplesIf}
 }

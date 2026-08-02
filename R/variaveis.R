@@ -47,8 +47,7 @@
 #'   `locality_id`, `locality_name`, `locality_level`,
 #'   `period`, `value`
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' # IPCA in Brazil
 #' ibge_variables(7060, localities = "BR")
 #'
@@ -67,8 +66,7 @@
 #'   localities     = list(N6 = c(3550308, 3304557)),
 #'   classification = list("226" = c(4844, 96608))
 #' )
-#' }
-#' 
+#'
 #'
 #' @export
 ibge_variables <- function(aggregate,
@@ -130,7 +128,8 @@ ibge_variables <- function(aggregate,
   } else {
     n_chunks <- length(plan)
     cli::cli_alert_info(
-      "Estimated result exceeds the API limit ({chunk_limit} values); splitting into {n_chunks} request{?s}."
+      "Estimated result exceeds the API limit ({chunk_limit} values);
+       splitting into {n_chunks} request{?s}."
     )
 
     pieces <- purrr::imap(plan, function(ch, i) {

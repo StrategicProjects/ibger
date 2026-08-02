@@ -16,22 +16,22 @@ ibge_metadados_url <- "https://servicodados.ibge.gov.br/api/v2/metadados"
 #' @return Parsed JSON response as a list.
 #' @noRd
 ibge_metadados_request <- function(..., .label = "data") {
-  
+
   path_parts <- c(...)
   url <- paste(c(ibge_metadados_url, path_parts), collapse = "/")
-  
+
   cli::cli_progress_step("Fetching {(.label)} from IBGE Metadata API...")
-  
+
   req <- httr2::request(url) |>
     httr2::req_user_agent("ibger (R package)") |>
     httr2::req_retry(max_tries = 3, backoff = ~ 2)
-  
+
   req <- httr2::req_error(
     req,
     is_error = function(resp) httr2::resp_status(resp) >= 400,
     body = function(resp) paste0("HTTP error ", httr2::resp_status(resp))
   )
-  
+
   resp <- tryCatch(
     httr2::req_perform(req),
     error = function(e) {
@@ -42,11 +42,11 @@ ibge_metadados_request <- function(..., .label = "data") {
       ), call = NULL)
     }
   )
-  
+
   result <- httr2::resp_body_json(resp, simplifyVector = FALSE)
-  
+
   cli::cli_progress_done()
-  
+
   result
 }
 
@@ -65,14 +65,14 @@ get_cached_survey_catalog <- function() {
   if (exists("catalog", envir = .ibger_survey_cache)) {
     return(get("catalog", envir = .ibger_survey_cache))
   }
-  
+
   data <- ibge_metadados_request("pesquisas", .label = "survey catalog")
-  
+
   catalog <- stats::setNames(
     purrr::map_chr(data, function(s) s[["nome"]] %||% NA_character_),
     purrr::map_chr(data, function(s) s[["codigo"]] %||% "")
   )
-  
+
   assign("catalog", catalog, envir = .ibger_survey_cache)
   catalog
 }
@@ -86,33 +86,33 @@ get_cached_survey_catalog <- function() {
 #' @noRd
 get_cached_survey_periods <- function(survey) {
   key <- paste0("periods_", survey)
-  
+
   if (exists(key, envir = .ibger_survey_cache)) {
     return(get(key, envir = .ibger_survey_cache))
   }
-  
+
   data <- ibge_metadados_request(
     "pesquisas", survey, "periodos",
     .label = glue::glue("periods for survey {survey}")
   )
-  
+
   result <- purrr::map_dfr(data, function(p) {
     month_val <- p[["mes"]]
     # The API returns mes = "0" or mes = "" for structural (annual) surveys,
     # meaning "no month". Treat all of these as NA.
-    month_int <- if (is.null(month_val) || month_val == "" || month_val == "0") {
+    month_int <- if (is.null(month_val) || month_val %in% c("", "0")) {
       NA_integer_
     } else {
       suppressWarnings(as.integer(month_val))
     }
-    
+
     tibble::tibble(
       year  = as.integer(pluck_chr(p, "ano")),
       month = month_int,
       order = as.integer(pluck_chr(p, "ordem"))
     )
   })
-  
+
   assign(key, result, envir = .ibger_survey_cache)
   result
 }
@@ -135,26 +135,27 @@ validate_survey_code <- function(survey) {
       "i" = "Use {.code ibge_surveys()} to see available survey codes."
     ), call = NULL)
   }
-  
+
   catalog <- get_cached_survey_catalog()
   valid_codes <- names(catalog)
-  
+
   if (survey %in% valid_codes) {
     return(invisible(TRUE))
   }
-  
+
   # Suggest closest matches by string distance
   distances <- utils::adist(toupper(survey), toupper(valid_codes))[1, ]
   closest_idx <- order(distances)[seq_len(min(5, length(distances)))]
   suggestions <- paste0(
     valid_codes[closest_idx], " - ", catalog[closest_idx]
   )
-  
+
   cli::cli_abort(c(
     "Survey code {.val {survey}} not found in the IBGE catalog.",
     "i" = "Did you mean one of these?",
     stats::setNames(paste(" ", suggestions), rep("*", length(suggestions))),
-    "i" = "Use {.code ibge_surveys()} to see all {length(valid_codes)} valid codes."
+    ">" = "Use {.code ibge_surveys()} to see all
+           {length(valid_codes)} valid codes."
   ), call = NULL)
 }
 
@@ -170,60 +171,65 @@ validate_survey_code <- function(survey) {
 #' @noRd
 validate_survey_period <- function(survey, year, month = NULL) {
   periods <- get_cached_survey_periods(survey)
-  
+
   if (nrow(periods) == 0) {
     cli::cli_abort(c(
       "No metadata periods found for survey {.val {survey}}.",
       "i" = "This survey may not have period-specific metadata."
     ), call = NULL)
   }
-  
+
   available_years <- sort(unique(periods$year))
-  
+
   if (!as.integer(year) %in% available_years) {
     yr_range <- range(available_years)
     cli::cli_abort(c(
       "Year {.val {year}} not available for survey {.val {survey}}.",
-      "i" = "Available years: {yr_range[1]} to {yr_range[2]} ({length(available_years)} total).",
-      "i" = "Use {.code ibge_survey_periods(\"{survey}\")} to see all periods."
+      "i" = "Available years: {yr_range[1]} to {yr_range[2]}
+             ({length(available_years)} total).",
+      ">" = "Use {.code ibge_survey_periods(\"{survey}\")} to see all periods."
     ), call = NULL)
   }
-  
+
   # If month was provided, check it exists for that year
   if (!is.null(month)) {
     year_rows <- periods[periods$year == as.integer(year), ]
     available_months <- sort(unique(stats::na.omit(year_rows$month)))
-    
+
     if (length(available_months) == 0) {
       # Survey has no months (structural) — month should not be provided
       cli::cli_abort(c(
-        "Survey {.val {survey}} does not use monthly periods (it is structural/annual).",
-        "i" = "Remove the {.arg month} argument: {.code ibge_survey_metadata(\"{survey}\", {year})}"
+        "Survey {.val {survey}} does not use monthly periods
+         (it is structural/annual).",
+        "i" = "Remove the {.arg month} argument:
+               {.code ibge_survey_metadata(\"{survey}\", {year})}"
       ), call = NULL)
     }
-    
+
     if (!as.integer(month) %in% available_months) {
       cli::cli_abort(c(
-        "Month {.val {month}} not available for survey {.val {survey}} in {.val {year}}.",
+        "Month {.val {month}} not available for survey {.val {survey}}
+         in {.val {year}}.",
         "i" = "Available months for {year}: {.val {available_months}}.",
-        "i" = "Use {.code ibge_survey_periods(\"{survey}\")} to see all periods."
+        ">" = "Use {.code ibge_survey_periods(\"{survey}\")} to see
+               all periods."
       ), call = NULL)
     }
   } else {
     # Month not provided — warn if the survey has monthly data
     year_rows <- periods[periods$year == as.integer(year), ]
-    has_months <- any(!is.na(year_rows$month))
-    
+    has_months <- !all(is.na(year_rows$month))
+
     if (has_months) {
       available_months <- sort(unique(stats::na.omit(year_rows$month)))
       cli::cli_warn(c(
         "Survey {.val {survey}} has monthly periods for {.val {year}}.",
         "i" = "Available months: {.val {available_months}}.",
-        "i" = "Consider specifying {.arg month} for more precise results."
+        ">" = "Consider specifying {.arg month} for more precise results."
       ))
     }
   }
-  
+
   invisible(TRUE)
 }
 
@@ -252,15 +258,15 @@ validate_survey_period <- function(survey, year, month = NULL) {
 #'     \item{name_en}{Survey name in English (may be `NA`)}
 #'     \item{status}{Survey status: Ativa, Encerrada, etc.}
 #'     \item{category}{Conjuntural, Estrutural, or Especial}
-#'     \item{collection_frequency}{Data collection frequency (Mensal, Anual, etc.)}
+#'     \item{collection_frequency}{Data collection frequency (Mensal,
+#'       Anual, etc.)}
 #'     \item{publication_frequency}{Publication frequency}
 #'     \item{thematic_classifications}{List-column of tibbles with thematic
 #'       classification details (name, domain, description). Only if
 #'       `thematic_classifications = TRUE`.}
 #'   }
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' # Full catalog
 #' ibge_surveys()
 #'
@@ -271,14 +277,13 @@ validate_survey_period <- function(survey, year, month = NULL) {
 #' library(dplyr)
 #' ibge_surveys(thematic_classifications = FALSE) |>
 #'   filter(status == "Ativa", category == "Conjuntural")
-#' }
 #'
 #' @seealso [ibge_survey_periods()], [ibge_survey_metadata()]
 #' @export
 ibge_surveys <- function(thematic_classifications = TRUE) {
-  
+
   data <- ibge_metadados_request("pesquisas", .label = "survey catalog")
-  
+
   result <- purrr::map_dfr(data, function(s) {
     row <- tibble::tibble(
       id                      = pluck_chr(s, "codigo"),
@@ -289,7 +294,7 @@ ibge_surveys <- function(thematic_classifications = TRUE) {
       collection_frequency    = pluck_chr(s, "periodicidade_coleta"),
       publication_frequency   = pluck_chr(s, "periodicidade_divulgacao")
     )
-    
+
     if (thematic_classifications) {
       cls_raw <- s[["classificacoes_tematicas"]]
       cls_tbl <- if (!is.null(cls_raw) && length(cls_raw) > 0) {
@@ -311,10 +316,10 @@ ibge_surveys <- function(thematic_classifications = TRUE) {
       }
       row$thematic_classifications <- list(cls_tbl)
     }
-    
+
     row
   })
-  
+
   n <- nrow(result)
   cli::cli_alert_success("{n} survey{?s} found.")
   result
@@ -341,8 +346,7 @@ ibge_surveys <- function(thematic_classifications = TRUE) {
 #'     \item{order}{Publication order within the period (0 = most recent).}
 #'   }
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' # Conjunctural survey (monthly periods)
 #' ibge_survey_periods("SC")   # Pesquisa Mensal de Serviços
 #'
@@ -350,22 +354,21 @@ ibge_surveys <- function(thematic_classifications = TRUE) {
 #' ibge_survey_periods("CD")   # Censo Demográfico
 #'
 #' # Invalid code: helpful error with suggestions
-#' ibge_survey_periods("PMS")
+#' try(ibge_survey_periods("PMS"))
 #' #> Error: Survey code "PMS" not found in the IBGE catalog.
 #' #> i Did you mean one of these?
 #' #>   * SC - Pesquisa Mensal de Serviços
 #' #>   ...
-#' }
 #'
 #' @seealso [ibge_surveys()], [ibge_survey_metadata()]
 #' @export
 ibge_survey_periods <- function(survey) {
-  
+
   # Pre-flight: validate survey code against catalog
   validate_survey_code(survey)
-  
+
   result <- get_cached_survey_periods(survey)
-  
+
   n <- nrow(result)
   cli::cli_alert_success("{n} period{?s} found for survey {.val {survey}}.")
   result
@@ -411,8 +414,7 @@ ibge_survey_periods <- function(survey) {
 #'       varies by survey)}
 #'   }
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' # Structural survey (no month needed)
 #' ibge_survey_metadata("CD", year = 2022)
 #'
@@ -424,76 +426,49 @@ ibge_survey_periods <- function(survey) {
 #' names(meta$occurrences[[1]])
 #'
 #' # Invalid code: clear error with suggestions
-#' ibge_survey_metadata("PMS", year = 2024)
+#' try(ibge_survey_metadata("PMS", year = 2024))
 #' #> Error: Survey code "PMS" not found in the IBGE catalog.
 #'
 #' # Invalid year: error with available range
 #' ibge_survey_metadata("CD", year = 1800)
 #' #> Error: Year 1800 not available for survey "CD".
 #' #> i Available years: 1940 to 2022 (9 total).
-#' }
 #'
 #' @seealso [ibge_surveys()], [ibge_survey_periods()]
 #' @export
 ibge_survey_metadata <- function(survey, year, month = NULL, order = 0) {
-  
-  # --- Input type checks ---
-  if (!is.numeric(year) || length(year) != 1) {
-    cli::cli_abort("{.arg year} must be a single integer.", call = NULL)
-  }
-  
-  if (!is.null(month)) {
-    if (!is.numeric(month) || length(month) != 1 || month < 1 || month > 12) {
-      cli::cli_abort(
-        "{.arg month} must be an integer between 1 and 12.",
-        call = NULL
-      )
-    }
-  }
-  
+
+  validate_survey_metadata_args(year, month)
+
   # --- Pre-flight validation against IBGE catalog ---
   validate_survey_code(survey)
   validate_survey_period(survey, year, month)
-  
+
   # --- Build request path ---
   path <- c(survey, as.integer(year))
-  
+
   label <- glue::glue("metadata for {survey} ({year}")
-  
+
   if (!is.null(month)) {
     path <- c(path, as.integer(month))
     label <- glue::glue("{label}/{month}")
   }
-  
+
   path <- c(path, as.integer(order))
   label <- paste0(label, ")")
-  
+
   data <- ibge_metadados_request(path, .label = label)
-  
+
   # The response is an array; take first element
   if (is.list(data) && is.null(names(data)) && length(data) >= 1) {
     data <- data[[1]]
   }
-  
-  # --- Thematic classifications ---
-  cls_raw <- data[["classificacoes_tematicas"]]
-  thematic_cls <- if (!is.null(cls_raw) && length(cls_raw) > 0) {
-    purrr::map_dfr(cls_raw, function(cls) {
-      as_chr <- function(x) if (is.null(x)) NA_character_ else as.character(x)
-      tibble::as_tibble(purrr::map(cls, as_chr))
-    })
-  } else {
-    tibble::tibble()
-  }
-  
-  # --- Occurrences (survey-specific metadata) ---
-  occ_raw <- data[["ocorrencias_pesquisa"]]
-  occurrences <- if (!is.null(occ_raw) && length(occ_raw) > 0) {
-    occ_raw
-  } else {
-    list()
-  }
-  
+
+  thematic_cls <- parse_survey_classifications(
+    data[["classificacoes_tematicas"]]
+  )
+  occurrences <- data[["ocorrencias_pesquisa"]] %||% list()
+
   result <- list(
     status                   = data[["situacao"]] %||% NA_character_,
     category                 = data[["categoria"]] %||% NA_character_,
@@ -507,22 +482,55 @@ ibge_survey_metadata <- function(survey, year, month = NULL, order = 0) {
     thematic_classifications = thematic_cls,
     occurrences              = occurrences
   )
-  
+
   class(result) <- c("ibge_survey_metadata", "list")
-  
+
   n_occ <- length(occurrences)
   cli::cli_alert_success(
     "Survey {.val {survey}} ({year}): {n_occ} metadata occurrence{?s}."
   )
-  
+
   result
+}
+
+#' Check the year/month argument types for ibge_survey_metadata()
+#' @noRd
+validate_survey_metadata_args <- function(year, month) {
+  year_ok <- is.numeric(year) && length(year) == 1
+  if (!year_ok) {
+    cli::cli_abort("{.arg year} must be a single integer.", call = NULL)
+  }
+
+  month_ok <- is.null(month) ||
+    (is.numeric(month) && length(month) == 1 && month >= 1 && month <= 12)
+  if (!month_ok) {
+    cli::cli_abort(
+      "{.arg month} must be an integer between 1 and 12.",
+      call = NULL
+    )
+  }
+
+  invisible(TRUE)
+}
+
+#' Parse the `classificacoes_tematicas` block of a metadata response
+#' @noRd
+parse_survey_classifications <- function(cls_raw) {
+  if (is.null(cls_raw) || length(cls_raw) == 0) {
+    return(tibble::tibble())
+  }
+
+  purrr::map_dfr(cls_raw, function(cls) {
+    as_chr <- function(x) if (is.null(x)) NA_character_ else as.character(x)
+    tibble::as_tibble(purrr::map(cls, as_chr))
+  })
 }
 
 #' @export
 print.ibge_survey_metadata <- function(x, ...) {
-  
+
   cli::cli_h1("{x$acronym}")
-  
+
   fields <- list(
     "Status"   = x$status,
     "Category" = x$category,
@@ -530,45 +538,66 @@ print.ibge_survey_metadata <- function(x, ...) {
     "Area"     = x$area,
     "Started"  = x$start_date
   )
-  
+
   for (nm in names(fields)) {
     val <- fields[[nm]]
     if (!is.na(val) && nchar(val) > 0) {
       cli::cli_text("{nm}: {val}")
     }
   }
-  
-  if (!is.na(x$deactivation_date) && nchar(x$deactivation_date) > 0) {
-    cli::cli_text("Deactivated: {x$deactivation_date}")
-  }
-  
-  if (!is.na(x$sidra_url) && nchar(x$sidra_url) > 0) {
-    cli::cli_text("SIDRA: {.url {x$sidra_url}}")
-  }
-  
-  if (!is.na(x$concla_url) && nchar(x$concla_url) > 0) {
-    cli::cli_text("CONCLA: {.url {x$concla_url}}")
-  }
-  
+
+  print_survey_links(x)
+
   n_cls <- nrow(x$thematic_classifications)
   if (n_cls > 0) {
     cli::cli_h2("Thematic classifications ({n_cls})")
   }
-  
-  n_occ <- length(x$occurrences)
-  if (n_occ > 0) {
-    cli::cli_h2("Metadata occurrences ({n_occ})")
-    cli::cli_text("Use {.code meta$occurrences} to explore the full metadata.")
-    
-    first <- x$occurrences[[1]]
-    if (is.list(first) && !is.null(names(first))) {
-      keys <- names(first)
-      n_keys <- length(keys)
-      n_show <- min(8, n_keys)
-      preview <- keys[seq_len(n_show)]
-      cli::cli_text("Fields: {.val {preview}}{if (n_keys > n_show) paste0(' ... and ', n_keys - n_show, ' more') else ''}")
-    }
+
+  print_survey_occurrences(x)
+
+  invisible(x)
+}
+
+#' Print the deactivation date and reference URLs, when present
+#' @noRd
+print_survey_links <- function(x) {
+  if (!is.na(x$deactivation_date) && nchar(x$deactivation_date) > 0) {
+    cli::cli_text("Deactivated: {x$deactivation_date}")
   }
-  
+
+  if (!is.na(x$sidra_url) && nchar(x$sidra_url) > 0) {
+    cli::cli_text("SIDRA: {.url {x$sidra_url}}")
+  }
+
+  if (!is.na(x$concla_url) && nchar(x$concla_url) > 0) {
+    cli::cli_text("CONCLA: {.url {x$concla_url}}")
+  }
+
+  invisible(x)
+}
+
+#' Print the metadata-occurrences section
+#' @noRd
+print_survey_occurrences <- function(x) {
+  n_occ <- length(x$occurrences)
+  if (n_occ == 0) return(invisible(x))
+
+  cli::cli_h2("Metadata occurrences ({n_occ})")
+  cli::cli_text("Use {.code meta$occurrences} to explore the full metadata.")
+
+  first <- x$occurrences[[1]]
+  if (is.list(first) && !is.null(names(first))) {
+    keys <- names(first)
+    n_keys <- length(keys)
+    n_show <- min(8, n_keys)
+    preview <- keys[seq_len(n_show)]
+    more <- if (n_keys > n_show) {
+      paste0(" ... and ", n_keys - n_show, " more")
+    } else {
+      ""
+    }
+    cli::cli_text("Fields: {.val {preview}}{more}")
+  }
+
   invisible(x)
 }

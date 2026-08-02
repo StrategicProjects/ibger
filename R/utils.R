@@ -118,8 +118,9 @@ format_localities <- function(localities) {
 
   if (!is.list(localities) || is.null(names(localities))) {
     cli::cli_abort(c(
-      "{.arg localities} must be {.val BR}, a level code (e.g. {.val N3}) or a named list.",
-      "i" = 'Example: {.code list(N6 = c(3550308, 3304557))}'
+      "{.arg localities} must be {.val BR}, a level code (e.g. {.val N3})
+       or a named list.",
+      "i" = "Example: {.code list(N6 = c(3550308, 3304557))}"
     ), call = NULL)
   }
 
@@ -176,13 +177,12 @@ format_variable <- function(variable) {
 #' parse_ibge_value(c("1.5", "10", "-", "..", "...", "X", NA))
 #' #> [1] 1.5  10.0  0.0   NA    NA    NA    NA
 #'
-#' \dontrun{
+#' @examplesIf interactive()
 #' # Typical usage after ibge_variables()
 #' library(dplyr)
 #'
 #' ibge_variables(7060, localities = "BR") |>
 #'   mutate(value = parse_ibge_value(value))
-#' }
 #'
 #' @export
 parse_ibge_value <- function(x) {

@@ -27,12 +27,11 @@ corresponding \code{ibge_metadata()} call. A CSV download button is also
 available.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # Open in RStudio Viewer
 ibge_explorer(launch.browser = FALSE)
 
 # Open in browser
 ibge_explorer()
-}
-
+\dontshow{\}) # examplesIf}
 }

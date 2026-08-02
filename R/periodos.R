@@ -2,15 +2,13 @@
 #'
 #' Retrieves available periods for an aggregate.
 #'
-#' @param aggregate Numeric aggregate identifier.
+#' @inheritParams ibge_metadata
 #'
 #' @return A [tibble][tibble::tibble] with columns:
 #'   `id`, `literal`, `modification`
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' ibge_periods(1705)
-#' }
 #'
 #' @export
 ibge_periods <- function(aggregate) {

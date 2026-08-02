@@ -1,24 +1,27 @@
 # extract_levels -------------------------------------------------------------
 
 test_that("extract_levels recognizes all locality forms", {
-  expect_equal(extract_levels("BR"), "N1")
-  expect_equal(extract_levels("br"), "N1")
-  expect_equal(extract_levels("N3"), "N3")
-  expect_equal(extract_levels(c("N3", "N6")), c("N3", "N6"))
-  expect_equal(extract_levels("N3[33,35]|N6[123]"), c("N3", "N6"))
-  expect_equal(extract_levels(list(N6 = c(1, 2), N3 = 3)), c("N6", "N3"))
-  expect_equal(extract_levels(NULL), character())
+  expect_identical(extract_levels("BR"), "N1")
+  expect_identical(extract_levels("br"), "N1")
+  expect_identical(extract_levels("N3"), "N3")
+  expect_identical(extract_levels(c("N3", "N6")), c("N3", "N6"))
+  expect_identical(extract_levels("N3[33,35]|N6[123]"), c("N3", "N6"))
+  expect_identical(extract_levels(list(N6 = c(1, 2), N3 = 3)), c("N6", "N3"))
+  expect_identical(extract_levels(NULL), character())
 })
 
 # extract_numeric_periods -----------------------------------------------------
 
 test_that("extract_numeric_periods expands ranges and skips last-N", {
-  expect_equal(extract_numeric_periods(NULL), numeric())
-  expect_equal(extract_numeric_periods(-6), numeric())
-  expect_equal(extract_numeric_periods("-3"), numeric())
-  expect_equal(extract_numeric_periods(c(201701, 201702)), c(201701, 201702))
-  expect_equal(extract_numeric_periods("2017-2019"), c(2017, 2018, 2019))
-  expect_equal(extract_numeric_periods("201701|201702"), c(201701, 201702))
+  expect_identical(extract_numeric_periods(NULL), numeric())
+  expect_identical(extract_numeric_periods(-6), numeric())
+  expect_identical(extract_numeric_periods("-3"), numeric())
+  expect_identical(
+    extract_numeric_periods(c(201701, 201702)),
+    c(201701, 201702)
+  )
+  expect_identical(extract_numeric_periods("2017-2019"), c(2017, 2018, 2019))
+  expect_identical(extract_numeric_periods("201701|201702"), c(201701, 201702))
 })
 
 # validate_* against fake metadata --------------------------------------------
@@ -84,6 +87,6 @@ test_that("print.ibge_metadata renders without error", {
   meta <- make_fake_meta()
   expect_invisible(print(meta))
   out <- cli::cli_fmt(print(meta))
-  expect_true(any(grepl("Fake aggregate", out)))
-  expect_true(any(grepl("Produto das lavouras", out)))
+  expect_true(any(grepl("Fake aggregate", out, fixed = TRUE)))
+  expect_true(any(grepl("Produto das lavouras", out, fixed = TRUE)))
 })

@@ -13,15 +13,22 @@ ibge_max_localities_per_request <- 500
 #' @return The value limit, or `NULL` when chunking is disabled.
 #' @noRd
 resolve_chunk_limit <- function(chunk) {
-  if (isFALSE(chunk)) return(NULL)
-  if (isTRUE(chunk)) return(ibge_value_limit)
-  if (is.numeric(chunk) && length(chunk) == 1 && !is.na(chunk) && chunk > 0) {
-    return(chunk)
+  is_positive_number <- is.numeric(chunk) && length(chunk) == 1 &&
+    !is.na(chunk) && chunk > 0
+
+  if (isFALSE(chunk)) {
+    NULL
+  } else if (isTRUE(chunk)) {
+    ibge_value_limit
+  } else if (is_positive_number) {
+    chunk
+  } else {
+    cli::cli_abort(c(
+      "{.arg chunk} must be {.val TRUE}, {.val FALSE} or a positive number.",
+      "i" = "Use {.val TRUE} to split queries above the API limit of
+             {ibge_value_limit} values."
+    ), call = NULL)
   }
-  cli::cli_abort(c(
-    "{.arg chunk} must be {.val TRUE}, {.val FALSE} or a positive number.",
-    "i" = "Use {.val TRUE} to split queries above the API limit of {ibge_value_limit} values."
-  ), call = NULL)
 }
 
 #' Period ids available for an aggregate (cached per session)
@@ -37,7 +44,7 @@ get_cached_period_ids <- function(aggregate) {
     aggregate, "periodos",
     .label = glue::glue("period list for aggregate {aggregate}")
   )
-  ids <- purrr::map_chr(data, function(p) pluck_chr(p, "id"))
+  ids <- purrr::map_chr(data, pluck_chr, "id")
 
   assign(cache_key, ids, envir = .ibger_cache)
   ids
@@ -56,7 +63,7 @@ get_cached_locality_ids <- function(aggregate, level) {
     aggregate, "localidades", level,
     .label = glue::glue("{level} localities for aggregate {aggregate}")
   )
-  ids <- purrr::map_chr(data, function(loc) pluck_chr(loc, "id"))
+  ids <- purrr::map_chr(data, pluck_chr, "id")
 
   assign(cache_key, ids, envir = .ibger_cache)
   ids
@@ -84,8 +91,7 @@ estimate_n_variables <- function(get_meta, variable) {
 #' so the default is 1.
 #' @noRd
 estimate_n_categories <- function(get_meta, classification) {
-  if (is.null(classification) || !is.list(classification) ||
-      length(classification) == 0) {
+  if (!is.list(classification) || length(classification) == 0) {
     return(1)
   }
 
@@ -106,18 +112,13 @@ estimate_n_categories <- function(get_meta, classification) {
 #' Estimated number of periods (without hitting the API)
 #' @noRd
 estimate_n_periods <- function(periods) {
-  if (is.null(periods)) return(6)
-
-  if (is.numeric(periods) && length(periods) == 1 && periods < 0) {
-    return(abs(periods))
+  if (is.null(periods)) {
+    6
+  } else if (is_last_n_periods(periods)) {
+    abs(as.numeric(periods))
+  } else {
+    max(length(extract_numeric_periods(periods)), length(periods))
   }
-
-  if (is.character(periods) && length(periods) == 1 &&
-      grepl("^-\\d+$", periods)) {
-    return(abs(as.numeric(periods)))
-  }
-
-  max(length(extract_numeric_periods(periods)), length(periods))
 }
 
 #' Resolve the concrete period ids requested (may hit the API)
@@ -127,10 +128,7 @@ resolve_period_ids <- function(aggregate, periods) {
 
   if (is.null(periods)) periods <- -6
 
-  is_last_n <- (is.numeric(periods) && length(periods) == 1 && periods < 0) ||
-    (is.character(periods) && length(periods) == 1 && grepl("^-\\d+$", periods))
-
-  if (is_last_n) {
+  if (is_last_n_periods(periods)) {
     n <- min(abs(as.numeric(periods)), length(all_ids))
     return(utils::tail(all_ids, n))
   }
@@ -140,7 +138,7 @@ resolve_period_ids <- function(aggregate, periods) {
 
   if (length(ids) == 0) {
     # Unrecognized form: keep the values as given
-    ids <- unlist(strsplit(paste(periods, collapse = "|"), "\\|", fixed = FALSE))
+    ids <- unlist(strsplit(paste(periods, collapse = "|"), "|", fixed = TRUE))
   }
 
   ids
@@ -161,7 +159,10 @@ resolve_localities_for_chunking <- function(aggregate, localities) {
     }
 
     if (all(grepl("^N\\d+$", codes))) {
-      ids <- purrr::map(codes, function(lv) get_cached_locality_ids(aggregate, lv))
+      ids <- purrr::map(
+        codes,
+        function(lv) get_cached_locality_ids(aggregate, lv)
+      )
       units <- tibble::tibble(
         level = rep(codes, lengths(ids)),
         id    = unlist(ids)
@@ -213,9 +214,9 @@ split_in_groups <- function(x, size) {
 build_chunk_plan <- function(aggregate, meta, variable, periods, localities,
                              classification, limit) {
 
+  # get_cached_metadata() is session-cached, so repeated calls are cheap
   get_meta <- function() {
-    if (is.null(meta)) meta <<- get_cached_metadata(aggregate)
-    meta
+    if (is.null(meta)) get_cached_metadata(aggregate) else meta
   }
 
   n_var <- estimate_n_variables(get_meta, variable)
@@ -271,7 +272,9 @@ build_chunk_plan <- function(aggregate, meta, variable, periods, localities,
     purrr::map(row_groups, function(rows) {
       list(
         periods_str    = p,
-        localities_str = units_to_localities_str(loc$units[rows, , drop = FALSE])
+        localities_str = units_to_localities_str(
+          loc$units[rows, , drop = FALSE]
+        )
       )
     })
   })

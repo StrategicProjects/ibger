@@ -33,19 +33,20 @@ validate_level <- function(meta, level) {
     meta$territorial_level$special,
     meta$territorial_level$ibge
   )
-  
+
   if (length(valid) == 0) return(invisible(TRUE))
-  
+
   requested <- if (is.character(level)) level else character()
   invalid <- setdiff(requested, valid)
-  
+
   if (length(invalid) > 0) {
     cli::cli_abort(c(
-      "!" = "Geographic level(s) {.val {invalid}} not available for aggregate {meta$id}.",
+      "!" = "Geographic level(s) {.val {invalid}} not available for
+             aggregate {meta$id}.",
       "i" = "Available levels: {.val {valid}}."
     ), call = NULL)
   }
-  
+
   invisible(TRUE)
 }
 
@@ -57,21 +58,22 @@ validate_localities <- function(meta, localities) {
     meta$territorial_level$special,
     meta$territorial_level$ibge
   )
-  
+
   if (length(valid) == 0) return(invisible(TRUE))
-  
+
   requested <- extract_levels(localities)
   if (length(requested) == 0) return(invisible(TRUE))
-  
+
   invalid <- setdiff(requested, valid)
-  
+
   if (length(invalid) > 0) {
     cli::cli_abort(c(
-      "!" = "Geographic level(s) {.val {invalid}} not available for aggregate {meta$id}.",
+      "!" = "Geographic level(s) {.val {invalid}} not available for
+             aggregate {meta$id}.",
       "i" = "Available levels: {.val {valid}}."
     ), call = NULL)
   }
-  
+
   invisible(TRUE)
 }
 
@@ -80,22 +82,23 @@ validate_localities <- function(meta, localities) {
 validate_periods <- function(meta, periods) {
   periods_num <- extract_numeric_periods(periods)
   if (length(periods_num) == 0) return(invisible(TRUE))
-  
+
   start <- as.numeric(meta$periodicity$start)
   end <- as.numeric(meta$periodicity$end)
-  
+
   if (is.na(start) || is.na(end)) return(invisible(TRUE))
-  
+
   out_of_range <- periods_num[periods_num < start | periods_num > end]
-  
+
   if (length(out_of_range) > 0) {
     freq <- meta$periodicity$frequency %||% "N/A"
     cli::cli_abort(c(
-      "!" = "Period(s) {.val {out_of_range}} out of range for aggregate {meta$id}.",
+      "!" = "Period(s) {.val {out_of_range}} out of range for
+             aggregate {meta$id}.",
       "i" = "Valid range: {.val {start}} to {.val {end}} ({freq})."
     ), call = NULL)
   }
-  
+
   invisible(TRUE)
 }
 
@@ -103,16 +106,18 @@ validate_periods <- function(meta, periods) {
 #' @noRd
 validate_variables <- function(meta, variable) {
   if (is.null(variable)) return(invisible(TRUE))
-  if (identical(variable, "all") || identical(variable, "todas")) return(invisible(TRUE))
+  if (identical(variable, "all") || identical(variable, "todas")) {
+    return(invisible(TRUE))
+  }
   if (identical(variable, "allxp")) return(invisible(TRUE))
-  
+
   requested <- as.character(variable)
   valid <- meta$variables
-  
+
   if (nrow(valid) == 0) return(invisible(TRUE))
-  
+
   invalid <- setdiff(requested, valid$id)
-  
+
   if (length(invalid) > 0) {
     disp <- paste0(valid$id, " - ", valid$name, " (", valid$unit, ")")
     cli::cli_abort(c(
@@ -121,59 +126,86 @@ validate_variables <- function(meta, variable) {
       stats::setNames(paste(" ", disp), rep("", length(disp)))
     ), call = NULL)
   }
-  
+
   invisible(TRUE)
 }
 
 #' Validate classifications against metadata
 #' @noRd
 validate_classifications <- function(meta, classification) {
-  if (is.null(classification) || !is.list(classification)) return(invisible(TRUE))
-  
+  if (is.null(classification) || !is.list(classification)) {
+    return(invisible(TRUE))
+  }
+
   valid_cls <- meta$classifications
   if (nrow(valid_cls) == 0) return(invisible(TRUE))
-  
+
   for (cls_id in names(classification)) {
-    idx <- which(valid_cls$id == cls_id)
-    
-    if (length(idx) == 0) {
-      disp <- paste0(valid_cls$id, " - ", valid_cls$name)
-      cli::cli_abort(c(
-        "!" = "Classification {.val {cls_id}} not found in aggregate {meta$id}.",
-        "i" = "Available classifications:",
-        stats::setNames(paste(" ", disp), rep("", length(disp)))
-      ), call = NULL)
-    }
-    
-    cats_requested <- classification[[cls_id]]
-    if (identical(cats_requested, "all") || identical(cats_requested, "todos")) next
-    
-    cats_valid <- valid_cls$categories[[idx]]
-    cats_chr <- as.character(cats_requested)
-    cats_invalid <- setdiff(cats_chr, cats_valid$category_id)
-    
-    if (length(cats_invalid) > 0) {
-      cls_name <- valid_cls$name[idx]
-      n_total <- nrow(cats_valid)
-      n_show <- min(10, n_total)
-      preview <- paste0(
-        cats_valid$category_id[seq_len(n_show)], " - ",
-        cats_valid$category_name[seq_len(n_show)]
-      )
-      more <- if (n_total > n_show) {
-        c("i" = "... and {n_total - n_show} more. Use {.code ibge_metadata({meta$id})$classifications} to see all.")
-      }
-      
-      cli::cli_abort(c(
-        "!" = "Category(ies) {.val {cats_invalid}} not found in classification {.val {cls_id}} ({cls_name}).",
-        "i" = "First categories available ({n_total} total):",
-        stats::setNames(paste(" ", preview), rep("", length(preview))),
-        more
-      ), call = NULL)
-    }
+    validate_one_classification(
+      meta, valid_cls, cls_id, classification[[cls_id]]
+    )
   }
-  
+
   invisible(TRUE)
+}
+
+#' Validate a single classification and its requested categories
+#' @noRd
+validate_one_classification <- function(meta, valid_cls, cls_id,
+                                        cats_requested) {
+  idx <- which(valid_cls$id == cls_id)
+
+  if (length(idx) == 0) {
+    disp <- paste0(valid_cls$id, " - ", valid_cls$name)
+    cli::cli_abort(c(
+      "!" = "Classification {.val {cls_id}} not found in
+             aggregate {meta$id}.",
+      "i" = "Available classifications:",
+      stats::setNames(paste(" ", disp), rep("", length(disp)))
+    ), call = NULL)
+  }
+
+  if (identical(cats_requested, "all") ||
+        identical(cats_requested, "todos")) {
+    return(invisible(TRUE))
+  }
+
+  cats_valid <- valid_cls$categories[[idx]]
+  cats_invalid <- setdiff(as.character(cats_requested),
+                          cats_valid$category_id)
+
+  if (length(cats_invalid) > 0) {
+    abort_invalid_categories(
+      meta, cls_id, valid_cls$name[idx], cats_valid, cats_invalid
+    )
+  }
+
+  invisible(TRUE)
+}
+
+#' Abort with a preview of the valid categories
+#' @noRd
+abort_invalid_categories <- function(meta, cls_id, cls_name, cats_valid,
+                                     cats_invalid) {
+  n_total <- nrow(cats_valid)
+  n_show <- min(10, n_total)
+  preview <- paste0(
+    cats_valid$category_id[seq_len(n_show)], " - ",
+    cats_valid$category_name[seq_len(n_show)]
+  )
+  more <- if (n_total > n_show) {
+    c("i" = "... and {n_total - n_show} more.
+       Use {.code ibge_metadata({meta$id})$classifications}
+       to see all.")
+  }
+
+  cli::cli_abort(c(
+    "!" = "Category(ies) {.val {cats_invalid}} not found in
+           classification {.val {cls_id}} ({cls_name}).",
+    "i" = "First categories available ({n_total} total):",
+    stats::setNames(paste(" ", preview), rep("", length(preview))),
+    more
+  ), call = NULL)
 }
 
 #' Validate all parameters against metadata
@@ -184,13 +216,13 @@ validate_query <- function(meta,
                            variable = NULL,
                            classification = NULL,
                            level = NULL) {
-  
+
   if (!is.null(level))           validate_level(meta, level)
   if (!is.null(localities))      validate_localities(meta, localities)
   if (!is.null(periods))         validate_periods(meta, periods)
   if (!is.null(variable))        validate_variables(meta, variable)
   if (!is.null(classification))  validate_classifications(meta, classification)
-  
+
   invisible(TRUE)
 }
 
@@ -198,59 +230,63 @@ validate_query <- function(meta,
 #' @noRd
 extract_levels <- function(localities) {
   if (is.null(localities)) return(character())
-  
+
   if (is.character(localities)) {
     loc_str <- paste(localities, collapse = "|")
-    
+
     if (grepl("^BR$", loc_str, ignore.case = TRUE)) {
       return("N1")
     }
-    
+
     levels <- regmatches(loc_str, gregexpr("N\\d+", loc_str))[[1]]
     return(unique(levels))
   }
-  
+
   if (is.list(localities) && !is.null(names(localities))) {
     return(unique(names(localities)))
   }
-  
+
   character()
+}
+
+#' Is `periods` the "last N" shorthand (a single negative number)?
+#' @noRd
+is_last_n_periods <- function(periods) {
+  (is.numeric(periods) && length(periods) == 1 && periods < 0) ||
+    (is.character(periods) && length(periods) == 1 &&
+       grepl("^-\\d+$", periods))
 }
 
 #' Extract positive numeric periods (ignores negative = last N)
 #' @noRd
 extract_numeric_periods <- function(periods) {
-  if (is.null(periods)) return(numeric())
-  
-  if (is.numeric(periods) && length(periods) == 1 && periods < 0) {
-    return(numeric())
+  if (is.null(periods) || is_last_n_periods(periods)) {
+    numeric()
+  } else if (is.numeric(periods)) {
+    periods[periods > 0]
+  } else if (is.character(periods)) {
+    parts <- unlist(strsplit(as.character(periods), "|", fixed = TRUE))
+    c(numeric(), unlist(purrr::map(parts, parse_period_part)))
+  } else {
+    numeric()
   }
-  
-  if (is.numeric(periods)) {
-    return(periods[periods > 0])
-  }
-  
-  if (is.character(periods)) {
-    per_str <- as.character(periods)
-    if (grepl("^-\\d+$", per_str)) return(numeric())
-    
-    all_periods <- c()
-    parts <- unlist(strsplit(per_str, "\\|"))
-    for (p in parts) {
-      if (grepl("-", p) && !grepl("^-", p)) {
-        bounds <- as.numeric(unlist(strsplit(p, "-")))
-        if (length(bounds) == 2 && all(!is.na(bounds))) {
-          all_periods <- c(all_periods, seq(bounds[1], bounds[2]))
-        }
-      } else {
-        val <- suppressWarnings(as.numeric(p))
-        if (!is.na(val) && val > 0) {
-          all_periods <- c(all_periods, val)
-        }
-      }
+}
+
+#' Expand one period specification part into numeric periods
+#'
+#' A part is either a range (`"2005-2007"`) or a single value; anything
+#' non-numeric (or non-positive) is dropped.
+#' @noRd
+parse_period_part <- function(p) {
+  if (grepl("-", p, fixed = TRUE) && !grepl("^-", p)) {
+    bounds <- as.numeric(unlist(strsplit(p, "-", fixed = TRUE)))
+    if (length(bounds) == 2 && !anyNA(bounds)) {
+      seq(bounds[1], bounds[2])
+    } else {
+      NULL
     }
-    return(all_periods)
+  } else {
+    val <- suppressWarnings(as.numeric(p))
+    if (!is.na(val) && val > 0) val else NULL
   }
-  
-  numeric()
 }

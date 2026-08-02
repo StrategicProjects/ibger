@@ -27,11 +27,10 @@ periodicity, territorial levels, variables, and classifications with
 all their categories.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 meta <- ibge_metadata(7060)
 meta$variables
 meta$classifications
 tidyr::unnest(meta$classifications, categories)
-}
-
+\dontshow{\}) # examplesIf}
 }

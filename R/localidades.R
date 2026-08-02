@@ -4,7 +4,7 @@
 #' levels. Validates the requested level(s) against the aggregate metadata
 #' before querying.
 #'
-#' @param aggregate Numeric aggregate identifier.
+#' @inheritParams ibge_metadata
 #' @param level Geographic level. Use `"N1"` (Brazil), `"N2"` (region),
 #'   `"N3"` (state), `"N6"` (municipality), `"N7"` (metropolitan area), etc.
 #'   For multiple levels, use a vector: `c("N6", "N7")`.
@@ -14,11 +14,9 @@
 #' @return A [tibble][tibble::tibble] with columns:
 #'   `id`, `name`, `level_id`, `level_name`
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' ibge_localities(1437, level = "N1")
 #' ibge_localities(1437, level = c("N6", "N7"))
-#' }
 #'
 #' @export
 ibge_localities <- function(aggregate, level = "N6", validate = TRUE) {

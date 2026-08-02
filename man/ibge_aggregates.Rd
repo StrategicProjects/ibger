@@ -38,10 +38,9 @@ per unique combination of parameters, so repeated calls with the same
 filters are instant.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ibge_aggregates()
 ibge_aggregates(periodicity = "P5")
 ibge_aggregates(level = "N6")
-}
-
+\dontshow{\}) # examplesIf}
 }

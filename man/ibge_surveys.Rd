@@ -19,7 +19,8 @@ A \link[tibble:tibble]{tibble} with columns:
 \item{name_en}{Survey name in English (may be \code{NA})}
 \item{status}{Survey status: Ativa, Encerrada, etc.}
 \item{category}{Conjuntural, Estrutural, or Especial}
-\item{collection_frequency}{Data collection frequency (Mensal, Anual, etc.)}
+\item{collection_frequency}{Data collection frequency (Mensal,
+Anual, etc.)}
 \item{publication_frequency}{Publication frequency}
 \item{thematic_classifications}{List-column of tibbles with thematic
 classification details (name, domain, description). Only if
@@ -38,7 +39,7 @@ this function uses the Metadata API (v2), which provides institutional and
 methodological documentation about surveys.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # Full catalog
 ibge_surveys()
 
@@ -49,8 +50,7 @@ ibge_surveys(thematic_classifications = FALSE)
 library(dplyr)
 ibge_surveys(thematic_classifications = FALSE) |>
   filter(status == "Ativa", category == "Conjuntural")
-}
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=ibge_survey_periods]{ibge_survey_periods()}}, \code{\link[=ibge_survey_metadata]{ibge_survey_metadata()}}

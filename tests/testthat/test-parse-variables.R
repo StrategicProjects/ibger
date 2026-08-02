@@ -47,21 +47,21 @@ flat_response <- function() {
 }
 
 test_that("parse_variables handles empty responses", {
-  expect_equal(nrow(parse_variables(list())), 0)
+  expect_identical(nrow(parse_variables(list())), 0L)
 })
 
 test_that("parse_variables_default builds tidy long output", {
   result <- parse_variables(nested_response())
 
   expect_s3_class(result, "tbl_df")
-  expect_equal(nrow(result), 4)
+  expect_identical(nrow(result), 4L)
   expect_named(result, c(
     "variable_id", "variable_name", "variable_unit",
     "classification_81",
     "locality_id", "locality_name", "locality_level", "period", "value"
   ))
-  expect_equal(unique(result$variable_id), "112")
-  expect_equal(unique(result$classification_81), "Total")
+  expect_identical(unique(result$variable_id), "112")
+  expect_identical(unique(result$classification_81), "Total")
   expect_setequal(unique(result$locality_name), c("Brasil", "Pernambuco"))
   expect_setequal(unique(result$period), c("2022", "2023"))
   # Values stay as character (special codes preserved)
@@ -73,15 +73,15 @@ test_that("parse_variables detects and parses flat view", {
   result <- parse_variables(flat_response())
 
   expect_s3_class(result, "tbl_df")
-  expect_equal(nrow(result), 2)
+  expect_identical(nrow(result), 2L)
   # Column names come from the header row labels
   expect_true("Valor" %in% names(result))
   expect_true("Brasil" %in% names(result))
-  expect_equal(result[["Valor"]], c("1000", "1100"))
+  expect_identical(result[["Valor"]], c("1000", "1100"))
 })
 
 test_that("parse_variables_flat with only a header returns empty", {
-  expect_equal(nrow(parse_variables_flat(flat_response()[1])), 0)
+  expect_identical(nrow(parse_variables_flat(flat_response()[1])), 0L)
 })
 
 test_that("parse_classifications returns one column per classification", {
@@ -91,11 +91,11 @@ test_that("parse_classifications returns one column per classification", {
   )
   result <- parse_classifications(cls)
   expect_named(result, c("classification_81", "classification_226"))
-  expect_equal(result$classification_81, "Total")
-  expect_equal(result$classification_226, "Arroz")
+  expect_identical(result$classification_81, "Total")
+  expect_identical(result$classification_226, "Arroz")
 
   # No classifications -> 1-row, 0-col tibble (bindable)
   empty <- parse_classifications(NULL)
-  expect_equal(nrow(empty), 1)
-  expect_equal(ncol(empty), 0)
+  expect_identical(nrow(empty), 1L)
+  expect_identical(ncol(empty), 0L)
 })

@@ -22,13 +22,15 @@ Parses a SIDRA API URL and fetches the data using \code{\link[=ibge_variables]{i
 returning the same tidy tibble format.
 }
 \examples{
-\dontrun{
-url <- "https://apisidra.ibge.gov.br/values/t/7060/n1/all/v/63/p/last\%2012/c315/7169"
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+url <- paste0(
+  "https://apisidra.ibge.gov.br/values",
+  "/t/7060/n1/all/v/63/p/last\%2012/c315/7169"
+)
 fetch_sidra_url(url)
 
 # Pipe-friendly: inspect then fetch
 url |> parse_sidra_url()
 url |> fetch_sidra_url()
-}
-
+\dontshow{\}) # examplesIf}
 }

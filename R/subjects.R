@@ -31,7 +31,7 @@
 #'
 #' @export
 ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
-  
+
   subjects <- tibble::tribble(
     ~id, ~name,
     148L, "Abastecimento de \u00e1gua",
@@ -54,7 +54,9 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     181L, "Antropometria",
     49L, "Aquisi\u00e7\u00e3o",
     230L, "Aquisi\u00e7\u00e3o de produtos aliment\u00edcios",
-    97L, "\u00c1rea remanescente e desflorestamento na Mata Atl\u00e2ntica e nas forma\u00e7\u00f5es vegetais litor\u00e2neas",
+    97L, paste0("\u00c1rea remanescente e desflorestamento na Mata",
+                " Atl\u00e2ntica e nas forma\u00e7\u00f5es vegetais",
+                " litor\u00e2neas"),
     104L, "\u00c1reas protegidas",
     248L, "Articula\u00e7\u00f5es interinstitucionais",
     223L, "Asma",
@@ -70,7 +72,8 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     290L, "Caracter\u00edsticas da escola",
     161L, "Caracter\u00edsticas da pessoa",
     162L, "Caracter\u00edsticas do domic\u00edlio",
-    313L, "Caracter\u00edsticas do domic\u00edlio e servi\u00e7os domiciliares de sa\u00fade",
+    313L, paste0("Caracter\u00edsticas do domic\u00edlio e servi\u00e7os",
+                 " domiciliares de sa\u00fade"),
     317L, "Caracter\u00edsticas do trabalho e apoio social",
     43L, "Caracter\u00edsticas dos estabelecimentos agropecu\u00e1rios",
     44L, "Caracter\u00edsticas dos produtores agropecu\u00e1rios",
@@ -79,13 +82,15 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     4L, "Casamentos",
     297L, "Cidades e comunidades sustent\u00e1veis",
     314L, "Cobertura de plano de sa\u00fade",
-    129L, "Coeficiente de mortalidade por homic\u00eddios ou por acidentes de transporte",
+    129L, paste0("Coeficiente de mortalidade por homic\u00eddios ou por",
+                 " acidentes de transporte"),
     141L, "Coleta seletiva de lixo",
     83L, "Com\u00e9rcio",
     243L, "Comit\u00eas de Bacias Hidrogr\u00e1ficas",
     218L, "Comportamento alimentar",
     92L, "Concentra\u00e7\u00e3o de poluentes no ar em \u00e1reas urbanas",
-    309L, "Confedera\u00e7\u00e3o da Agricultura e Pecu\u00e1ria do Brasil (CNA)",
+    309L, paste0("Confedera\u00e7\u00e3o da Agricultura e Pecu\u00e1ria",
+                 " do Brasil (CNA)"),
     79L, "Constru\u00e7\u00e3o civil",
     51L, "Consumo alimentar",
     135L, "Consumo de energia per capita",
@@ -115,7 +120,8 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     27L, "Educa\u00e7\u00e3o",
     302L, "Educa\u00e7\u00e3o de qualidade",
     156L, "Emigra\u00e7\u00e3o",
-    91L, "Emiss\u00f5es de origem antr\u00f3pica dos gases associados ao efeito estufa",
+    91L, paste0("Emiss\u00f5es de origem antr\u00f3pica dos gases",
+                " associados ao efeito estufa"),
     173L, "Emprego",
     198L, "Empresarial n\u00e3o-financeiro",
     12L, "Empresas",
@@ -154,7 +160,8 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     273L, "Idosos",
     130L, "Igualdade de g\u00eanero",
     293L, "Imagem corporal",
-    224L, "Imagem corporal, atitude em rela\u00e7\u00e3o ao peso corporal e estado nutricional",
+    224L, paste0("Imagem corporal, atitude em rela\u00e7\u00e3o ao peso",
+                 " corporal e estado nutricional"),
     122L, "Imuniza\u00e7\u00e3o contra doen\u00e7as infecciosas infantis",
     234L, "Incid\u00eancia de AIDS",
     254L, "Indicadores demogr\u00e1ficos",
@@ -197,7 +204,8 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     308L, "Outras formas de trabalho",
     73L, "Ovos de galinha",
     299L, "Parcerias e meios de implementa\u00e7\u00e3o",
-    137L, "Participa\u00e7\u00e3o de fontes renov\u00e1veis na oferta de energia",
+    137L, paste0("Participa\u00e7\u00e3o de fontes renov\u00e1veis na",
+                 " oferta de energia"),
     319L, "Paternidade e pr\u00e9-natal do parceiro",
     275L, "Patrim\u00f4nio cultural",
     300L, "Paz, justi\u00e7a e institui\u00e7\u00f5es eficazes",
@@ -271,7 +279,8 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     176L, "Trabalho e rendimento",
     199L, "Trabalho infantil",
     323L, "Trabalho por meio de plataformas digitais",
-    105L, "Tr\u00e1fico, cria\u00e7\u00e3o e com\u00e9rcio de animais silvestres",
+    105L, paste0("Tr\u00e1fico, cria\u00e7\u00e3o e com\u00e9rcio de",
+                 " animais silvestres"),
     182L, "Transportes",
     111L, "Tratamento de esgoto",
     311L, "Turismo",
@@ -289,13 +298,16 @@ ibge_subjects <- function(pattern = NULL, ignore_case = TRUE) {
     139L, "Vida \u00fatil das reservas minerais",
     171L, "Viol\u00eancia"
   )
-  
+
   if (!is.null(pattern) && nzchar(pattern)) {
-    subjects <- subjects[grepl(pattern, subjects$name, ignore.case = ignore_case), ]
-    cli::cli_alert_success("{nrow(subjects)} subject{?s} matched pattern {.val {pattern}}.")
+    keep <- grepl(pattern, subjects$name, ignore.case = ignore_case)
+    subjects <- subjects[keep, ]
+    cli::cli_alert_success(
+      "{nrow(subjects)} subject{?s} matched pattern {.val {pattern}}."
+    )
   } else {
     cli::cli_alert_success("{nrow(subjects)} subjects loaded.")
   }
-  
+
   subjects
 }

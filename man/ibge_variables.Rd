@@ -82,7 +82,7 @@ metadata. If any parameter is invalid, stops with a clear error message
 showing the allowed values.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # IPCA in Brazil
 ibge_variables(7060, localities = "BR")
 
@@ -101,7 +101,6 @@ ibge_variables(
   localities     = list(N6 = c(3550308, 3304557)),
   classification = list("226" = c(4844, 96608))
 )
-}
 
-
+\dontshow{\}) # examplesIf}
 }

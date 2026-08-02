@@ -28,18 +28,22 @@ test_that("parse_sidra_url decodes a full SIDRA URL", {
   cleanup <- seed_fake_meta(5434, sidra_meta())
   withr::defer(cleanup())
 
-  url <- "https://apisidra.ibge.gov.br/values/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623"
+  url <- paste0("https://apisidra.ibge.gov.br/values",
+                "/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623")
   parsed <- parse_sidra_url(url)
 
   expect_s3_class(parsed, "sidra_query")
-  expect_equal(parsed$aggregate$id, "5434")
-  expect_equal(parsed$variables$id, "4090")
-  expect_equal(parsed$variables$name, "Pessoas de 14 anos ou mais de idade")
-  expect_equal(parsed$periods, "last 1")
-  expect_equal(parsed$localities[[1]]$level, "N1")
-  expect_equal(parsed$localities[[1]]$codes, "all")
-  expect_equal(parsed$classifications[["888"]]$name, "Condicao em relacao a forca de trabalho")
-  expect_equal(
+  expect_identical(parsed$aggregate$id, "5434")
+  expect_identical(parsed$variables$id, "4090")
+  expect_identical(parsed$variables$name, "Pessoas de 14 anos ou mais de idade")
+  expect_identical(parsed$periods, "last 1")
+  expect_identical(parsed$localities[[1]]$level, "N1")
+  expect_identical(parsed$localities[[1]]$codes, "all")
+  expect_identical(
+    parsed$classifications[["888"]]$name,
+    "Condicao em relacao a forca de trabalho"
+  )
+  expect_identical(
     parsed$classifications[["888"]]$categories$category_name,
     c("Forca de trabalho", "Fora da forca de trabalho")
   )
@@ -49,7 +53,8 @@ test_that("parse_sidra_url builds the equivalent ibge_variables() call", {
   cleanup <- seed_fake_meta(5434, sidra_meta())
   withr::defer(cleanup())
 
-  url <- "https://apisidra.ibge.gov.br/values/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623"
+  url <- paste0("https://apisidra.ibge.gov.br/values",
+                "/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623")
   call_str <- parse_sidra_url(url)$ibger_call
 
   expect_match(call_str, "aggregate = 5434", fixed = TRUE)
@@ -66,9 +71,10 @@ test_that("parse_sidra_url handles specific locality codes and levels", {
   url <- "https://apisidra.ibge.gov.br/values/t/5434/n3/33,35/v/4090/p/202301"
   parsed <- parse_sidra_url(url)
 
-  expect_equal(parsed$localities[[1]]$level, "N3")
-  expect_equal(parsed$localities[[1]]$codes, "33,35")
-  expect_match(parsed$ibger_call, "localities = list(N3 = c(33,35))", fixed = TRUE)
+  expect_identical(parsed$localities[[1]]$level, "N3")
+  expect_identical(parsed$localities[[1]]$codes, "33,35")
+  expect_match(parsed$ibger_call, "localities = list(N3 = c(33,35))",
+               fixed = TRUE)
   expect_match(parsed$ibger_call, 'periods = "202301"', fixed = TRUE)
 })
 
@@ -83,24 +89,25 @@ test_that("print.sidra_query renders without error", {
   cleanup <- seed_fake_meta(5434, sidra_meta())
   withr::defer(cleanup())
 
-  url <- "https://apisidra.ibge.gov.br/values/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623"
+  url <- paste0("https://apisidra.ibge.gov.br/values",
+                "/t/5434/n1/all/v/4090/p/last%201/c888/47946,56623")
   parsed <- parse_sidra_url(url)
 
   expect_invisible(print(parsed))
   out <- cli::cli_fmt(print(parsed))
-  expect_true(any(grepl("SIDRA Query", out)))
-  expect_true(any(grepl("5434", out)))
+  expect_true(any(grepl("SIDRA Query", out, fixed = TRUE)))
+  expect_true(any(grepl("5434", out, fixed = TRUE)))
 })
 
-test_that("fetch_sidra_url translates the URL into ibge_variables() arguments", {
+test_that("fetch_sidra_url translates the URL into ibge_variables()", {
   cleanup <- seed_fake_meta(5434, sidra_meta())
   withr::defer(cleanup())
 
-  captured <- NULL
+  captured <- new.env(parent = emptyenv())
   local_mocked_bindings(
     ibge_variables = function(aggregate, variable, periods, localities,
                               classification, validate) {
-      captured <<- list(
+      captured$args <- list(
         aggregate = aggregate, variable = variable, periods = periods,
         localities = localities, classification = classification
       )
@@ -108,12 +115,13 @@ test_that("fetch_sidra_url translates the URL into ibge_variables() arguments", 
     }
   )
 
-  url <- "https://apisidra.ibge.gov.br/values/t/5434/n1/all/v/4090/p/last%203/c888/47946"
+  url <- paste0("https://apisidra.ibge.gov.br/values",
+                "/t/5434/n1/all/v/4090/p/last%203/c888/47946")
   fetch_sidra_url(url)
 
-  expect_equal(captured$aggregate, 5434L)
-  expect_equal(captured$variable, 4090)
-  expect_equal(captured$periods, -3L)
-  expect_equal(captured$localities, "BR")
-  expect_equal(captured$classification, list("888" = 47946))
+  expect_identical(captured$args$aggregate, 5434L)
+  expect_identical(captured$args$variable, 4090)
+  expect_identical(captured$args$periods, -3L)
+  expect_identical(captured$args$localities, "BR")
+  expect_identical(captured$args$classification, list("888" = 47946))
 })

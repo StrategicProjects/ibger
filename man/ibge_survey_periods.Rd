@@ -28,7 +28,7 @@ validated against the IBGE catalog; invalid codes produce a helpful error
 with suggestions.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # Conjunctural survey (monthly periods)
 ibge_survey_periods("SC")   # Pesquisa Mensal de Serviços
 
@@ -36,13 +36,12 @@ ibge_survey_periods("SC")   # Pesquisa Mensal de Serviços
 ibge_survey_periods("CD")   # Censo Demográfico
 
 # Invalid code: helpful error with suggestions
-ibge_survey_periods("PMS")
+try(ibge_survey_periods("PMS"))
 #> Error: Survey code "PMS" not found in the IBGE catalog.
 #> i Did you mean one of these?
 #>   * SC - Pesquisa Mensal de Serviços
 #>   ...
-}
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=ibge_surveys]{ibge_surveys()}}, \code{\link[=ibge_survey_metadata]{ibge_survey_metadata()}}

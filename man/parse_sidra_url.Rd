@@ -27,9 +27,11 @@ into a human-readable breakdown of its parameters, enriched with names
 from the aggregate metadata.
 }
 \examples{
-\dontrun{
-url <- "https://apisidra.ibge.gov.br/values/t/5434/n1/all/v/4090/p/last\%201/c888/47946,56623"
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+url <- paste0(
+  "https://apisidra.ibge.gov.br/values",
+  "/t/5434/n1/all/v/4090/p/last\%201/c888/47946,56623"
+)
 parse_sidra_url(url)
-}
-
+\dontshow{\}) # examplesIf}
 }

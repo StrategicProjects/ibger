@@ -13,7 +13,7 @@ test_that("ibge_subjects filters by pattern", {
 
   # Case-sensitive match finds nothing for upper-case pattern
   result_cs <- ibge_subjects("INTERNET", ignore_case = FALSE)
-  expect_equal(nrow(result_cs), 0)
+  expect_identical(nrow(result_cs), 0L)
 })
 
 test_that("ibge_subjects supports regular expressions", {

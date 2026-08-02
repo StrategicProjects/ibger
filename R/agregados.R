@@ -18,12 +18,10 @@
 #' @return A [tibble][tibble::tibble] with columns:
 #'   `survey_id`, `survey_name`, `aggregate_id`, `aggregate_name`
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' ibge_aggregates()
 #' ibge_aggregates(periodicity = "P5")
 #' ibge_aggregates(level = "N6")
-#' }
 #'
 #' @export
 ibge_aggregates <- function(period = NULL,
@@ -31,7 +29,7 @@ ibge_aggregates <- function(period = NULL,
                             classification = NULL,
                             periodicity = NULL,
                             level = NULL) {
-  
+
   # Build a cache key from the parameter combination
   params <- list(
     periodo       = period,
@@ -41,7 +39,7 @@ ibge_aggregates <- function(period = NULL,
     nivel         = level
   )
   cache_key <- paste0("aggregates_", rlang::hash(params))
-  
+
   # Return cached result if available
   if (exists(cache_key, envir = .ibger_cache)) {
     result <- get(cache_key, envir = .ibger_cache)
@@ -49,15 +47,15 @@ ibge_aggregates <- function(period = NULL,
     cli::cli_alert_success("{n} aggregate{?s} found (cached).")
     return(result)
   }
-  
+
   query <- purrr::compact(params)
-  
+
   data <- ibge_request(query = query, .label = "aggregates")
-  
+
   result <- purrr::map_dfr(data, function(survey) {
     aggregates <- survey[["agregados"]]
     if (is.null(aggregates) || length(aggregates) == 0) return(NULL)
-    
+
     purrr::map_dfr(aggregates, function(ag) {
       tibble::tibble(
         survey_id      = pluck_chr(survey, "id"),
@@ -67,10 +65,10 @@ ibge_aggregates <- function(period = NULL,
       )
     })
   })
-  
+
   # Store in cache
   assign(cache_key, result, envir = .ibger_cache)
-  
+
   n <- nrow(result)
   cli::cli_alert_success("{n} aggregate{?s} found.")
   result

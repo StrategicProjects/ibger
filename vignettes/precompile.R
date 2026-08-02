@@ -8,9 +8,7 @@
 # in. Run it from the package root whenever a .Rmd.orig changes, then commit
 # the regenerated .Rmd and tutorial-*.png / ipca-example-*.png figures.
 
-local({
-  old <- setwd("vignettes")
-  on.exit(setwd(old), add = TRUE)
+withr::with_dir("vignettes", {
   knitr::knit("ipca-example.Rmd.orig", output = "ipca-example.Rmd")
   knitr::knit("tutorial.Rmd.orig", output = "tutorial.Rmd")
 })
