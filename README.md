@@ -206,7 +206,10 @@ alternative. Both packages access IBGE aggregate data, but they talk to
   to the user. ibger estimates the result size before querying and, when it
   exceeds the Aggregates API per-request limit, automatically splits the
   query into multiple requests and combines the results
-  (`ibge_variables(..., chunk = TRUE)`, the default).
+  (`ibge_variables(..., chunk = TRUE)`, the default). Note that large
+  requests are slow on the server side: municipality-level queries
+  (`localities = "N6"`) can take one to several minutes per request to be
+  answered by the IBGE API — the function is not hanging.
 - **Structured metadata**: ibger queries dedicated JSON endpoints for
   metadata (`/metadados`, `/periodos`, `/localidades/{nivel}`). sidrar
   scrapes an HTML page (`desctabapi.aspx`) to discover classifications,
@@ -248,7 +251,7 @@ All data retrieved through this package is sourced from the
 [IBGE Aggregates API](https://servicodados.ibge.gov.br/api/docs/agregados?versao=3)
 and the [IBGE Metadata API](https://servicodados.ibge.gov.br/api/docs/metadados?versao=2)
 and remains the intellectual property of IBGE. Users must comply with IBGE's
-[terms of use](https://www.ibge.gov.br/acesso-informacao/institucional/termos-de-uso.html)
+[terms of use](https://www.ibge.gov.br/acesso-informacao/acoes-e-programas/politica-de-privacidade.html)
 when using, publishing, or redistributing the data.
 
 The data is provided **as-is**, without warranty of any kind. The package

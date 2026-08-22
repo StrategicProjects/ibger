@@ -2,6 +2,21 @@
 
 ## Changes from the rOpenSci review (ropensci/software-review#787)
 
+* Fixed the `bsicons` availability check in `ibge_explorer()`, which told
+  users to install `bslib` instead of `bsicons` (reported by @allanvc).
+* Fixed the documentation of the `launch.browser` argument of
+  `ibge_explorer()`, which described `FALSE` as the default; the default is
+  and remains `TRUE` (open in the browser), and `FALSE` opens the app in the
+  RStudio Viewer pane (reported by @allanvc).
+* Documented the IBGE API's server-side latency for large queries in
+  `?ibge_variables` and the README: municipality-level requests can take one
+  to several minutes each (suggested by @allanvc).
+* README: replaced the link to IBGE's terms of use, whose old address now
+  returns a 404, with the current "Termo de Uso e Política de Privacidade"
+  page (reported by @allanvc).
+* Removed the stray `.Rhistory` file from the repository (suggested by
+  @allanvc).
+
 * `curl (>= 6.0.0)` is now declared in `Imports`, enforcing at install time
   the version requirement that was previously only documented in the README
   (older curl versions fail with `curl_modify_url is not an exported object`).

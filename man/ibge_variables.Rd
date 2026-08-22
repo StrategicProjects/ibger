@@ -80,6 +80,11 @@ aggregate for the specified localities, periods and classifications.
 Before querying the API, validates all parameters against the aggregate
 metadata. If any parameter is invalid, stops with a clear error message
 showing the allowed values.
+
+Note that large requests can be slow on the server side: queries covering
+all municipalities (\code{localities = "N6"}, some 5,500 localities) may take
+one to several minutes \emph{per request} to be answered by the IBGE API, even
+before any chunking. This is normal — the function is not hanging.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

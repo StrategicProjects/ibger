@@ -58,3 +58,5 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+# JOSS paper local build (CI builds the draft PDF)
+paper.pdf

@@ -9,9 +9,10 @@
 #' corresponding `ibge_metadata()` call. A CSV download button is also
 #' available.
 #'
-#' @param launch.browser Logical or function. If `TRUE`, opens the app in
-#'   the default browser. If `FALSE`, opens in the RStudio Viewer pane
-#'   (default). You can also pass a function such as [shiny::paneViewer()].
+#' @param launch.browser Logical or function. If `TRUE` (the default), opens
+#'   the app in the default browser. If `FALSE`, opens in the RStudio Viewer
+#'   pane when running inside RStudio. You can also pass a function such as
+#'   [shiny::paneViewer()].
 #'
 #' @return This function is called for its side effect (launching the app).
 #'   Returns the value of [shiny::runApp()] invisibly.
@@ -50,7 +51,7 @@ ibge_explorer <- function(launch.browser = TRUE) {
   if (!requireNamespace("bsicons", quietly = TRUE)) {
     cli::cli_abort(c(
       "The {.pkg bsicons} package is required to run the aggregate explorer.",
-      "i" = 'Install it with {.code install.packages("bslib")}'
+      "i" = 'Install it with {.code install.packages("bsicons")}'
     ), call = NULL)
   }
 

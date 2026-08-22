@@ -7,6 +7,11 @@
 #' metadata. If any parameter is invalid, stops with a clear error message
 #' showing the allowed values.
 #'
+#' Note that large requests can be slow on the server side: queries covering
+#' all municipalities (`localities = "N6"`, some 5,500 localities) may take
+#' one to several minutes *per request* to be answered by the IBGE API, even
+#' before any chunking. This is normal — the function is not hanging.
+#'
 #' @param aggregate Numeric aggregate identifier (SIDRA table).
 #' @param variable Variable(s) to retrieve. Can be:
 #'   - `NULL` (default): returns all standard variables
