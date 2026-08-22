@@ -15,9 +15,9 @@ ibge_explorer(launch.browser = TRUE)
 
 - launch.browser:
 
-  Logical or function. If `TRUE`, opens the app in the default browser.
-  If `FALSE`, opens in the RStudio Viewer pane (default). You can also
-  pass a function such as
+  Logical or function. If `TRUE` (the default), opens the app in the
+  default browser. If `FALSE`, opens in the RStudio Viewer pane when
+  running inside RStudio. You can also pass a function such as
   [`shiny::paneViewer()`](https://rdrr.io/pkg/shiny/man/viewer.html).
 
 ## Value

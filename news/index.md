@@ -4,28 +4,57 @@
 
 ### Changes from the rOpenSci review (ropensci/software-review#787)
 
+- Fixed the `bsicons` availability check in
+  [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md),
+  which told users to install `bslib` instead of `bsicons` (reported by
+  [@allanvc](https://github.com/allanvc)).
+
+- Fixed the documentation of the `launch.browser` argument of
+  [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md),
+  which described `FALSE` as the default; the default is and remains
+  `TRUE` (open in the browser), and `FALSE` opens the app in the RStudio
+  Viewer pane (reported by [@allanvc](https://github.com/allanvc)).
+
+- Documented the IBGE API’s server-side latency for large queries in
+  [`?ibge_variables`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md)
+  and the README: municipality-level requests can take one to several
+  minutes each (suggested by [@allanvc](https://github.com/allanvc)).
+
+- README: replaced the link to IBGE’s terms of use, whose old address
+  now returns a 404, with the current “Termo de Uso e Política de
+  Privacidade” page (reported by
+  [@allanvc](https://github.com/allanvc)).
+
+- Removed the stray `.Rhistory` file from the repository (suggested by
+  [@allanvc](https://github.com/allanvc)).
+
 - `curl (>= 6.0.0)` is now declared in `Imports`, enforcing at install
   time the version requirement that was previously only documented in
   the README (older curl versions fail with
   `curl_modify_url is not an exported object`).
+
 - The table of IBGE special value codes (`-`, `..`, `...`, `X`) is now
   documented in a single place —
   [`?parse_ibge_value`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.md)
   — and linked from the README and vignettes instead of being repeated.
+
 - The `ipca-example` and `tutorial` vignettes are now precompiled from
   `.Rmd.orig` sources against the live IBGE API
   (`vignettes/precompile.R`), so their output and ggplot2 figures render
   on the pkgdown site.
+
 - README: added the rOpenSci review badge, linked the API-concepts
   vignette from the quick start, pointed the “Value column” section to
   [`parse_ibge_value()`](https://strategicprojects.github.io/ibger/reference/parse_ibge_value.md),
   and rewrote the
   [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md)
   section to match the tone of the rest of the page.
+
 - Examples no longer use `\dontrun{}`: examples that query the live IBGE
   API (or launch the Shiny explorer) are now guarded with
   `@examplesIf interactive()`, so they render in the docs and run for
   interactive users without hitting the network during checks.
+
 - Internal refactor to address the remaining pkgcheck/goodpractice
   notes: every function is now below the cyclomatic-complexity threshold
   of 15 (long functions such as
