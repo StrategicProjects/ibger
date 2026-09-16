@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ibger</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,7 +126,7 @@ items</li>
 <span><span class="co">#&gt; 4 66    IPCA - Peso mensal                    %</span></span>
 <span></span>
 <span><span class="co"># Peek at the classification categories</span></span>
-<span><span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 20 × 6</span></span>
 <span><span class="co">#&gt;    id    name             category_id category_name category_unit category_level</span></span>
@@ -249,7 +249,7 @@ groups (level 1 categories) are things like Food and beverages (7170),
 Housing (7445), Transportation (7486), etc.</p>
 <p>First, find the category IDs you need:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cats</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cats</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Level-1 groups (just below the general index)</span></span>
 <span><span class="va">cats</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">category_level</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span></span>
@@ -349,7 +349,7 @@ download the general index for all metro areas and reshape:</p>
 <span><span class="va">all_metros</span> <span class="op">&lt;-</span> <span class="va">all_metros</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="../reference/parse_ibge_value.html">parse_ibge_value</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">variable_name</span>, <span class="va">locality_name</span>, <span class="va">period</span>, <span class="va">value</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">variable_name</span>, values_from <span class="op">=</span> <span class="va">value</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">variable_name</span>, values_from <span class="op">=</span> <span class="va">value</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">all_metros</span></span>
 <span><span class="co">#&gt; # A tibble: 120 × 5</span></span>

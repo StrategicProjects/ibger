@@ -36,3 +36,10 @@ Authors:
 
 - Diogo Bezerra <diogo.bezerra@ufpe.br>
   ([ORCID](https://orcid.org/0000-0002-1216-8674))
+
+Other contributors:
+
+- Allan Quadros ([ORCID](https://orcid.org/0000-0003-3250-5380))
+  (Reviewed the package for rOpenSci, see
+  \<https://github.com/ropensci/software-review/issues/787\>)
+  \[reviewer\]

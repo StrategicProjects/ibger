@@ -14,19 +14,24 @@
 
 - **Diogo Bezerra**. Author. [](https://orcid.org/0000-0002-1216-8674)
 
+- **Allan Quadros**. Reviewer.
+  [](https://orcid.org/0000-0003-3250-5380)  
+  Reviewed the package for rOpenSci, see
+  \<<https://github.com/ropensci/software-review/issues/787>\>
+
 ## Citation
 
 Source:
 [`DESCRIPTION`](https://github.com/StrategicProjects/ibger/blob/main/DESCRIPTION)
 
 Leite A, Wasiliew M, Vasconcelos H, Amorim C, Bezerra D (2026). *ibger:
-Access the 'IBGE' Aggregate Data API from 'R'*. R package version 0.2.0,
-<https://github.com/StrategicProjects/ibger>.
+Access the 'IBGE' Aggregate Data API from 'R'*. R package version
+0.2.0.9000, <https://github.com/StrategicProjects/ibger>.
 
     @Manual{,
       title = {ibger: Access the 'IBGE' Aggregate Data API from 'R'},
       author = {Andre Leite and Marcos Wasiliew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra},
       year = {2026},
-      note = {R package version 0.2.0},
+      note = {R package version 0.2.0.9000},
       url = {https://github.com/StrategicProjects/ibger},
     }
