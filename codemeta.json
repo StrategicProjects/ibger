@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/StrategicProjects/ibger",
   "issueTracker": "https://github.com/StrategicProjects/ibger/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.2.0",
+  "version": "0.2.0.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -335,7 +335,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "984.414KB",
+  "fileSize": "992.188KB",
   "releaseNotes": "https://github.com/StrategicProjects/ibger/blob/main/NEWS.md",
   "readme": "https://github.com/StrategicProjects/ibger/blob/main/README.md",
   "contIntegration": ["https://github.com/StrategicProjects/ibger/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/StrategicProjects/ibger"],

@@ -31,5 +31,10 @@ Authors:
   \item Diogo Bezerra \email{diogo.bezerra@ufpe.br} (\href{https://orcid.org/0000-0002-1216-8674}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Allan Quadros (\href{https://orcid.org/0000-0003-3250-5380}{ORCID}) (Reviewed the package for rOpenSci, see <https://github.com/ropensci/software-review/issues/787>) [reviewer]
+}
+
 }
 \keyword{internal}
