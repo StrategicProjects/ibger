@@ -91,8 +91,8 @@ before any chunking. This is normal — the function is not hanging.
 # IPCA in Brazil
 ibge_variables(7060, localities = "BR")
 
-# Specific variables for states
-ibge_variables(1705, variable = c(284, 285), localities = "N3")
+# Specific variables for states (quarterly animal slaughter)
+ibge_variables(1092, variable = c(284, 285), localities = "N3")
 
 # Large query (all municipalities): split automatically into
 # multiple requests to respect the API's 100,000 value limit

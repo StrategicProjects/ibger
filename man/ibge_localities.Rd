@@ -25,9 +25,15 @@ Retrieves available localities for an aggregate at one or more geographic
 levels. Validates the requested level(s) against the aggregate metadata
 before querying.
 }
+\details{
+When several levels are requested, one request is made per level and the
+results are combined. (The API's own multi-level endpoint returns an empty
+list when any of the requested levels has no localities for the
+aggregate, which would silently hide the other levels.)
+}
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ibge_localities(1437, level = "N1")
-ibge_localities(1437, level = c("N6", "N7"))
+ibge_localities(1437, level = c("N2", "N3"))
 \dontshow{\}) # examplesIf}
 }

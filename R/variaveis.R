@@ -56,8 +56,8 @@
 #' # IPCA in Brazil
 #' ibge_variables(7060, localities = "BR")
 #'
-#' # Specific variables for states
-#' ibge_variables(1705, variable = c(284, 285), localities = "N3")
+#' # Specific variables for states (quarterly animal slaughter)
+#' ibge_variables(1092, variable = c(284, 285), localities = "N3")
 #'
 #' # Large query (all municipalities): split automatically into
 #' # multiple requests to respect the API's 100,000 value limit
@@ -126,7 +126,8 @@ ibge_variables <- function(aggregate,
     data <- ibge_request(
       aggregate, "periodos", periods_str, "variaveis", variable_str,
       query = query,
-      .label = glue::glue("variables for aggregate {aggregate}")
+      .label = glue::glue("variables for aggregate {aggregate}"),
+      .data_request = TRUE
     )
 
     result <- parse_variables(data, view = view)
@@ -145,7 +146,8 @@ ibge_variables <- function(aggregate,
           classificacao = classification_str,
           view          = view
         ),
-        .label = glue::glue("chunk {i}/{n_chunks} for aggregate {aggregate}")
+        .label = glue::glue("chunk {i}/{n_chunks} for aggregate {aggregate}"),
+        .data_request = TRUE
       )
       parse_variables(data, view = view)
     })

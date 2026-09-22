@@ -242,19 +242,17 @@ all_metros <- all_metros |>
 all_metros
 ```
 
-## Tips for large queries
+## Large queries
 
-IPCA has 365 categories in classification 315. Querying all categories
-for all periods and all metro areas can easily exceed the 100,000-value
-limit. Strategies:
-
-1. **Reduce periods**: use `-1` or `-3` instead of `-12`
-2. **Reduce localities**: query one metro at a time
-3. **Reduce categories**: pick only the groups you need
-4. **Loop and bind**: query in chunks and combine with `dplyr::bind_rows()`
+IPCA has several hundred categories in classification 315. Querying all
+of them for many periods and every metro area quickly exceeds the API's
+per-request limit. You do not have to split such a query yourself:
+`ibge_variables()` estimates the result size and, when needed, splits the
+request (by periods, then by localities) and binds the pieces back
+together — see the `chunk` argument in `?ibge_variables`. The full
+breakdown for one period and Brazil fits in a single request:
 
 ```{r}
-# Example: query all categories for just 1 period, Brazil only
 full_breakdown <- ibge_variables(
   aggregate      = 7060,
   variable       = 63,
@@ -265,6 +263,10 @@ full_breakdown <- ibge_variables(
 
 nrow(full_breakdown)
 ```
+
+Even with automatic splitting, narrowing the periods, localities or
+categories to what you actually need keeps the queries fast: the IBGE API
+takes noticeably longer to answer large requests.
 
 ## Handling special values
 

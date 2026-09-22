@@ -430,7 +430,7 @@ ibge_survey_periods <- function(survey) {
 #' #> Error: Survey code "PMS" not found in the IBGE catalog.
 #'
 #' # Invalid year: error with available range
-#' ibge_survey_metadata("CD", year = 1800)
+#' try(ibge_survey_metadata("CD", year = 1800))
 #' #> Error: Year 1800 not available for survey "CD".
 #' #> i Available years: 1940 to 2022 (9 total).
 #'

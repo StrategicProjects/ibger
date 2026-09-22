@@ -13,6 +13,9 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-1216-8674")),
     person("Allan", "Quadros", role = "rev",
            comment = c(ORCID = "0000-0003-3250-5380",
+                       "Reviewed the package for rOpenSci, see <https://github.com/ropensci/software-review/issues/787>")),
+    person("Diana", "García-Cortés", role = "rev",
+           comment = c(ORCID = "0000-0003-1562-7319",
                        "Reviewed the package for rOpenSci, see <https://github.com/ropensci/software-review/issues/787>")))
 Description: 'Tidyverse'-friendly interface to the Brazilian Institute of Geography and Statistics ('IBGE') aggregate data 'API' 
     <https://servicodados.ibge.gov.br/api/docs/agregados?versao=3>. Query aggregates, variables, localities, periods, and metadata

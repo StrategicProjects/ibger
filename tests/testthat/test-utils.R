@@ -79,3 +79,10 @@ test_that("parse_ibge_value converts IBGE special codes", {
   # Numeric input is returned untouched
   expect_identical(parse_ibge_value(c(1, 2.5)), c(1, 2.5))
 })
+
+test_that("http_error_hint only mentions the size limit for data requests", {
+  expect_match(http_error_hint(500, data_request = TRUE), "result-size")
+  expect_no_match(http_error_hint(500, data_request = FALSE), "100,000")
+  expect_match(http_error_hint(500, data_request = FALSE), "non-existent")
+  expect_identical(http_error_hint(404), "HTTP error 404")
+})

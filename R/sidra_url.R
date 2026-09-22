@@ -40,6 +40,7 @@ parse_sidra_url <- function(url) {
   var_info <- resolve_sidra_variables(meta, parsed$variables)
   cls_info <- resolve_sidra_classifications(meta, parsed$classifications)
   loc_info <- resolve_sidra_localities(parsed$localities)
+  warn_sidra_levels(meta, loc_info)
 
   ibger_call <- build_ibger_call(
     parsed$aggregate_id, var_info$id, parsed$periods,
@@ -182,10 +183,37 @@ sidra_level_names <- c(
 #' @noRd
 resolve_sidra_localities <- function(localities) {
   purrr::map(localities, function(loc) {
-    level_name <- sidra_level_names[[loc$level]]
-    if (is.null(level_name)) level_name <- loc$level
+    level_name <- unname(sidra_level_names[loc$level])
+    if (is.na(level_name)) level_name <- "unknown level"
     list(level = loc$level, level_name = level_name, codes = loc$codes)
   })
+}
+
+#' Warn about territorial levels the aggregate does not offer
+#'
+#' The SIDRA API rejects such URLs with an error; here the parse still
+#' succeeds (so the user can inspect the query), the print method flags the
+#' level, and `fetch_sidra_url()` aborts through the regular validation.
+#' @noRd
+warn_sidra_levels <- function(meta, localities) {
+  valid <- c(
+    meta$territorial_level$administrative,
+    meta$territorial_level$special,
+    meta$territorial_level$ibge
+  )
+  if (length(valid) == 0 || length(localities) == 0) return(invisible())
+
+  requested <- purrr::map_chr(localities, "level")
+  invalid <- setdiff(requested, valid)
+  if (length(invalid) == 0) return(invisible())
+
+  cli::cli_warn(c(
+    "Geographic level(s) {.val {invalid}} not available for
+     aggregate {meta$id}.",
+    "i" = "Available levels: {.val {valid}}.",
+    "i" = "{.fn fetch_sidra_url} will fail for this URL."
+  ))
+  invisible()
 }
 
 #' Build equivalent ibge_variables() call as a string
@@ -229,18 +257,25 @@ format_call_periods <- function(periods) {
 #' @noRd
 format_call_localities <- function(localities) {
   if (length(localities) == 0) return("")
+  paste0(",\n  localities = ", deparse_localities_arg(localities))
+}
 
-  loc_parts <- purrr::map_chr(localities, function(loc) {
-    if (tolower(loc$codes) == "all" && loc$level == "N1") return('"BR"')
-    if (tolower(loc$codes) == "all") return(paste0('"', loc$level, '"'))
-    paste0(loc$level, " = c(", loc$codes, ")")
+#' Render the `localities` argument produced by `sidra_localities_arg()` as
+#' R code, so the printed call and `fetch_sidra_url()` always agree.
+#' @noRd
+deparse_localities_arg <- function(localities) {
+  arg <- sidra_localities_arg(localities)
+
+  if (is.character(arg)) return(paste0('"', arg, '"'))
+
+  parts <- purrr::imap_chr(arg, function(ids, level) {
+    if (length(ids) == 1) {
+      paste0(level, " = ", ids)
+    } else {
+      paste0(level, " = c(", toString(ids), ")")
+    }
   })
-
-  if (length(loc_parts) == 1 && grepl('^"', loc_parts)) {
-    paste0(",\n  localities = ", loc_parts)
-  } else {
-    paste0(",\n  localities = list(", toString(loc_parts), ")")
-  }
+  paste0("list(", toString(parts), ")")
 }
 
 #' Format the `classification` argument of the equivalent call
@@ -297,7 +332,11 @@ print_sidra_variables <- function(x) {
 #' @noRd
 print_sidra_periods <- function(x) {
   cli::cli_h2("Periods")
-  if (nchar(x$periods) == 0) return(invisible())
+  if (length(x$periods) == 0 || nchar(x$periods) == 0) {
+    cli::cli_text("  (not specified: {.fn ibge_variables} defaults to the
+                   last 6 periods)")
+    return(invisible())
+  }
 
   if (grepl("^last\\s+", x$periods, ignore.case = TRUE)) {
     n <- sub("^last\\s+", "", x$periods, ignore.case = TRUE)
@@ -313,11 +352,8 @@ print_sidra_localities <- function(x) {
 
   cli::cli_h2("Localities")
   for (loc in x$localities) {
-    if (tolower(loc$codes) == "all") {
-      cli::cli_text("  {loc$level} ({loc$level_name}): all")
-    } else {
-      cli::cli_text("  {loc$level} ({loc$level_name}): {loc$codes}")
-    }
+    codes <- if (tolower(loc$codes) == "all") "all" else loc$codes
+    cli::cli_text("  {loc$level} ({loc$level_name}): {codes}")
   }
 }
 
@@ -392,15 +428,16 @@ sidra_localities_arg <- function(localities) {
   })
   names(loc_list) <- purrr::map_chr(localities, "level")
 
-  # "all" levels become just the level code
+  # Only specific codes: a named list, e.g. list(N3 = c(33, 35), N6 = 1)
   all_levels <- purrr::map_lgl(localities, ~ tolower(.x$codes) == "all")
   if (!any(all_levels)) return(loc_list)
 
-  level_strs <- purrr::map_chr(localities[all_levels], "level")
-  specific <- loc_list[!all_levels]
-  paste(c(level_strs, purrr::imap_chr(specific, function(ids, lvl) {
-    paste0(lvl, "[", paste(ids, collapse = ","), "]")
-  })), collapse = "|")
+  # At least one "all" level: the API's pipe syntax, e.g. "N1|N3[33,35]"
+  parts <- purrr::map_chr(localities, function(loc) {
+    if (tolower(loc$codes) == "all") return(loc$level)
+    paste0(loc$level, "[", loc$codes, "]")
+  })
+  paste(parts, collapse = "|")
 }
 
 #' Translate a single parsed locality into an ibge_variables() argument
@@ -445,7 +482,7 @@ sidra_variable_arg <- function(variables) {
 #' Translate parsed periods into an ibge_variables() argument
 #' @noRd
 sidra_periods_arg <- function(periods) {
-  if (nchar(periods) == 0) return(-6)
+  if (length(periods) == 0 || nchar(periods) == 0) return(-6)
 
   if (grepl("^last\\s+", periods, ignore.case = TRUE)) {
     -as.integer(sub("^last\\s+", "", periods, ignore.case = TRUE))

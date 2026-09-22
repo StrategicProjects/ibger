@@ -34,6 +34,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Allan Quadros (\href{https://orcid.org/0000-0003-3250-5380}{ORCID}) (Reviewed the package for rOpenSci, see <https://github.com/ropensci/software-review/issues/787>) [reviewer]
+  \item Diana García-Cortés (\href{https://orcid.org/0000-0003-1562-7319}{ORCID}) (Reviewed the package for rOpenSci, see <https://github.com/ropensci/software-review/issues/787>) [reviewer]
 }
 
 }

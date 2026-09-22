@@ -1,0 +1,340 @@
+---
+title: "Getting started with ibger"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with ibger}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!--
+getting-started.Rmd is generated from getting-started.Rmd.orig by
+vignettes/precompile.R, which runs the code against the live IBGE API.
+Edit the .orig file, then re-run the script and commit the regenerated .Rmd.
+-->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE,
+  error = FALSE
+)
+options(cli.num_colors = 1, width = 80)
+```
+
+## Overview
+
+**ibger** provides a tidyverse-friendly interface to the
+[IBGE Aggregate Data API](https://servicodados.ibge.gov.br/api/docs/agregados?versao=3)
+(version 3). This is the same API that powers
+[SIDRA](https://sidra.ibge.gov.br/) — the automatic data retrieval system
+for all surveys and censuses conducted by the Brazilian Institute of
+Geography and Statistics (IBGE).
+
+Each SIDRA table corresponds to an **aggregate** in the API. With ibger
+you can browse aggregates, inspect their metadata, and retrieve tidy data
+— all from R.
+
+All the output shown in this vignette was produced by running the code
+against the live API when the vignette was last built (see the date at the
+end); numbers such as the catalog size or the latest period will change over
+time.
+
+## Installation
+
+```{r, eval = FALSE}
+# CRAN release
+install.packages("ibger")
+
+# Development version
+# install.packages("remotes")
+remotes::install_github("StrategicProjects/ibger")
+```
+
+```{r}
+library(ibger)
+```
+
+## A typical workflow
+
+### Step 1 — Find an aggregate
+
+Use `ibge_aggregates()` to list every aggregate grouped by survey. Optional
+filters let you narrow the search. Subject codes come from
+`ibge_subjects()`; `70` is "Abate de animais" (animal slaughter):
+
+```{r}
+# All aggregates (the catalog is large: only the first rows are shown)
+ibge_aggregates()
+
+# One subject: animal slaughter
+ibge_aggregates(subject = 70)
+
+# Monthly aggregates only
+ibge_aggregates(periodicity = "P5")
+
+# Aggregates with municipality-level data
+ibge_aggregates(level = "N6")
+```
+
+The filters are checked before the request: the API silently ignores values
+it cannot parse, so a typo would otherwise return the whole catalog.
+
+```{r, error = TRUE}
+ibge_aggregates(periodicity = "monthly")
+```
+
+### Step 2 — Inspect the metadata
+
+Once you have an aggregate ID, `ibge_metadata()` tells you everything about
+its structure. Aggregate **1092** is the quarterly animal slaughter table
+(number of establishments, animals slaughtered and carcass weight):
+
+```{r}
+meta <- ibge_metadata(1092)
+meta
+```
+
+Each component is accessible directly:
+
+```{r}
+meta$variables
+
+meta$classifications
+
+# Unnest to see every category
+tidyr::unnest(meta$classifications, categories)
+
+# Geographic levels
+meta$territorial_level
+
+# Time range
+meta$periodicity
+```
+
+### Step 3 — Retrieve data
+
+`ibge_variables()` is the main workhorse. It sends the request and returns
+a tidy tibble (one row per variable × locality × period × category):
+
+```{r}
+ibge_variables(1092, localities = "BR")
+```
+
+## Specifying localities
+
+The `localities` parameter accepts several convenient formats:
+
+```{r}
+# Country total
+ibge_variables(1092, variable = 284, periods = -1, localities = "BR")
+
+# All states
+ibge_variables(1092, variable = 284, periods = -1, localities = "N3")
+
+# Specific states (RJ = 33, SP = 35)
+ibge_variables(1092, variable = 284, periods = -1,
+               localities = list(N3 = c(33, 35)))
+
+# Mix levels: two metropolitan areas + one municipality
+# (IPCA, aggregate 7060, is published for metropolitan areas and capitals)
+ibge_variables(7060, variable = 63, periods = -1,
+               localities = list(N7 = c(3501, 3301), N6 = 5208707))
+```
+
+The geographic level codes follow the IBGE convention:
+
+| Code | Level                      | Example                              |
+|------|----------------------------|--------------------------------------|
+| `N1` | Brazil                     | `"BR"` or `list(N1 = 1)`            |
+| `N2` | Major region               | `list(N2 = 1)` — North              |
+| `N3` | State (UF)                 | `list(N3 = 33)` — Rio de Janeiro    |
+| `N6` | Municipality               | `list(N6 = 3550308)` — São Paulo/SP |
+| `N7` | Metropolitan area          | `list(N7 = 3501)` — RM São Paulo    |
+
+> **Tip**: Not every aggregate is available at every level. Aggregate 1092
+> has data for N1 and N3 but not N6. Use `ibge_metadata()` to check, or
+> rely on the validation described below.
+
+## Specifying periods
+
+Periods follow the API convention — negative values mean "last N":
+
+```{r}
+# Last 6 periods (the default)
+ibge_variables(1092, variable = 284, periods = -6, localities = "BR")
+
+# Last 12 periods
+ibge_variables(1092, variable = 284, periods = -12, localities = "BR")
+
+# Specific period codes (IPCA is monthly: 202301 = January 2023)
+ibge_variables(7060, variable = 63, periods = c(202301, 202302, 202303),
+               localities = "BR")
+
+# Range (inclusive)
+ibge_variables(7060, variable = 63, periods = "202101-202104",
+               localities = "BR")
+
+# Range + extra period
+ibge_variables(7060, variable = 63, periods = "202101-202103|202301",
+               localities = "BR")
+```
+
+> **Note**: Negative values cannot be mixed with specific periods. Period
+> codes encode both the date and the periodicity — `202001` means
+> January 2020 in a monthly aggregate but the first quarter of 2020 in a
+> quarterly one. `ibge_metadata()` reports the periodicity, and
+> `ibge_periods()` lists the valid codes.
+
+## Filtering with classifications
+
+Many aggregates break their data further by classifications (dimensions).
+For instance, aggregate 1712 (temporary crops in the 2006 Agricultural
+Census) has a classification for the product (226) and another for the
+producer's condition (218).
+
+```{r}
+# Single category: pineapple (4844) from product classification (226)
+ibge_variables(
+  aggregate      = 1712,
+  variable       = 214,
+  localities     = "BR",
+  classification = list("226" = 4844)
+)
+
+# Multiple categories
+ibge_variables(
+  aggregate      = 1712,
+  variable       = 214,
+  localities     = "BR",
+  classification = list("226" = c(4844, 96608, 96609))
+)
+
+# Multiple classifications
+ibge_variables(
+  aggregate      = 1712,
+  variable       = 214,
+  localities     = "BR",
+  classification = list("226" = c(4844, 96608), "218" = 4780)
+)
+
+# All categories of a classification
+ibge_variables(
+  aggregate      = 1712,
+  variable       = 214,
+  localities     = "BR",
+  classification = list("226" = "all")
+)
+```
+
+When no classification is specified, the API returns the **Total** category
+(ID = 0) — an aggregate across all categories.
+
+## Automatic validation
+
+Before sending any request, `ibge_variables()` and `ibge_localities()`
+validate your parameters against the aggregate's metadata. If something
+doesn't match, you get a clear error with the allowed values:
+
+```{r, error = TRUE}
+# N6 (municipalities) is not available for aggregate 1092
+ibge_variables(1092, localities = "N6")
+
+# Period out of range
+ibge_variables(1092, periods = 199001, localities = "BR")
+
+# Non-existent variable
+ibge_variables(1092, variable = 999, localities = "BR")
+
+# Non-existent category
+ibge_variables(1092, localities = "BR", classification = list("18" = 1))
+```
+
+Metadata is fetched once per session and cached. To force a refresh:
+
+```{r}
+ibge_clear_cache()
+```
+
+Skip validation entirely with `validate = FALSE`:
+
+```{r}
+ibge_variables(1092, variable = 284, periods = -1, localities = "BR",
+               validate = FALSE)
+```
+
+## Large queries
+
+The API rejects requests whose result is too large (see `?ibge_variables`
+and the API-concepts vignette). You do not need to split such queries by
+hand: `ibge_variables()` estimates the result size from the metadata and,
+when it exceeds the limit, splits the request into several smaller ones and
+combines the results. The query below asks for the estimated population of
+every municipality (aggregate 6579, about 5,570 localities) for the last 12
+years — some 67,000 values — and is transparently sent as two requests:
+
+```{r}
+pop <- ibge_variables(6579, localities = "N6", periods = -12)
+pop
+```
+
+Municipality-level requests are slow on the server side (one to several
+minutes each), so expect this to take a while. Use `chunk = FALSE` to force
+a single request, or pass a number to change the per-request limit.
+
+## Browsing the survey catalog
+
+Beyond aggregate-level data, ibger also provides access to the
+[IBGE Metadata API](https://servicodados.ibge.gov.br/api/docs/metadados?versao=2)
+(v2), which catalogs IBGE's surveys with institutional and methodological
+information such as status, category, collection frequency, and thematic
+classifications.
+
+This is useful when you want to understand **what surveys exist** and
+**how they are structured** before diving into specific aggregates.
+
+```{r}
+# List all IBGE surveys
+ibge_surveys()
+
+# Filter active short-term ("conjuntural") surveys
+library(dplyr)
+ibge_surveys(thematic_classifications = FALSE) |>
+  filter(status == "Ativa", category == "Conjuntural")
+
+# Check which periods have metadata for the Censo Demográfico
+ibge_survey_periods("CD")
+
+# Get full institutional metadata for a specific period
+meta_cd <- ibge_survey_metadata("CD", year = 2022)
+meta_cd
+
+# Explore methodology fields
+names(meta_cd$occurrences[[1]])
+```
+
+Survey codes are validated before each request. If you use a wrong code,
+the error suggests similar alternatives:
+
+```{r, error = TRUE}
+ibge_survey_periods("PMS")
+```
+
+## Special values
+
+The `value` column may contain special codes instead of numbers (`-`,
+`..`, `...`, `X`), so it comes through as a character column. Use
+`parse_ibge_value()` to convert it to numeric in one step — its
+documentation (`?parse_ibge_value`) has the full table of codes and how
+each one is handled:
+
+```{r}
+ibge_variables(7060, variable = 63, localities = "BR") |>
+  mutate(value = parse_ibge_value(value))
+```
+
+---
+
+This vignette was last built on `r format(Sys.Date(), "%Y-%m-%d")` against
+the live IBGE API.

@@ -13,16 +13,18 @@ ibge_aggregates(
 )
 }
 \arguments{
-\item{period}{Period of interest, e.g. \code{"P5[202001]"} (monthly),
-\code{"P10[20201]"} (quarterly).}
+\item{period}{Period of interest, as a periodicity code followed by one
+or more period ids in brackets: \code{"P5[202001]"} (January 2020, monthly
+aggregates), \code{"P1[2019,2020]"} (2019 and 2020, annual aggregates).}
 
 \item{subject}{Numeric subject code (e.g. \code{70} for animal slaughter).
 Use \code{\link[=ibge_subjects]{ibge_subjects()}} to look up codes.}
 
-\item{classification}{Numeric classification code.}
+\item{classification}{Numeric classification code (e.g. \code{12026}).}
 
-\item{periodicity}{Periodicity code: \code{"P5"} (monthly), \code{"P10"}
-(quarterly), \code{"P13"} (annual), etc.}
+\item{periodicity}{Periodicity code (see Details): \code{"P1"} (annual),
+\code{"P5"} (monthly), \code{"P8"} (semi-annual), \code{"P9"} (quarterly), \code{"P13"}
+(rolling quarter), etc.}
 
 \item{level}{Geographic level: \code{"N1"} (Brazil), \code{"N2"} (region), \code{"N3"}
 (state), \code{"N6"} (municipality), etc.}
@@ -37,10 +39,31 @@ Each aggregate corresponds to a SIDRA table. Results are cached in memory
 per unique combination of parameters, so repeated calls with the same
 filters are instant.
 }
+\details{
+All filters are optional. Their format is checked before the request:
+the IBGE API silently ignores filters it cannot parse (returning the
+whole catalog) or answers HTTP 500, so malformed values are rejected
+here with an informative error. A well-formed filter that matches no
+aggregate returns an empty tibble with a warning.
+
+Periodicity codes used by the API (as observed in the catalog):\tabular{ll}{
+   Code \tab Periodicity \cr
+   \code{P1} \tab Annual \cr
+   \code{P5} \tab Monthly \cr
+   \code{P7} \tab Every three years \cr
+   \code{P8} \tab Semi-annual \cr
+   \code{P9} \tab Quarterly \cr
+   \code{P11} \tab Every two years \cr
+   \code{P13} \tab Rolling quarter (PNAD Contínua) \cr
+   \code{P16} \tab Every six years \cr
+}
+}
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ibge_aggregates()
 ibge_aggregates(periodicity = "P5")
 ibge_aggregates(level = "N6")
+ibge_aggregates(subject = 70)
+ibge_aggregates(period = "P5[202001]")
 \dontshow{\}) # examplesIf}
 }
