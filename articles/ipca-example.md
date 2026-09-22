@@ -245,7 +245,8 @@ inflation across major cities:
 # Check available metropolitan areas
 metros <- ibge_localities(7060, level = "N7")
 metros
-#> # A tibble: 0 × 0
+#> # A tibble: 0 × 4
+#> # ℹ 4 variables: id <chr>, name <chr>, level_id <chr>, level_name <chr>
 ```
 
 Pick a few and compare:
@@ -304,36 +305,35 @@ all_metros
 #> # A tibble: 120 × 5
 #>    locality_name period `IPCA - Variação mensal` IPCA - Variação acumulada no …¹
 #>    <chr>         <chr>                     <dbl>                           <dbl>
-#>  1 Belém - PA    202507                    -0.04                            3.35
-#>  2 Belém - PA    202508                    -0.15                            3.19
-#>  3 Belém - PA    202509                     0.27                            3.47
-#>  4 Belém - PA    202510                     0.26                            3.74
-#>  5 Belém - PA    202511                     0.11                            3.85
-#>  6 Belém - PA    202512                    -0.1                             3.75
-#>  7 Belém - PA    202601                     0.16                            0.16
-#>  8 Belém - PA    202602                     0.62                            0.78
-#>  9 Belém - PA    202603                     1.31                            2.11
-#> 10 Belém - PA    202604                     1.08                            3.21
+#>  1 Belém - PA    202509                     0.27                            3.47
+#>  2 Belém - PA    202510                     0.26                            3.74
+#>  3 Belém - PA    202511                     0.11                            3.85
+#>  4 Belém - PA    202512                    -0.1                             3.75
+#>  5 Belém - PA    202601                     0.16                            0.16
+#>  6 Belém - PA    202602                     0.62                            0.78
+#>  7 Belém - PA    202603                     1.31                            2.11
+#>  8 Belém - PA    202604                     1.08                            3.21
+#>  9 Belém - PA    202605                     0.63                            3.86
+#> 10 Belém - PA    202606                     0.07                            3.93
 #> # ℹ 110 more rows
 #> # ℹ abbreviated name: ¹​`IPCA - Variação acumulada no ano`
 #> # ℹ 1 more variable: `IPCA - Variação acumulada em 12 meses` <dbl>
 ```
 
-## Tips for large queries
+## Large queries
 
-IPCA has 365 categories in classification 315. Querying all categories
-for all periods and all metro areas can easily exceed the 100,000-value
-limit. Strategies:
-
-1.  **Reduce periods**: use `-1` or `-3` instead of `-12`
-2.  **Reduce localities**: query one metro at a time
-3.  **Reduce categories**: pick only the groups you need
-4.  **Loop and bind**: query in chunks and combine with
-    [`dplyr::bind_rows()`](https://dplyr.tidyverse.org/reference/bind_rows.html)
+IPCA has several hundred categories in classification 315. Querying all
+of them for many periods and every metro area quickly exceeds the API’s
+per-request limit. You do not have to split such a query yourself:
+[`ibge_variables()`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md)
+estimates the result size and, when needed, splits the request (by
+periods, then by localities) and binds the pieces back together — see
+the `chunk` argument in
+[`?ibge_variables`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md).
+The full breakdown for one period and Brazil fits in a single request:
 
 ``` r
 
-# Example: query all categories for just 1 period, Brazil only
 full_breakdown <- ibge_variables(
   aggregate      = 7060,
   variable       = 63,
@@ -345,6 +345,10 @@ full_breakdown <- ibge_variables(
 nrow(full_breakdown)
 #> [1] 457
 ```
+
+Even with automatic splitting, narrowing the periods, localities or
+categories to what you actually need keeps the queries fast: the IBGE
+API takes noticeably longer to answer large requests.
 
 ## Handling special values
 

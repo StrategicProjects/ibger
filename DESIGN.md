@@ -235,14 +235,18 @@ when the API’s responses change.
 
 ### Precomputed vignettes for network-dependent examples
 
-Two vignettes (`ipca-example`, `tutorial`) run real queries and produce
-figures, which cannot happen on CRAN or CI. They follow the rOpenSci
+All four vignettes run real queries (two of them also produce figures),
+which cannot happen on CRAN or CI. They follow the rOpenSci
 precomputation pattern: the executable sources are
 `vignettes/*.Rmd.orig`, and `vignettes/precompile.R` knits them locally
 against the live API into the `.Rmd` files (with output and figures
-baked in) that ship with the package. The other two vignettes
-(`getting-started`, `api-concepts`) keep `eval = FALSE` with
-hand-checked output, as they are mostly conceptual.
+baked in) that ship with the package. `getting-started` and
+`api-concepts` originally kept `eval = FALSE` with hand-written output;
+the second rOpenSci review found several of those outputs to be wrong or
+contradictory (they had drifted from the API and from each other), so
+since then every vignette is precomputed and no output in the
+documentation is typed by hand. The build date is printed at the end of
+each vignette.
 
 ## Why the Internal Function Graph Is Larger than the Exported API
 

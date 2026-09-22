@@ -147,8 +147,8 @@ before any chunking. This is normal — the function is not hanging.</p>
 <span class="r-in"><span><span class="co"># IPCA in Brazil</span></span></span>
 <span class="r-in"><span><span class="fu">ibge_variables</span><span class="op">(</span><span class="fl">7060</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Specific variables for states</span></span></span>
-<span class="r-in"><span><span class="fu">ibge_variables</span><span class="op">(</span><span class="fl">1705</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">284</span>, <span class="fl">285</span><span class="op">)</span>, localities <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specific variables for states (quarterly animal slaughter)</span></span></span>
+<span class="r-in"><span><span class="fu">ibge_variables</span><span class="op">(</span><span class="fl">1092</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">284</span>, <span class="fl">285</span><span class="op">)</span>, localities <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Large query (all municipalities): split automatically into</span></span></span>
 <span class="r-in"><span><span class="co"># multiple requests to respect the API's 100,000 value limit</span></span></span>

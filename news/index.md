@@ -4,6 +4,81 @@
 
 ### Changes from the rOpenSci review (ropensci/software-review#787)
 
+#### Second review ([@ddiannae](https://github.com/ddiannae))
+
+- [`parse_sidra_url()`](https://strategicprojects.github.io/ibger/reference/parse_sidra_url.md)
+  /
+  [`fetch_sidra_url()`](https://strategicprojects.github.io/ibger/reference/fetch_sidra_url.md):
+  a SIDRA URL without a `/p/` (periods) segment no longer crashes the
+  print method and the fetch; the equivalent call falls back to the
+  [`ibge_variables()`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md)
+  default (last 6 periods) (reported by
+  [@ddiannae](https://github.com/ddiannae)).
+- [`parse_sidra_url()`](https://strategicprojects.github.io/ibger/reference/parse_sidra_url.md):
+  a territorial level that is not in the internal lookup table
+  (e.g. `n12`) no longer errors with “subscript out of bounds”. Levels
+  that the aggregate does not offer now raise a warning at parse time
+  listing the available levels, and
+  [`fetch_sidra_url()`](https://strategicprojects.github.io/ibger/reference/fetch_sidra_url.md)
+  fails through the regular validation (reported by
+  [@ddiannae](https://github.com/ddiannae)).
+- [`parse_sidra_url()`](https://strategicprojects.github.io/ibger/reference/parse_sidra_url.md):
+  URLs with several territorial levels (e.g. `n1/all/n3/all`) produced
+  an “Equivalent ibger call” with an unnamed list that
+  [`ibge_variables()`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md)
+  rejects. The printed call and
+  [`fetch_sidra_url()`](https://strategicprojects.github.io/ibger/reference/fetch_sidra_url.md)
+  now share one translation: a named list when every level has specific
+  codes, and the API’s pipe syntax (`"N1|N3[33,35]"`) otherwise
+  (reported by [@ddiannae](https://github.com/ddiannae)).
+- [`ibge_aggregates()`](https://strategicprojects.github.io/ibger/reference/ibge_aggregates.md)
+  now checks the format of its five filters before the request. The API
+  silently drops filters it cannot parse (returning the whole catalog
+  under a success message) and answers HTTP 500 to others,
+  e.g. `periodicity = 30`; malformed values now abort with an example of
+  the expected format. An empty result is reported with a warning
+  instead of a green “0 aggregates found”, and keeps the documented
+  columns (reported by [@ddiannae](https://github.com/ddiannae)).
+- [`ibge_aggregates()`](https://strategicprojects.github.io/ibger/reference/ibge_aggregates.md):
+  the periodicity codes in the documentation were wrong (`P10` and `P58`
+  do not exist; `P13` is the rolling quarter, not annual). The
+  documented table now lists the codes observed in the catalog: `P1`
+  annual, `P5` monthly, `P8` semi-annual, `P9` quarterly, `P13` rolling
+  quarter, plus the multi-year codes (reported by
+  [@ddiannae](https://github.com/ddiannae)).
+- [`ibge_localities()`](https://strategicprojects.github.io/ibger/reference/ibge_localities.md)
+  with several levels queries each level separately and binds the
+  results: the API’s own multi-level endpoint returns an empty list as
+  soon as one of the levels has no localities for the aggregate. An
+  empty result now keeps the documented columns and is reported with a
+  warning (reported by [@ddiannae](https://github.com/ddiannae)).
+- The “exceeds the 100,000 value limit” hint on HTTP 500 is now only
+  shown for data requests
+  ([`ibge_variables()`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md));
+  for the other endpoints, where a 500 means the API could not interpret
+  the request (non-existent aggregate, invalid filter), the message says
+  so (reported by [@ddiannae](https://github.com/ddiannae)).
+- Vignettes: `getting-started` and `api-concepts` are now precomputed
+  against the live API like the other two (`vignettes/precompile.R`), so
+  every printed output is real. This removed a set of wrong hand-written
+  outputs — aggregate 1705 (IPCA-15) was described as the quarterly
+  animal slaughter table, which is 1092; the
+  `ibge_variables(1705, localities = "N3")` example (also in
+  [`?ibge_variables`](https://strategicprojects.github.io/ibger/reference/ibge_variables.md))
+  errors because 1705 has no state level; `periodicity = "P10"` returned
+  nothing — and replaced the advice to split large queries by hand with
+  a section on the automatic chunking (`chunk`) in all three vignettes
+  that mentioned the limit (reported by
+  [@ddiannae](https://github.com/ddiannae); precomputing suggested by
+  [@beatrizmilz](https://github.com/beatrizmilz)).
+- [`ibge_localities()`](https://strategicprojects.github.io/ibger/reference/ibge_localities.md)
+  example: `ibge_localities(1437, level = c("N6", "N7"))` returned an
+  empty tibble (1437 has no metropolitan-area localities); the example
+  now uses `c("N2", "N3")` (reported by
+  [@ddiannae](https://github.com/ddiannae)).
+
+#### First review ([@allanvc](https://github.com/allanvc))
+
 - Fixed the `bsicons` availability check in
   [`ibge_explorer()`](https://strategicprojects.github.io/ibger/reference/ibge_explorer.md),
   which told users to install `bslib` instead of `bsicons` (reported by

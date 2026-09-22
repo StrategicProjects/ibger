@@ -69,8 +69,9 @@ filters are instant.</p>
 
 
 <dl><dt id="arg-period">period<a class="anchor" aria-label="anchor" href="#arg-period"></a></dt>
-<dd><p>Period of interest, e.g. <code>"P5[202001]"</code> (monthly),
-<code>"P10[20201]"</code> (quarterly).</p></dd>
+<dd><p>Period of interest, as a periodicity code followed by one
+or more period ids in brackets: <code>"P5[202001]"</code> (January 2020, monthly
+aggregates), <code>"P1[2019,2020]"</code> (2019 and 2020, annual aggregates).</p></dd>
 
 
 <dt id="arg-subject">subject<a class="anchor" aria-label="anchor" href="#arg-subject"></a></dt>
@@ -79,12 +80,13 @@ Use <code><a href="ibge_subjects.html">ibge_subjects()</a></code> to look up cod
 
 
 <dt id="arg-classification">classification<a class="anchor" aria-label="anchor" href="#arg-classification"></a></dt>
-<dd><p>Numeric classification code.</p></dd>
+<dd><p>Numeric classification code (e.g. <code>12026</code>).</p></dd>
 
 
 <dt id="arg-periodicity">periodicity<a class="anchor" aria-label="anchor" href="#arg-periodicity"></a></dt>
-<dd><p>Periodicity code: <code>"P5"</code> (monthly), <code>"P10"</code>
-(quarterly), <code>"P13"</code> (annual), etc.</p></dd>
+<dd><p>Periodicity code (see Details): <code>"P1"</code> (annual),
+<code>"P5"</code> (monthly), <code>"P8"</code> (semi-annual), <code>"P9"</code> (quarterly), <code>"P13"</code>
+(rolling quarter), etc.</p></dd>
 
 
 <dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
@@ -97,6 +99,14 @@ Use <code><a href="ibge_subjects.html">ibge_subjects()</a></code> to look up cod
     <p>A <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> with columns:
 <code>survey_id</code>, <code>survey_name</code>, <code>aggregate_id</code>, <code>aggregate_name</code></p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>All filters are optional. Their format is checked before the request:
+the IBGE API silently ignores filters it cannot parse (returning the
+whole catalog) or answers HTTP 500, so malformed values are rejected
+here with an informative error. A well-formed filter that matches no
+aggregate returns an empty tibble with a warning.</p>
+<p>Periodicity codes used by the API (as observed in the catalog):</p><table class="table table"><tr><td>Code</td><td>Periodicity</td></tr><tr><td><code>P1</code></td><td>Annual</td></tr><tr><td><code>P5</code></td><td>Monthly</td></tr><tr><td><code>P7</code></td><td>Every three years</td></tr><tr><td><code>P8</code></td><td>Semi-annual</td></tr><tr><td><code>P9</code></td><td>Quarterly</td></tr><tr><td><code>P11</code></td><td>Every two years</td></tr><tr><td><code>P13</code></td><td>Rolling quarter (PNAD Contínua)</td></tr><tr><td><code>P16</code></td><td>Every six years</td></tr></table></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -104,6 +114,8 @@ Use <code><a href="ibge_subjects.html">ibge_subjects()</a></code> to look up cod
 <span class="r-in"><span><span class="fu">ibge_aggregates</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">ibge_aggregates</span><span class="op">(</span>periodicity <span class="op">=</span> <span class="st">"P5"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">ibge_aggregates</span><span class="op">(</span>level <span class="op">=</span> <span class="st">"N6"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ibge_aggregates</span><span class="op">(</span>subject <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ibge_aggregates</span><span class="op">(</span>period <span class="op">=</span> <span class="st">"P5[202001]"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

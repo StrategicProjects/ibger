@@ -303,7 +303,8 @@ inflation across major cities:</p>
 <code class="sourceCode R"><span><span class="co"># Check available metropolitan areas</span></span>
 <span><span class="va">metros</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_localities.html">ibge_localities</a></span><span class="op">(</span><span class="fl">7060</span>, level <span class="op">=</span> <span class="st">"N7"</span><span class="op">)</span></span>
 <span><span class="va">metros</span></span>
-<span><span class="co">#&gt; # A tibble: 0 × 0</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 0 × 4</span></span>
+<span><span class="co">#&gt; # ℹ 4 variables: id &lt;chr&gt;, name &lt;chr&gt;, level_id &lt;chr&gt;, level_name &lt;chr&gt;</span></span></code></pre></div>
 <p>Pick a few and compare:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ipca_metros</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
@@ -355,44 +356,33 @@ download the general index for all metro areas and reshape:</p>
 <span><span class="co">#&gt; # A tibble: 120 × 5</span></span>
 <span><span class="co">#&gt;    locality_name period `IPCA - Variação mensal` IPCA - Variação acumulada no …¹</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;         &lt;chr&gt;                     &lt;dbl&gt;                           &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 Belém - PA    202507                    -0.04                            3.35</span></span>
-<span><span class="co">#&gt;  2 Belém - PA    202508                    -0.15                            3.19</span></span>
-<span><span class="co">#&gt;  3 Belém - PA    202509                     0.27                            3.47</span></span>
-<span><span class="co">#&gt;  4 Belém - PA    202510                     0.26                            3.74</span></span>
-<span><span class="co">#&gt;  5 Belém - PA    202511                     0.11                            3.85</span></span>
-<span><span class="co">#&gt;  6 Belém - PA    202512                    -0.1                             3.75</span></span>
-<span><span class="co">#&gt;  7 Belém - PA    202601                     0.16                            0.16</span></span>
-<span><span class="co">#&gt;  8 Belém - PA    202602                     0.62                            0.78</span></span>
-<span><span class="co">#&gt;  9 Belém - PA    202603                     1.31                            2.11</span></span>
-<span><span class="co">#&gt; 10 Belém - PA    202604                     1.08                            3.21</span></span>
+<span><span class="co">#&gt;  1 Belém - PA    202509                     0.27                            3.47</span></span>
+<span><span class="co">#&gt;  2 Belém - PA    202510                     0.26                            3.74</span></span>
+<span><span class="co">#&gt;  3 Belém - PA    202511                     0.11                            3.85</span></span>
+<span><span class="co">#&gt;  4 Belém - PA    202512                    -0.1                             3.75</span></span>
+<span><span class="co">#&gt;  5 Belém - PA    202601                     0.16                            0.16</span></span>
+<span><span class="co">#&gt;  6 Belém - PA    202602                     0.62                            0.78</span></span>
+<span><span class="co">#&gt;  7 Belém - PA    202603                     1.31                            2.11</span></span>
+<span><span class="co">#&gt;  8 Belém - PA    202604                     1.08                            3.21</span></span>
+<span><span class="co">#&gt;  9 Belém - PA    202605                     0.63                            3.86</span></span>
+<span><span class="co">#&gt; 10 Belém - PA    202606                     0.07                            3.93</span></span>
 <span><span class="co">#&gt; # ℹ 110 more rows</span></span>
 <span><span class="co">#&gt; # ℹ abbreviated name: ¹​`IPCA - Variação acumulada no ano`</span></span>
 <span><span class="co">#&gt; # ℹ 1 more variable: `IPCA - Variação acumulada em 12 meses` &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="tips-for-large-queries">Tips for large queries<a class="anchor" aria-label="anchor" href="#tips-for-large-queries"></a>
+<h2 id="large-queries">Large queries<a class="anchor" aria-label="anchor" href="#large-queries"></a>
 </h2>
-<p>IPCA has 365 categories in classification 315. Querying all
-categories for all periods and all metro areas can easily exceed the
-100,000-value limit. Strategies:</p>
-<ol style="list-style-type: decimal">
-<li>
-<strong>Reduce periods</strong>: use <code>-1</code> or
-<code>-3</code> instead of <code>-12</code>
-</li>
-<li>
-<strong>Reduce localities</strong>: query one metro at a time</li>
-<li>
-<strong>Reduce categories</strong>: pick only the groups you
-need</li>
-<li>
-<strong>Loop and bind</strong>: query in chunks and combine with
-<code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code>
-</li>
-</ol>
+<p>IPCA has several hundred categories in classification 315. Querying
+all of them for many periods and every metro area quickly exceeds the
+API’s per-request limit. You do not have to split such a query yourself:
+<code><a href="../reference/ibge_variables.html">ibge_variables()</a></code> estimates the result size and, when
+needed, splits the request (by periods, then by localities) and binds
+the pieces back together — see the <code>chunk</code> argument in
+<code><a href="../reference/ibge_variables.html">?ibge_variables</a></code>. The full breakdown for one period and
+Brazil fits in a single request:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Example: query all categories for just 1 period, Brazil only</span></span>
-<span><span class="va">full_breakdown</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">full_breakdown</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  aggregate      <span class="op">=</span> <span class="fl">7060</span>,</span>
 <span>  variable       <span class="op">=</span> <span class="fl">63</span>,</span>
 <span>  periods        <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
@@ -402,6 +392,9 @@ need</li>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">full_breakdown</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 457</span></span></code></pre></div>
+<p>Even with automatic splitting, narrowing the periods, localities or
+categories to what you actually need keeps the queries fast: the IBGE
+API takes noticeably longer to answer large requests.</p>
 </div>
 <div class="section level2">
 <h2 id="handling-special-values">Handling special values<a class="anchor" aria-label="anchor" href="#handling-special-values"></a>

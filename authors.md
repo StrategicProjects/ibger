@@ -19,6 +19,11 @@
   Reviewed the package for rOpenSci, see
   \<<https://github.com/ropensci/software-review/issues/787>\>
 
+- **Diana García-Cortés**. Reviewer.
+  [](https://orcid.org/0000-0003-1562-7319)  
+  Reviewed the package for rOpenSci, see
+  \<<https://github.com/ropensci/software-review/issues/787>\>
+
 ## Citation
 
 Source:

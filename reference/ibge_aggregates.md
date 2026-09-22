@@ -21,8 +21,9 @@ ibge_aggregates(
 
 - period:
 
-  Period of interest, e.g. `"P5[202001]"` (monthly), `"P10[20201]"`
-  (quarterly).
+  Period of interest, as a periodicity code followed by one or more
+  period ids in brackets: `"P5[202001]"` (January 2020, monthly
+  aggregates), `"P1[2019,2020]"` (2019 and 2020, annual aggregates).
 
 - subject:
 
@@ -32,12 +33,13 @@ ibge_aggregates(
 
 - classification:
 
-  Numeric classification code.
+  Numeric classification code (e.g. `12026`).
 
 - periodicity:
 
-  Periodicity code: `"P5"` (monthly), `"P10"` (quarterly), `"P13"`
-  (annual), etc.
+  Periodicity code (see Details): `"P1"` (annual), `"P5"` (monthly),
+  `"P8"` (semi-annual), `"P9"` (quarterly), `"P13"` (rolling quarter),
+  etc.
 
 - level:
 
@@ -49,6 +51,28 @@ ibge_aggregates(
 A [tibble](https://tibble.tidyverse.org/reference/tibble.html) with
 columns: `survey_id`, `survey_name`, `aggregate_id`, `aggregate_name`
 
+## Details
+
+All filters are optional. Their format is checked before the request:
+the IBGE API silently ignores filters it cannot parse (returning the
+whole catalog) or answers HTTP 500, so malformed values are rejected
+here with an informative error. A well-formed filter that matches no
+aggregate returns an empty tibble with a warning.
+
+Periodicity codes used by the API (as observed in the catalog):
+
+|       |                                 |
+|-------|---------------------------------|
+| Code  | Periodicity                     |
+| `P1`  | Annual                          |
+| `P5`  | Monthly                         |
+| `P7`  | Every three years               |
+| `P8`  | Semi-annual                     |
+| `P9`  | Quarterly                       |
+| `P11` | Every two years                 |
+| `P13` | Rolling quarter (PNAD Contínua) |
+| `P16` | Every six years                 |
+
 ## Examples
 
 ``` r
@@ -56,5 +80,7 @@ if (FALSE) { # interactive()
 ibge_aggregates()
 ibge_aggregates(periodicity = "P5")
 ibge_aggregates(level = "N6")
+ibge_aggregates(subject = 70)
+ibge_aggregates(period = "P5[202001]")
 }
 ```

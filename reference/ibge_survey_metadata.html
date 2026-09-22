@@ -154,7 +154,7 @@ scope, reference period, and more.</p>
 <span class="r-in"><span><span class="co">#&gt; Error: Survey code "PMS" not found in the IBGE catalog.</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid year: error with available range</span></span></span>
-<span class="r-in"><span><span class="fu">ibge_survey_metadata</span><span class="op">(</span><span class="st">"CD"</span>, year <span class="op">=</span> <span class="fl">1800</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">ibge_survey_metadata</span><span class="op">(</span><span class="st">"CD"</span>, year <span class="op">=</span> <span class="fl">1800</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co">#&gt; Error: Year 1800 not available for survey "CD".</span></span></span>
 <span class="r-in"><span><span class="co">#&gt; i Available years: 1940 to 2022 (9 total).</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>

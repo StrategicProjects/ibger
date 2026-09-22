@@ -169,7 +169,7 @@
 </div>
 <div class="section level3">
 <h3 id="precomputed-vignettes-for-network-dependent-examples">Precomputed vignettes for network-dependent examples<a class="anchor" aria-label="anchor" href="#precomputed-vignettes-for-network-dependent-examples"></a></h3>
-<p>Two vignettes (<code>ipca-example</code>, <code>tutorial</code>) run real queries and produce figures, which cannot happen on CRAN or CI. They follow the rOpenSci precomputation pattern: the executable sources are <code>vignettes/*.Rmd.orig</code>, and <code>vignettes/precompile.R</code> knits them locally against the live API into the <code>.Rmd</code> files (with output and figures baked in) that ship with the package. The other two vignettes (<code>getting-started</code>, <code>api-concepts</code>) keep <code>eval = FALSE</code> with hand-checked output, as they are mostly conceptual.</p>
+<p>All four vignettes run real queries (two of them also produce figures), which cannot happen on CRAN or CI. They follow the rOpenSci precomputation pattern: the executable sources are <code>vignettes/*.Rmd.orig</code>, and <code>vignettes/precompile.R</code> knits them locally against the live API into the <code>.Rmd</code> files (with output and figures baked in) that ship with the package. <code>getting-started</code> and <code>api-concepts</code> originally kept <code>eval = FALSE</code> with hand-written output; the second rOpenSci review found several of those outputs to be wrong or contradictory (they had drifted from the API and from each other), so since then every vignette is precomputed and no output in the documentation is typed by hand. The build date is printed at the end of each vignette.</p>
 </div>
 </div>
 <div class="section level2">

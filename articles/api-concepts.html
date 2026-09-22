@@ -73,6 +73,11 @@
 
     
     
+<!--
+api-concepts.Rmd is generated from api-concepts.Rmd.orig by
+vignettes/precompile.R, which runs the code against the live IBGE API.
+Edit the .orig file, then re-run the script and commit the regenerated .Rmd.
+-->
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -83,6 +88,9 @@ Brazilian Institute of Geography and Statistics.</p>
 <p>This vignette explains the API’s data model so you can make the most
 of ibger. If you’re familiar with OLAP terminology: variables =
 measures, classifications = dimensions, and categories = members.</p>
+<p>All output below comes from running the code against the live API
+when the vignette was last built (date at the end), so counts and latest
+periods will drift over time.</p>
 </div>
 <div class="section level2">
 <h2 id="core-concepts">Core concepts<a class="anchor" aria-label="anchor" href="#core-concepts"></a>
@@ -95,77 +103,140 @@ IBGE survey. Each aggregate has a numeric ID that is stable over time.
 For example:</p>
 <ul>
 <li>
-<strong>1705</strong> — IPCA-15 — Variação mensal, acumulada no ano,
-acumulada em 12 meses e peso mensal (Monthly change, year-to-date
-accumulation, 12-month accumulation and monthly weight)</li>
+<strong>1092</strong> — Número de informantes, Quantidade e Peso
+total das carcaças dos animais abatidos (quarterly animal
+slaughter)</li>
 <li>
 <strong>1712</strong> — Produção, venda, valor da produção e área
-colhida da lavoura (Censo Agropecuário) (Production, sales, production
-value and harvested area of crops — Agricultural Census)</li>
+colhida da lavoura temporária (temporary crops, 2006 Agricultural
+Census)</li>
 <li>
 <strong>7060</strong> — IPCA — Variação mensal, acumulada no ano,
-acumulada em 12 meses e peso mensal (Monthly change, year-to-date
-accumulation, 12-month accumulation and monthly weight)</li>
+acumulada em 12 meses e peso mensal (consumer price index)</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/ibger" class="external-link">ibger</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Search for aggregates</span></span>
-<span><span class="fu"><a href="../reference/ibge_aggregates.html">ibge_aggregates</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/ibge_aggregates.html">ibge_aggregates</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching aggregates from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching aggregates from IBGE API... [805ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 9336 aggregates found.</span></span>
+<span><span class="co">#&gt; # A tibble: 9,336 × 4</span></span>
+<span><span class="co">#&gt;    survey_id survey_name                             aggregate_id aggregate_name</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;                                   &lt;chr&gt;        &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt;  1 D5        "Áreas Urbanizadas do Brasil"           10763        Áreas urbaniz…</span></span>
+<span><span class="co">#&gt;  2 D5        "Áreas Urbanizadas do Brasil"           8418         Áreas urbaniz…</span></span>
+<span><span class="co">#&gt;  3 EO        "Avaliação dos dados sobre a Biodivers… 10510        Índice de con…</span></span>
+<span><span class="co">#&gt;  4 EO        "Avaliação dos dados sobre a Biodivers… 10511        Quantidade de…</span></span>
+<span><span class="co">#&gt;  5 EO        "Avaliação dos dados sobre a Biodivers… 10512        Categorias de…</span></span>
+<span><span class="co">#&gt;  6 CL        "Cadastro Central de Empresas"          1685         Unidades loca…</span></span>
+<span><span class="co">#&gt;  7 CL        "Cadastro Central de Empresas"          1732         Dados gerais …</span></span>
+<span><span class="co">#&gt;  8 CL        "Cadastro Central de Empresas"          1733         Dados gerais …</span></span>
+<span><span class="co">#&gt;  9 CL        "Cadastro Central de Empresas"          1734         Dados gerais …</span></span>
+<span><span class="co">#&gt; 10 CL        "Cadastro Central de Empresas"          1735         Dados gerais …</span></span>
+<span><span class="co">#&gt; # ℹ 9,326 more rows</span></span></code></pre></div>
 <p>You can filter by periodicity, geographic level, subject, or
 classification:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Only quarterly aggregates</span></span>
-<span><span class="fu"><a href="../reference/ibge_aggregates.html">ibge_aggregates</a></span><span class="op">(</span>periodicity <span class="op">=</span> <span class="st">"P10"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ibge_aggregates.html">ibge_aggregates</a></span><span class="op">(</span>periodicity <span class="op">=</span> <span class="st">"P9"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching aggregates from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching aggregates from IBGE API... [136ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 94 aggregates found.</span></span>
+<span><span class="co">#&gt; # A tibble: 94 × 4</span></span>
+<span><span class="co">#&gt;    survey_id survey_name                  aggregate_id aggregate_name           </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;                        &lt;chr&gt;        &lt;chr&gt;                    </span></span>
+<span><span class="co">#&gt;  1 ST        Contas Nacionais Trimestrais 1620         Série encadeada do índic…</span></span>
+<span><span class="co">#&gt;  2 ST        Contas Nacionais Trimestrais 1621         Série encadeada do índic…</span></span>
+<span><span class="co">#&gt;  3 ST        Contas Nacionais Trimestrais 1846         Valores a preços corrent…</span></span>
+<span><span class="co">#&gt;  4 ST        Contas Nacionais Trimestrais 2072         Contas econômicas trimes…</span></span>
+<span><span class="co">#&gt;  5 ST        Contas Nacionais Trimestrais 2205         Conta financeira trimest…</span></span>
+<span><span class="co">#&gt;  6 ST        Contas Nacionais Trimestrais 5932         Taxa de variação do índi…</span></span>
+<span><span class="co">#&gt;  7 ST        Contas Nacionais Trimestrais 6612         Valores encadeados a pre…</span></span>
+<span><span class="co">#&gt;  8 ST        Contas Nacionais Trimestrais 6613         Valores encadeados a pre…</span></span>
+<span><span class="co">#&gt;  9 ST        Contas Nacionais Trimestrais 6726         Taxa de poupança         </span></span>
+<span><span class="co">#&gt; 10 ST        Contas Nacionais Trimestrais 6727         Taxa de investimento     </span></span>
+<span><span class="co">#&gt; # ℹ 84 more rows</span></span>
 <span></span>
 <span><span class="co"># Aggregates that have state-level data</span></span>
-<span><span class="fu"><a href="../reference/ibge_aggregates.html">ibge_aggregates</a></span><span class="op">(</span>level <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/ibge_aggregates.html">ibge_aggregates</a></span><span class="op">(</span>level <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching aggregates from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching aggregates from IBGE API... [166ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 6269 aggregates found.</span></span>
+<span><span class="co">#&gt; # A tibble: 6,269 × 4</span></span>
+<span><span class="co">#&gt;    survey_id survey_name                             aggregate_id aggregate_name</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;                                   &lt;chr&gt;        &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt;  1 D5        "Áreas Urbanizadas do Brasil"           10763        Áreas urbaniz…</span></span>
+<span><span class="co">#&gt;  2 D5        "Áreas Urbanizadas do Brasil"           8418         Áreas urbaniz…</span></span>
+<span><span class="co">#&gt;  3 EO        "Avaliação dos dados sobre a Biodivers… 10510        Índice de con…</span></span>
+<span><span class="co">#&gt;  4 EO        "Avaliação dos dados sobre a Biodivers… 10511        Quantidade de…</span></span>
+<span><span class="co">#&gt;  5 EO        "Avaliação dos dados sobre a Biodivers… 10512        Categorias de…</span></span>
+<span><span class="co">#&gt;  6 CL        "Cadastro Central de Empresas"          1685         Unidades loca…</span></span>
+<span><span class="co">#&gt;  7 CL        "Cadastro Central de Empresas"          1732         Dados gerais …</span></span>
+<span><span class="co">#&gt;  8 CL        "Cadastro Central de Empresas"          1733         Dados gerais …</span></span>
+<span><span class="co">#&gt;  9 CL        "Cadastro Central de Empresas"          1734         Dados gerais …</span></span>
+<span><span class="co">#&gt; 10 CL        "Cadastro Central de Empresas"          1735         Dados gerais …</span></span>
+<span><span class="co">#&gt; # ℹ 6,259 more rows</span></span></code></pre></div>
+<p>Filters are checked for the format the API expects before the request
+is sent (the API ignores what it cannot parse and returns the whole
+catalog):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_aggregates.html">ibge_aggregates</a></span><span class="op">(</span>periodicity <span class="op">=</span> <span class="st">"quarterly"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error:</span></span>
+<span><span class="co">#&gt; ! Invalid `periodicity` filter: "quarterly".</span></span>
+<span><span class="co">#&gt; ℹ Expected a single value like "P5".</span></span>
+<span><span class="co">#&gt; ℹ See `?ibge_aggregates` for the accepted formats.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="variables">Variables<a class="anchor" aria-label="anchor" href="#variables"></a>
 </h3>
 <p>Each aggregate exposes one or more <strong>variables</strong> — the
-measures being reported. Aggregate 1712 (crop production), for example,
-has:</p>
-<table class="table">
-<thead><tr class="header">
-<th>ID</th>
-<th>Variable</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>214</td>
-<td>Quantidade produzida (Production qty)</td>
-</tr>
-<tr class="even">
-<td>215</td>
-<td>Valor da produção (Production value)</td>
-</tr>
-<tr class="odd">
-<td>216</td>
-<td>Área colhida (Harvested area)</td>
-</tr>
-<tr class="even">
-<td>1982</td>
-<td>Quantidade vendida (Sold qty)</td>
-</tr>
-<tr class="odd">
-<td>…</td>
-<td>…</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+measures being reported. For aggregate 1712 (crop production):</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">1712</span><span class="op">)</span></span>
-<span><span class="va">meta</span><span class="op">$</span><span class="va">variables</span></span></code></pre></div>
+<span><span class="co">#&gt; ℹ Fetching metadata for aggregate 1712 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching metadata for aggregate 1712 from IBGE API... [71ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1712: 7 variables,</span></span>
+<span><span class="co">#&gt; 6 classifications, 108 categories.</span></span>
+<span><span class="va">meta</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; # A tibble: 7 × 3</span></span>
+<span><span class="co">#&gt;   id      name                                          unit                    </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                                         &lt;chr&gt;                   </span></span>
+<span><span class="co">#&gt; 1 183     Número de estabelecimentos agropecuários      Unidades                </span></span>
+<span><span class="co">#&gt; 2 214     Quantidade produzida                          Vide categorias da clas…</span></span>
+<span><span class="co">#&gt; 3 1982    Quantidade vendida                            Vide categorias da clas…</span></span>
+<span><span class="co">#&gt; 4 215     Valor da produção                             Mil Reais               </span></span>
+<span><span class="co">#&gt; 5 1000215 Valor da produção - percentual do total geral %                       </span></span>
+<span><span class="co">#&gt; 6 216     Área colhida                                  Hectares                </span></span>
+<span><span class="co">#&gt; 7 1000216 Área colhida - percentual do total geral      %</span></span></code></pre></div>
 <p>When calling <code><a href="../reference/ibge_variables.html">ibge_variables()</a></code>, you can request specific
 variables by ID:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Two specific variables</span></span>
-<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1712</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">214</span>, <span class="fl">1982</span><span class="op">)</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1712</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">214</span>, <span class="fl">1982</span><span class="op">)</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1712: 7 variables,</span></span>
+<span><span class="co">#&gt; 6 classifications, 108 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1712 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1712 from IBGE API... [120ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 2 records retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 14</span></span>
+<span><span class="co">#&gt;   variable_id variable_name  variable_unit classification_218 classification_220</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;          &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt; 1 214         Quantidade pr… Unidades      Total              Total             </span></span>
+<span><span class="co">#&gt; 2 1982        Quantidade ve… Unidades      Total              Total             </span></span>
+<span><span class="co">#&gt; # ℹ 9 more variables: classification_226 &lt;chr&gt;, classification_12517 &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   classification_12523 &lt;chr&gt;, classification_12617 &lt;chr&gt;, locality_id &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span></code></pre></div>
 <p>Use <code>variable = NULL</code> (default) for all standard
 variables, or <code>variable = "all"</code> to include API-generated
-percentage variables when available.</p>
+percentage variables (the <code>1000215</code>-style ids above) when
+available.</p>
 </div>
 <div class="section level3">
 <h3 id="classifications-and-categories">Classifications and categories<a class="anchor" aria-label="anchor" href="#classifications-and-categories"></a>
@@ -173,37 +244,110 @@ percentage variables when available.</p>
 <p>Besides being linked to a locality and a period, each observation can
 be further broken down by <strong>classifications</strong> (dimensions).
 Each classification contains <strong>categories</strong> (members).</p>
-<p>For aggregate 1712, the classifications are things like “type of
-product” (226), “producer condition” (218), “economic activity group”,
-etc. Classification 226 has categories like “pineapple” (4844), “garlic”
-(96608), “potato” (96609), and hundreds more.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">1712</span><span class="op">)</span></span>
-<span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span></span>
+<p>For aggregate 1712, the classifications are “product” (226),
+“producer condition” (218), “economic activity group”, and so on.
+Classification 226 has categories like “pineapple” (4844), “garlic”
+(96608) and “potato” (96609):</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt;   id    name                                      categories       </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                     &lt;list&gt;           </span></span>
+<span><span class="co">#&gt; 1 226   Produtos da lavoura temporária            &lt;tibble [53 × 4]&gt;</span></span>
+<span><span class="co">#&gt; 2 218   Condição do produtor em relação às terras &lt;tibble [7 × 4]&gt; </span></span>
+<span><span class="co">#&gt; 3 12517 Grupos de atividade econômica             &lt;tibble [10 × 4]&gt;</span></span>
+<span><span class="co">#&gt; 4 220   Grupos de área total                      &lt;tibble [19 × 4]&gt;</span></span>
+<span><span class="co">#&gt; 5 12523 Grupos de área colhida                    &lt;tibble [12 × 4]&gt;</span></span>
+<span><span class="co">#&gt; 6 12617 Pronafiano                                &lt;tibble [7 × 4]&gt;</span></span>
 <span></span>
 <span><span class="co"># Unnest to see all categories</span></span>
-<span><span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">classifications</span>, <span class="va">categories</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 108 × 6</span></span>
+<span><span class="co">#&gt;    id    name             category_id category_name category_unit category_level</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt;  1 226   Produtos da lav… 113869      Total         &lt;NA&gt;          0             </span></span>
+<span><span class="co">#&gt;  2 226   Produtos da lav… 4844        Abacaxi       Mil frutos    1             </span></span>
+<span><span class="co">#&gt;  3 226   Produtos da lav… 111671      Abóbora, mor… Toneladas     1             </span></span>
+<span><span class="co">#&gt;  4 226   Produtos da lav… 111672      Algodão herb… Toneladas     1             </span></span>
+<span><span class="co">#&gt;  5 226   Produtos da lav… 4847        Alho          Toneladas     1             </span></span>
+<span><span class="co">#&gt;  6 226   Produtos da lav… 96608       Amendoim em … Toneladas     1             </span></span>
+<span><span class="co">#&gt;  7 226   Produtos da lav… 4851        Arroz em cas… Toneladas     1             </span></span>
+<span><span class="co">#&gt;  8 226   Produtos da lav… 111673      Aveia branca… Toneladas     1             </span></span>
+<span><span class="co">#&gt;  9 226   Produtos da lav… 96609       Batata-ingle… Toneladas     1             </span></span>
+<span><span class="co">#&gt; 10 226   Produtos da lav… 4857        Cana-de-açúc… Toneladas     1             </span></span>
+<span><span class="co">#&gt; # ℹ 98 more rows</span></span></code></pre></div>
 <p>When you don’t specify a classification, the API returns results for
 the <strong>Total</strong> category (ID = 0). This is a special
 aggregate across all categories.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Default: Total category (aggregated across all products)</span></span>
-<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1712</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1712</span>, variable <span class="op">=</span> <span class="fl">214</span>, localities <span class="op">=</span> <span class="st">"BR"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1712: 7 variables,</span></span>
+<span><span class="co">#&gt; 6 classifications, 108 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1712 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1712 from IBGE API... [69ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 1 record retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 14</span></span>
+<span><span class="co">#&gt;   variable_id variable_name  variable_unit classification_218 classification_220</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;          &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt; 1 214         Quantidade pr… Unidades      Total              Total             </span></span>
+<span><span class="co">#&gt; # ℹ 9 more variables: classification_226 &lt;chr&gt;, classification_12517 &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   classification_12523 &lt;chr&gt;, classification_12617 &lt;chr&gt;, locality_id &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span>
 <span></span>
 <span><span class="co"># Specific products</span></span>
 <span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  <span class="fl">1712</span>,</span>
+<span>  variable       <span class="op">=</span> <span class="fl">214</span>,</span>
 <span>  localities     <span class="op">=</span> <span class="st">"BR"</span>,</span>
 <span>  classification <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"226"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4844</span>, <span class="fl">96608</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1712: 7 variables,</span></span>
+<span><span class="co">#&gt; 6 classifications, 108 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1712 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1712 from IBGE API... [72ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 2 records retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 14</span></span>
+<span><span class="co">#&gt;   variable_id variable_name  variable_unit classification_226 classification_218</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;          &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt; 1 214         Quantidade pr… Mil frutos    Abacaxi            Total             </span></span>
+<span><span class="co">#&gt; 2 214         Quantidade pr… Mil frutos    Amendoim em casca  Total             </span></span>
+<span><span class="co">#&gt; # ℹ 9 more variables: classification_220 &lt;chr&gt;, classification_12517 &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   classification_12523 &lt;chr&gt;, classification_12617 &lt;chr&gt;, locality_id &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span>
 <span></span>
-<span><span class="co"># All products (can be large)</span></span>
+<span><span class="co"># All products</span></span>
 <span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  <span class="fl">1712</span>,</span>
-<span>  periods        <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  variable       <span class="op">=</span> <span class="fl">214</span>,</span>
 <span>  localities     <span class="op">=</span> <span class="st">"BR"</span>,</span>
 <span>  classification <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"226"</span> <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1712: 7 variables,</span></span>
+<span><span class="co">#&gt; 6 classifications, 108 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1712 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1712 from IBGE API... [72ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 53 records retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 53 × 14</span></span>
+<span><span class="co">#&gt;    variable_id variable_name variable_unit classification_226 classification_218</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 214         Quantidade p… Unidades      Total              Total             </span></span>
+<span><span class="co">#&gt;  2 214         Quantidade p… Unidades      Abacaxi            Total             </span></span>
+<span><span class="co">#&gt;  3 214         Quantidade p… Unidades      Abóbora, moranga,… Total             </span></span>
+<span><span class="co">#&gt;  4 214         Quantidade p… Unidades      Algodão herbáceo   Total             </span></span>
+<span><span class="co">#&gt;  5 214         Quantidade p… Unidades      Alho               Total             </span></span>
+<span><span class="co">#&gt;  6 214         Quantidade p… Unidades      Amendoim em casca  Total             </span></span>
+<span><span class="co">#&gt;  7 214         Quantidade p… Unidades      Arroz em casca     Total             </span></span>
+<span><span class="co">#&gt;  8 214         Quantidade p… Unidades      Aveia branca em g… Total             </span></span>
+<span><span class="co">#&gt;  9 214         Quantidade p… Unidades      Batata-inglesa     Total             </span></span>
+<span><span class="co">#&gt; 10 214         Quantidade p… Unidades      Cana-de-açúcar     Total             </span></span>
+<span><span class="co">#&gt; # ℹ 43 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 9 more variables: classification_220 &lt;chr&gt;, classification_12517 &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   classification_12523 &lt;chr&gt;, classification_12617 &lt;chr&gt;, locality_id &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="geographic-levels-and-localities">Geographic levels and localities<a class="anchor" aria-label="anchor" href="#geographic-levels-and-localities"></a>
@@ -211,6 +355,12 @@ aggregate across all categories.</p>
 <p>IBGE organizes Brazil into a hierarchy of geographic levels. Each
 aggregate supports a specific subset of these levels:</p>
 <table class="table">
+<colgroup>
+<col width="10%">
+<col width="38%">
+<col width="10%">
+<col width="39%">
+</colgroup>
 <thead><tr class="header">
 <th>Code</th>
 <th>Level</th>
@@ -239,7 +389,7 @@ aggregate supports a specific subset of these levels:</p>
 <tr class="even">
 <td><code>N6</code></td>
 <td>Municipality</td>
-<td>5,570+</td>
+<td>5,570</td>
 <td>3550308 (São Paulo city)</td>
 </tr>
 <tr class="odd">
@@ -249,16 +399,28 @@ aggregate supports a specific subset of these levels:</p>
 <td>3501 (RM São Paulo)</td>
 </tr>
 <tr class="even">
+<td><code>N8</code></td>
+<td>Mesoregion</td>
+<td>137</td>
+<td>3515 (Metropolitana de SP)</td>
+</tr>
+<tr class="odd">
 <td><code>N9</code></td>
-<td>Immediate region</td>
-<td>varies</td>
+<td>Microregion</td>
+<td>558</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td><code>N10</code></td>
+<td>District</td>
+<td>9,700+</td>
 <td>…</td>
 </tr>
 <tr class="odd">
-<td><code>N15</code></td>
-<td>Intermediate region</td>
+<td><code>N102</code></td>
+<td>Neighbourhood (bairro)</td>
 <td>varies</td>
-<td>…</td>
+<td>census aggregates only</td>
 </tr>
 </tbody>
 </table>
@@ -268,35 +430,136 @@ area IDs (N7) use different numbering. São Paulo city is 3550308 (N6),
 while the São Paulo metropolitan area is 3501 (N7). Don’t confuse
 them.</p>
 </blockquote>
-<p>The available levels for each aggregate are in the metadata:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">1705</span><span class="op">)</span></span>
+<p>The available levels for each aggregate are in the metadata, and
+<code><a href="../reference/ibge_localities.html">ibge_localities()</a></code> lists the localities at a level:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">1092</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching metadata for aggregate 1092 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching metadata for aggregate 1092 from IBGE API... [154ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1092: 6 variables,</span></span>
+<span><span class="co">#&gt; 3 classifications, 14 categories.</span></span>
 <span><span class="va">meta</span><span class="op">$</span><span class="va">territorial_level</span></span>
 <span><span class="co">#&gt; $administrative</span></span>
-<span><span class="co">#&gt; [1] "N1" "N2" "N3"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "N1" "N3"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $special</span></span>
+<span><span class="co">#&gt; character(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $ibge</span></span>
+<span><span class="co">#&gt; character(0)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/ibge_localities.html">ibge_localities</a></span><span class="op">(</span><span class="fl">1092</span>, level <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1092: 6 variables,</span></span>
+<span><span class="co">#&gt; 3 classifications, 14 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching N3 localities for aggregate 1092 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching N3 localities for aggregate 1092 from IBGE API... [73ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 27 localities found.</span></span>
+<span><span class="co">#&gt; # A tibble: 27 × 4</span></span>
+<span><span class="co">#&gt;    id    name      level_id level_name          </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt;  1 11    Rondônia  N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  2 12    Acre      N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  3 13    Amazonas  N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  4 14    Roraima   N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  5 15    Pará      N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  6 16    Amapá     N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  7 17    Tocantins N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  8 21    Maranhão  N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt;  9 22    Piauí     N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt; 10 23    Ceará     N3       Unidade da Federação</span></span>
+<span><span class="co">#&gt; # ℹ 17 more rows</span></span></code></pre></div>
 <p>You can request all localities at a level, or pick specific ones:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># All states</span></span>
-<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1705</span>, localities <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1092</span>, variable <span class="op">=</span> <span class="fl">284</span>, periods <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, localities <span class="op">=</span> <span class="st">"N3"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1092: 6 variables,</span></span>
+<span><span class="co">#&gt; 3 classifications, 14 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching N3 localities for aggregate 1092 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching N3 localities for aggregate 1092 from IBGE API... [75ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1092 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1092 from IBGE API... [71ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 27 records retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 27 × 11</span></span>
+<span><span class="co">#&gt;    variable_id variable_name    variable_unit classification_18</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;            &lt;chr&gt;         &lt;chr&gt;            </span></span>
+<span><span class="co">#&gt;  1 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  2 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  3 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  4 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  5 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  6 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  7 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  8 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt;  9 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt; 10 284         Animais abatidos Cabeças       Total            </span></span>
+<span><span class="co">#&gt; # ℹ 17 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 7 more variables: classification_12529 &lt;chr&gt;, classification_12716 &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   locality_id &lt;chr&gt;, locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   value &lt;chr&gt;</span></span>
 <span></span>
 <span><span class="co"># Specific states</span></span>
-<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1705</span>, localities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>N3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33</span>, <span class="fl">35</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1092</span>, variable <span class="op">=</span> <span class="fl">284</span>, periods <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>               localities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>N3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33</span>, <span class="fl">35</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1092: 6 variables,</span></span>
+<span><span class="co">#&gt; 3 classifications, 14 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1092 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1092 from IBGE API... [151ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 2 records retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 11</span></span>
+<span><span class="co">#&gt;   variable_id variable_name variable_unit classification_18 classification_12529</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;             &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 284         Animais abat… Cabeças       Total             Total               </span></span>
+<span><span class="co">#&gt; 2 284         Animais abat… Cabeças       Total             Total               </span></span>
+<span><span class="co">#&gt; # ℹ 6 more variables: classification_12716 &lt;chr&gt;, locality_id &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   locality_name &lt;chr&gt;, locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span></code></pre></div>
 <p>The API also supports <strong>contextual queries</strong> — filtering
 municipalities by their parent state or region. For example,
 <code>N6[N3[33,35],N2[1]]</code> means “all municipalities in RJ, SP, or
-the North region”. ibger passes this through directly:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+the North region”. ibger passes this through directly (aggregate 512 is
+the harvested area of permanent crops in the 1995 Agricultural
+Census):</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span></span>
 <span>  <span class="fl">512</span>,</span>
 <span>  variable   <span class="op">=</span> <span class="fl">216</span>,</span>
-<span>  periods    <span class="op">=</span> <span class="op">-</span><span class="fl">6</span>,</span>
 <span>  localities <span class="op">=</span> <span class="st">"N6[N3[33,35],N2[1]]"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching metadata for aggregate 512 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching metadata for aggregate 512 from IBGE API... [76ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ Aggregate 512: 2 variables,</span></span>
+<span><span class="co">#&gt; 2 classifications, 84 categories.</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 512 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 512 from IBGE API... [78ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 1069 records retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 1,069 × 10</span></span>
+<span><span class="co">#&gt;    variable_id variable_name variable_unit classification_218 classification_227</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  2 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  3 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  4 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  5 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  6 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  7 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  8 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt;  9 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt; 10 216         Área colhida  Hectares      Total              Total             </span></span>
+<span><span class="co">#&gt; # ℹ 1,059 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 5 more variables: locality_id &lt;chr&gt;, locality_name &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="periods-and-periodicities">Periods and periodicities<a class="anchor" aria-label="anchor" href="#periods-and-periodicities"></a>
 </h3>
-<p>Each aggregate has a fixed periodicity:</p>
+<p>Each aggregate has a fixed periodicity. The codes used by the API’s
+<code>periodicity</code> filter (as observed in the catalog) are:</p>
 <table class="table">
 <thead><tr class="header">
 <th>Code</th>
@@ -304,20 +567,36 @@ the North region”. ibger passes this through directly:</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>P5</code></td>
-<td>Monthly</td>
-</tr>
-<tr class="even">
-<td><code>P10</code></td>
-<td>Quarterly</td>
-</tr>
-<tr class="odd">
-<td><code>P13</code></td>
+<td><code>P1</code></td>
 <td>Annual</td>
 </tr>
 <tr class="even">
-<td><code>P58</code></td>
+<td><code>P5</code></td>
+<td>Monthly</td>
+</tr>
+<tr class="odd">
+<td><code>P7</code></td>
+<td>Every three years</td>
+</tr>
+<tr class="even">
+<td><code>P8</code></td>
 <td>Semi-annual</td>
+</tr>
+<tr class="odd">
+<td><code>P9</code></td>
+<td>Quarterly</td>
+</tr>
+<tr class="even">
+<td><code>P11</code></td>
+<td>Every two years</td>
+</tr>
+<tr class="odd">
+<td><code>P13</code></td>
+<td>Rolling quarter (PNAD Contínua)</td>
+</tr>
+<tr class="even">
+<td><code>P16</code></td>
+<td>Every six years</td>
 </tr>
 </tbody>
 </table>
@@ -326,31 +605,63 @@ the North region”. ibger passes this through directly:</p>
 periodicity:</p>
 <ul>
 <li>Monthly (<code>P5</code>): January 2020</li>
-<li>Quarterly (<code>P10</code>): Q1 2020</li>
-<li>Semi-annual (<code>P58</code>): S1 2020</li>
+<li>Quarterly (<code>P9</code>): Q1 2020</li>
+<li>Semi-annual (<code>P8</code>): first half of 2020</li>
 </ul>
-<p>The metadata tells you the valid range:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>The metadata tells you the frequency and the valid range:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ibge_metadata.html">ibge_metadata</a></span><span class="op">(</span><span class="fl">7060</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching metadata for aggregate 7060 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching metadata for aggregate 7060 from IBGE API... [79ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ Aggregate 7060: 4 variables,</span></span>
+<span><span class="co">#&gt; 1 classification, 457 categories.</span></span>
 <span><span class="va">meta</span><span class="op">$</span><span class="va">periodicity</span></span>
-<span><span class="co">#&gt; $frequency [1] "mensal"</span></span>
-<span><span class="co">#&gt; $start     [1] "202001"</span></span>
-<span><span class="co">#&gt; $end       [1] "202512"</span></span></code></pre></div>
+<span><span class="co">#&gt; $frequency</span></span>
+<span><span class="co">#&gt; [1] "mensal"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $start</span></span>
+<span><span class="co">#&gt; [1] 202001</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $end</span></span>
+<span><span class="co">#&gt; [1] 202608</span></span></code></pre></div>
 <p>ibger’s <code><a href="../reference/ibge_periods.html">ibge_periods()</a></code> lists every individual
 period:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_periods.html">ibge_periods</a></span><span class="op">(</span><span class="fl">7060</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_periods.html">ibge_periods</a></span><span class="op">(</span><span class="fl">7060</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching periods for aggregate 7060 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching periods for aggregate 7060 from IBGE API... [70ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 80 periods found.</span></span>
+<span><span class="co">#&gt; # A tibble: 80 × 3</span></span>
+<span><span class="co">#&gt;    id     literal                            modification</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;                              &lt;chr&gt;       </span></span>
+<span><span class="co">#&gt;  1 202001 janeiro 2020 / janeiro de 2020     07/02/2020  </span></span>
+<span><span class="co">#&gt;  2 202002 fevereiro 2020 / fevereiro de 2020 11/03/2020  </span></span>
+<span><span class="co">#&gt;  3 202003 março 2020 / março de 2020         09/04/2020  </span></span>
+<span><span class="co">#&gt;  4 202004 abril 2020 / abril de 2020         08/05/2020  </span></span>
+<span><span class="co">#&gt;  5 202005 maio 2020 / maio de 2020           10/06/2020  </span></span>
+<span><span class="co">#&gt;  6 202006 junho 2020 / junho de 2020         10/07/2020  </span></span>
+<span><span class="co">#&gt;  7 202007 julho 2020 / julho de 2020         07/08/2020  </span></span>
+<span><span class="co">#&gt;  8 202008 agosto 2020 / agosto de 2020       09/09/2020  </span></span>
+<span><span class="co">#&gt;  9 202009 setembro 2020 / setembro de 2020   09/10/2020  </span></span>
+<span><span class="co">#&gt; 10 202010 outubro 2020 / outubro de 2020     06/11/2020  </span></span>
+<span><span class="co">#&gt; # ℹ 70 more rows</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="request-limits">Request limits<a class="anchor" aria-label="anchor" href="#request-limits"></a>
 </h2>
-<p>The API allows at most <strong>100,000 values</strong> per request.
-The formula is:</p>
+<p>The API rejects requests whose result is too large, answering HTTP
+500. The documented limit is <strong>100,000 values</strong> per
+request, computed as:</p>
 <blockquote>
-<p><strong>categories × periods × localities ≤ 100,000</strong></p>
+<p><strong>variables × categories × periods × localities ≤
+100,000</strong></p>
 </blockquote>
-<p>For example, a request for aggregate 2654 with:</p>
+<p>In practice requests start failing above roughly 50,000 values, which
+is the limit ibger uses. For example, a request for aggregate 2654
+(deaths by month, nature, sex and age) with:</p>
 <ul>
 <li>Classification 244: 1 category</li>
 <li>Classification 1836: 2 categories</li>
@@ -361,8 +672,61 @@ The formula is:</p>
 </ul>
 <p>produces 1 × 2 × 2 × 1 × 6 × 4 = <strong>96 values</strong> — well
 within the limit.</p>
-<p>If your request exceeds 100,000 values, the API returns HTTP 500.
-Reduce the number of localities, periods, or categories and retry.</p>
+<p>You do not need to split large requests yourself.
+<code><a href="../reference/ibge_variables.html">ibge_variables()</a></code> estimates the size of the result from the
+metadata (fetching the period and locality lists when needed) and, when
+the estimate exceeds the limit, splits the query — first by periods,
+then by localities — and binds the pieces back together. The
+<code>chunk</code> argument controls this: <code>TRUE</code> (the
+default) uses the built-in limit, <code>FALSE</code> forces a single
+request, and a number sets a custom per-request limit. Lowering the
+limit is a quick way to see the mechanism at work on a small query (27
+states × 12 years = 324 values):</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">6579</span>, localities <span class="op">=</span> <span class="st">"N3"</span>, periods <span class="op">=</span> <span class="op">-</span><span class="fl">12</span>, chunk <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Fetching metadata for aggregate 6579 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching metadata for aggregate 6579 from IBGE API... [69ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ Aggregate 6579: 1 variable,</span></span>
+<span><span class="co">#&gt; 0 classifications, 0 categories.</span></span>
+<span><span class="co">#&gt; ℹ Fetching N3 localities for aggregate 6579 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching N3 localities for aggregate 6579 from IBGE API... [101ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Fetching period list for aggregate 6579 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching period list for aggregate 6579 from IBGE API... [80ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Estimated result exceeds the API limit (100 values);</span></span>
+<span><span class="co">#&gt; splitting into 4 requests.</span></span>
+<span><span class="co">#&gt; ℹ Fetching chunk 1/4 for aggregate 6579 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching chunk 1/4 for aggregate 6579 from IBGE API... [198ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Fetching chunk 2/4 for aggregate 6579 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching chunk 2/4 for aggregate 6579 from IBGE API... [208ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Fetching chunk 3/4 for aggregate 6579 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching chunk 3/4 for aggregate 6579 from IBGE API... [126ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Fetching chunk 4/4 for aggregate 6579 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching chunk 4/4 for aggregate 6579 from IBGE API... [122ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 324 records retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 324 × 8</span></span>
+<span><span class="co">#&gt;    variable_id variable_name             variable_unit locality_id locality_name</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;                     &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;        </span></span>
+<span><span class="co">#&gt;  1 9324        População residente esti… Pessoas       11          Rondônia     </span></span>
+<span><span class="co">#&gt;  2 9324        População residente esti… Pessoas       11          Rondônia     </span></span>
+<span><span class="co">#&gt;  3 9324        População residente esti… Pessoas       11          Rondônia     </span></span>
+<span><span class="co">#&gt;  4 9324        População residente esti… Pessoas       12          Acre         </span></span>
+<span><span class="co">#&gt;  5 9324        População residente esti… Pessoas       12          Acre         </span></span>
+<span><span class="co">#&gt;  6 9324        População residente esti… Pessoas       12          Acre         </span></span>
+<span><span class="co">#&gt;  7 9324        População residente esti… Pessoas       13          Amazonas     </span></span>
+<span><span class="co">#&gt;  8 9324        População residente esti… Pessoas       13          Amazonas     </span></span>
+<span><span class="co">#&gt;  9 9324        População residente esti… Pessoas       13          Amazonas     </span></span>
+<span><span class="co">#&gt; 10 9324        População residente esti… Pessoas       14          Roraima      </span></span>
+<span><span class="co">#&gt; # ℹ 314 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 3 more variables: locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span></code></pre></div>
+<p>The getting-started vignette shows a real case (all municipalities,
+12 years) that is split automatically.</p>
 </div>
 <div class="section level2">
 <h2 id="view-modes">View modes<a class="anchor" aria-label="anchor" href="#view-modes"></a>
@@ -370,12 +734,41 @@ Reduce the number of localities, periods, or categories and retry.</p>
 <p>The API supports three view modes for the response format. ibger uses
 the default JSON mode, but you can also pass <code>view = "OLAP"</code>
 or <code>view = "flat"</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># OLAP notation</span></span>
-<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1705</span>, localities <span class="op">=</span> <span class="st">"BR"</span>, view <span class="op">=</span> <span class="st">"OLAP"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1092</span>, variable <span class="op">=</span> <span class="fl">284</span>, periods <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, localities <span class="op">=</span> <span class="st">"BR"</span>,</span>
+<span>               view <span class="op">=</span> <span class="st">"OLAP"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1092: 6 variables,</span></span>
+<span><span class="co">#&gt; 3 classifications, 14 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1092 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1092 from IBGE API... [201ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 1 record retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 8</span></span>
+<span><span class="co">#&gt;   variable_id variable_name variable_unit locality_id locality_name</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;        </span></span>
+<span><span class="co">#&gt; 1 284         &lt;NA&gt;          Cabeças       1           Brasil       </span></span>
+<span><span class="co">#&gt; # ℹ 3 more variables: locality_level &lt;chr&gt;, period &lt;chr&gt;, value &lt;chr&gt;</span></span>
 <span></span>
 <span><span class="co"># Flat mode (first element is metadata, data starts at second)</span></span>
-<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1705</span>, localities <span class="op">=</span> <span class="st">"BR"</span>, view <span class="op">=</span> <span class="st">"flat"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/ibge_variables.html">ibge_variables</a></span><span class="op">(</span><span class="fl">1092</span>, variable <span class="op">=</span> <span class="fl">284</span>, periods <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, localities <span class="op">=</span> <span class="st">"BR"</span>,</span>
+<span>               view <span class="op">=</span> <span class="st">"flat"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Aggregate 1092: 6 variables,</span></span>
+<span><span class="co">#&gt; 3 classifications, 14 categories (cached).</span></span>
+<span><span class="co">#&gt; ℹ Fetching variables for aggregate 1092 from IBGE API...</span></span>
+<span><span class="co">#&gt; ✔ Fetching variables for aggregate 1092 from IBGE API... [101ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ 1 record retrieved.</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 17</span></span>
+<span><span class="co">#&gt;   `Nível Territorial (Código)` `Nível Territorial` `Unidade de Medida (Código)`</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                        &lt;chr&gt;               &lt;chr&gt;                       </span></span>
+<span><span class="co">#&gt; 1 1                            Brasil              24                          </span></span>
+<span><span class="co">#&gt; # ℹ 14 more variables: `Unidade de Medida` &lt;chr&gt;, Valor &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   `Brasil (Código)` &lt;chr&gt;, Brasil &lt;chr&gt;, `Trimestre (Código)` &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   Trimestre &lt;chr&gt;, `Variável (Código)` &lt;chr&gt;, Variável &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   `Tipo de rebanho bovino (Código)` &lt;chr&gt;, `Tipo de rebanho bovino` &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   `Tipo de inspeção (Código)` &lt;chr&gt;, `Tipo de inspeção` &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   `Referência temporal (Código)` &lt;chr&gt;, `Referência temporal` &lt;chr&gt;</span></span></code></pre></div>
 <p>In most cases, the default mode with ibger’s tidy output is the most
 convenient.</p>
 </div>
@@ -479,6 +872,10 @@ parameters:</p>
 </tr>
 </tbody>
 </table>
+<p>If you already have a SIDRA API URL (from the SIDRA query builder or
+the sidrar package), <code><a href="../reference/parse_sidra_url.html">parse_sidra_url()</a></code> translates it into
+the equivalent <code><a href="../reference/ibge_variables.html">ibge_variables()</a></code> call and
+<code><a href="../reference/fetch_sidra_url.html">fetch_sidra_url()</a></code> runs it.</p>
 </div>
 <div class="section level2">
 <h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
@@ -492,6 +889,9 @@ API documentation</a></li>
 Query Builder</a> — useful for exploring tables before writing R
 code</li>
 </ul>
+<hr>
+<p>This vignette was last built on 2026-09-22 against the live IBGE
+API.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
