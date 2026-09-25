@@ -211,7 +211,7 @@ warn_sidra_levels <- function(meta, localities) {
     "Geographic level(s) {.val {invalid}} not available for
      aggregate {meta$id}.",
     "i" = "Available levels: {.val {valid}}.",
-    "i" = "{.fn fetch_sidra_url} will fail for this URL."
+    ">" = "{.fn fetch_sidra_url} will fail for this URL."
   ))
   invisible()
 }

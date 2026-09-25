@@ -158,7 +158,8 @@ test_that("an unknown territorial level warns instead of crashing", {
   withr::defer(cleanup())
 
   url <- "https://apisidra.ibge.gov.br/values/t/5434/n12/all/v/4090"
-  expect_warning(parsed <- parse_sidra_url(url), "N12")
+  expect_warning(parse_sidra_url(url), "N12")
+  parsed <- suppressWarnings(parse_sidra_url(url))
 
   expect_identical(parsed$localities[[1]]$level, "N12")
   expect_identical(parsed$localities[[1]]$level_name, "unknown level")

@@ -152,7 +152,7 @@ check_filter <- function(value, arg, pattern, example) {
     cli::cli_abort(c(
       "Invalid {.arg {arg}} filter: {.val {value}}.",
       "i" = "Expected a single value like {.val {example}}.",
-      "i" = "See {.code ?ibge_aggregates} for the accepted formats."
+      ">" = "See {.code ?ibge_aggregates} for the accepted formats."
     ), call = NULL)
   }
 

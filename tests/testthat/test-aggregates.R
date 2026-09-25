@@ -28,8 +28,8 @@ test_that("well-formed filters pass the format check", {
 test_that("parse_aggregates returns the promised columns when empty", {
   empty <- parse_aggregates(list())
   expect_s3_class(empty, "tbl_df")
-  expect_identical(
-    names(empty),
+  expect_named(
+    empty,
     c("survey_id", "survey_name", "aggregate_id", "aggregate_name")
   )
   expect_identical(nrow(empty), 0L)
@@ -43,8 +43,8 @@ test_that("parse_aggregates returns the promised columns when empty", {
 test_that("ibge_aggregates warns on an empty result", {
   local_mocked_bindings(ibge_request = function(...) list())
   ibge_clear_cache()
-  expect_message(res <- ibge_aggregates(periodicity = "P59"),
-                 "No aggregates found")
+  expect_message(ibge_aggregates(periodicity = "P59"), "No aggregates found")
+  res <- suppressMessages(ibge_aggregates(periodicity = "P59"))
   expect_identical(nrow(res), 0L)
   expect_identical(ncol(res), 4L)
 })
