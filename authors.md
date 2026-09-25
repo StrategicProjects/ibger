@@ -5,7 +5,7 @@
 - **Andre Leite**. Author, maintainer.
   [](https://orcid.org/0000-0002-4718-9766)
 
-- **Marcos Wasiliew**. Author.
+- **Marcos Wasiliew**. Author. [](https://orcid.org/0009-0004-4694-3159)
 
 - **Hugo Vasconcelos**. Author.
   [](https://orcid.org/0000-0001-6249-0920)
