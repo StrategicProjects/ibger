@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **Andre Leite**. Author, maintainer.
+- **André Leite**. Author, maintainer.
   [](https://orcid.org/0000-0002-4718-9766)
 
 - **Marcos Wasiliew**. Author. [](https://orcid.org/0009-0004-4694-3159)
@@ -35,7 +35,7 @@ Access the 'IBGE' Aggregate Data API from 'R'*. R package version
 
     @Manual{,
       title = {ibger: Access the 'IBGE' Aggregate Data API from 'R'},
-      author = {Andre Leite and Marcos Wasiliew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra},
+      author = {André Leite and Marcos Wasiliew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra},
       year = {2026},
       note = {R package version 0.2.0.9000},
       url = {https://github.com/StrategicProjects/ibger},
