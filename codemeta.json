@@ -24,7 +24,7 @@
   "author": [
     {
       "@type": "Person",
-      "givenName": "Andre",
+      "givenName": "André",
       "familyName": "Leite",
       "email": "leite@castlab.org",
       "@id": "https://orcid.org/0000-0002-4718-9766"
@@ -60,7 +60,7 @@
   "maintainer": [
     {
       "@type": "Person",
-      "givenName": "Andre",
+      "givenName": "André",
       "familyName": "Leite",
       "email": "leite@castlab.org",
       "@id": "https://orcid.org/0000-0002-4718-9766"
